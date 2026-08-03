@@ -1,0 +1,29 @@
+{
+  "name": "coding-portal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx",
+    "portal": "tsx portal/server.ts",
+    "test:run": "tsx --test",
+    "test:findMedianSortedArrays": "npm run test:run -- findMedianSortedArrays/findMedianSortedArrays.test.ts",
+    "test:bisection": "npm run test:run -- bisection/binarySearch.test.ts",
+    "test:kth": "npm run test:run -- kth/findKthSortedArrays.test.ts",
+    "test:heapsort": "npm run test:run -- heapsort/heapSort.test.ts",
+    "test:course-schedule": "npm run test:run -- course-schedule-ii/findOrder.test.ts",
+    "test:edit-distance": "npm run test:run -- edit-distance/minDistance.test.ts",
+    "test:climbing-stairs": "npm run test:run -- climbing-stairs/climbStairs.test.ts",
+    "test:histogram": "npm run test:run -- largest-rectangle/largestRectangleArea.test.ts",
+    "test:min-window": "npm run test:run -- min-window-substring/minWindow.test.ts",
+    "test:max-path-sum": "npm run test:run -- max-path-sum/maxPathSum.test.ts",
+    "test:lru": "npm run test:run -- lru-cache/LRUCache.test.ts",
+    "test:day1": "npm run test:run -- course-schedule-ii/findOrder.test.ts edit-distance/minDistance.test.ts largest-rectangle/largestRectangleArea.test.ts",
+    "test:day2": "npm run test:run -- min-window-substring/minWindow.test.ts max-path-sum/maxPathSum.test.ts lru-cache/LRUCache.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "marked": "^18.0.7",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}

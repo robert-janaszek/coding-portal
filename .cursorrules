@@ -1,0 +1,73 @@
+# coding-portal
+
+Local TypeScript workspace for algorithm / interview coding exercises (LeetCode-style).
+Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lists problems and runs tests.
+
+## Project layout
+
+```
+<problem-id>/
+  PROBLEM.md          # statement, examples, constraints, how to run tests
+  HINTS.md            # spoilers — open only when stuck
+  <Solution>.ts       # implementation stub / solution
+  <Solution>.test.ts  # node:test suite (import `it` from ../test/it)
+portal/               # local UI + server to browse problems and run tests
+test/it.ts            # shared `it` wrapper with default timeout
+```
+
+Portal discovers a problem when the folder contains `PROBLEM.md` and a `*.test.ts` file.
+Do not put exercise folders under `portal/`, `test/`, or `node_modules/`.
+
+## Role when helping with exercises
+
+This repo is for **practice**, not for shipping a solved dump.
+
+- Prefer guiding: ask what was tried, point at complexity targets in `PROBLEM.md`, suggest approaches and edge cases.
+- Do **not** paste a full working solution unless the user explicitly asks for one (e.g. "solve it", "give me the answer", "implement it").
+- Treat `HINTS.md` as spoilers. Do not dump its contents unprompted; nudge toward opening it if the user is stuck.
+- When implementing on request: keep the public function signature and file name; make tests pass; match complexity targets from `PROBLEM.md` when stated.
+- Prefer clear, interview-style TypeScript (readable over clever). Avoid unrelated refactors.
+
+## Adding or editing a problem
+
+When creating a new exercise, mirror an existing folder (e.g. `climbing-stairs/`):
+
+1. `PROBLEM.md` — title (`# N. Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
+2. Stub `.ts` — exported function with a short JSDoc pointing at `PROBLEM.md`; body can be `throw new Error("Not implemented")` or a minimal placeholder.
+3. `.test.ts` — `node:assert/strict` + `describe` from `node:test` + `it` from `../test/it`. Cover LeetCode examples and important edge cases.
+4. `HINTS.md` — progressive spoilers (idea → recurrence/structure → complexity note). Mark as spoilers at the top.
+5. Optional `package.json` script: `"test:<id>": "npm run test:run -- <dir>/<file>.test.ts"`.
+
+Do not change unrelated problems or the portal unless the task requires it.
+
+## Tests & tooling
+
+- Runner: `tsx --test` (`npm run test:run -- <path>` or a named `test:*` script).
+- Always import `it` from `../test/it` (not raw `node:test`) so the default timeout applies.
+- Portal: `npm run portal` (default port 3456).
+
+## Git commit messages
+
+Write commit messages in English, imperative mood, Conventional Commits, subject under 72 chars, no trailing period on the subject.
+
+Format: `<type>(<scope>): <summary>`
+
+Allowed types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`.
+
+Scopes — pick from what changed:
+
+- problem folder id (e.g. `climbing-stairs`, `edit-distance`)
+- `portal` — portal server or UI
+- `test` — shared test helpers
+- `config` — `package.json`, `tsconfig.json`, tooling
+- `deps` — dependency updates
+
+Examples:
+
+```
+feat(climbing-stairs): add climbing stairs exercise stub and tests
+fix(edit-distance): handle empty-string base cases
+docs(lru-cache): clarify O(1) get/put target in PROBLEM.md
+test(min-window): cover duplicate-character windows
+chore(portal): stream test output without buffering
+```
