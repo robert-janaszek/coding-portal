@@ -1,6 +1,6 @@
 # coding-portal
 
-Local TypeScript workspace for algorithm / interview coding exercises (LeetCode-style).
+Local TypeScript workspace for algorithm / interview coding exercises.
 Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lists problems and runs tests.
 
 ## Project layout
@@ -33,10 +33,12 @@ This repo is for **practice**, not for shipping a solved dump.
 When creating a new exercise, mirror an existing folder (e.g. `climbing-stairs/`):
 
 1. `PROBLEM.md` — title (`# N. Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
-2. Stub `.ts` — exported function with a short JSDoc pointing at `PROBLEM.md`; body can be `throw new Error("Not implemented")` or a minimal placeholder.
-3. `.test.ts` — `node:assert/strict` + `describe` from `node:test` + `it` from `../test/it`. Cover LeetCode examples and important edge cases.
-4. `HINTS.md` — progressive spoilers (idea → recurrence/structure → complexity note). Mark as spoilers at the top.
-5. Optional `package.json` script: `"test:<id>": "npm run test:run -- <dir>/<file>.test.ts"`.
+2. Stub `<Name>.ts` — exported signature only; body `throw new Error("Not implemented")`. No comments.
+3. Hidden template `.<Name>.ts` — identical copy of the stub; used by the portal to restore the file after “Mark as done”.
+4. `.test.ts` — `node:assert/strict` + `describe` from `node:test` + `it` from `../test/it`. Cover examples and important edge cases.
+5. `HINTS.md` — progressive spoilers (idea → recurrence/structure → complexity note). Mark as spoilers at the top.
+6. Optional `solution.ts` — reference implementation; not imported by tests.
+7. Optional `package.json` script: `"test:<id>": "npm run test:run -- <dir>/<file>.test.ts"`.
 
 Do not change unrelated problems or the portal unless the task requires it.
 
