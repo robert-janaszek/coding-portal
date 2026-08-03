@@ -34,6 +34,11 @@ let outputBuffer = "";
 /** @type {"readme" | "tests"} */
 let activeTab = "readme";
 let resultsCollapsed = false;
+/** True after a successful full RUN all for the current problem. */
+let lastFullRunOk = false;
+/** @type {string | null} name of the in-flight run, or null for RUN all */
+let currentRunName = null;
+let markDoneBusy = false;
 
 marked.setOptions({ gfm: true, breaks: false });
 
@@ -252,12 +257,12 @@ function parseSummary(text) {
 }
 
 /**
- * @param {"idle" | "running" | "ok" | "fail" | "stopped" | "error"} state
+ * @param {"idle" | "running" | "ok" | "fail" | "stopped" | "error" | "saved"} state
  * @param {ReturnType<typeof parseSummary>} [stats]
  */
 function renderSummary(state, stats = null) {
   runSummaryEl.hidden = false;
-  runSummaryEl.className = `run-summary ${state}`;
+  runSummaryEl.className = `run-summary ${state === "saved" ? "ok" : state}`;
 
   if (state === "running") {
     runSummaryEl.innerHTML = `
@@ -274,6 +279,17 @@ function renderSummary(state, stats = null) {
       <div class="summary-title">${label}</div>
       <div class="summary-stats">
         <span class="stat">No complete summary</span>
+      </div>`;
+    return;
+  }
+
+  if (state === "saved") {
+    runSummaryEl.innerHTML = `
+      <div class="summary-main">
+        <div class="summary-title">Saved to solution.ts</div>
+        <div class="summary-stats">
+          <span class="stat">Stub restored — ready for the next attempt</span>
+        </div>
       </div>`;
     return;
   }
@@ -300,9 +316,79 @@ function renderSummary(state, stats = null) {
   }
 
   const title = fail > 0 || state === "fail" ? "Failed" : "Passed";
+  const showMarkDone = state === "ok" && lastFullRunOk && !markDoneBusy;
   runSummaryEl.innerHTML = `
-    <div class="summary-title">${title}</div>
-    <div class="summary-stats">${parts.join("")}</div>`;
+    <div class="summary-main">
+      <div class="summary-title">${title}</div>
+      <div class="summary-stats">${parts.join("")}</div>
+    </div>
+    ${
+      showMarkDone
+        ? `<button type="button" class="btn btn-ghost btn-mark-done" id="btn-mark-done">Mark as done</button>`
+        : ""
+    }`;
+
+  const btn = document.getElementById("btn-mark-done");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      void markProblemDone();
+    });
+  }
+}
+
+/**
+ * Mark the selected problem as solved: copy impl → solution.ts, restore stub.
+ */
+async function markProblemDone() {
+  if (!selectedId || !lastFullRunOk || markDoneBusy) return;
+
+  const ok = window.confirm(
+    "Copy your solution to solution.ts and restore the stub for the next person?",
+  );
+  if (!ok) return;
+
+  markDoneBusy = true;
+  const markBtn = document.getElementById("btn-mark-done");
+  if (markBtn) {
+    markBtn.disabled = true;
+    markBtn.textContent = "Saving…";
+  }
+
+  try {
+    const res = await fetch(
+      `/api/problems/${encodeURIComponent(selectedId)}/complete`,
+      { method: "POST" },
+    );
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(body.error || res.statusText || "Request failed");
+    }
+    lastFullRunOk = false;
+    markProblemSolvedInList(selectedId);
+    renderSummary("saved");
+    appendTerminal("\n[saved to solution.ts — stub restored]\n", "meta");
+  } catch (err) {
+    appendTerminal(`\n[mark as done failed] ${err}\n`, "stderr");
+  } finally {
+    markDoneBusy = false;
+  }
+
+  if (lastFullRunOk) {
+    renderSummary("ok", parseSummary(outputBuffer));
+  }
+}
+
+/** @param {string} id */
+function markProblemSolvedInList(id) {
+  const btn = problemListEl.querySelector(`.problem-item[data-id="${CSS.escape(id)}"]`);
+  if (!btn || btn.classList.contains("solved")) return;
+  btn.classList.add("solved");
+  const doneEl = document.createElement("span");
+  doneEl.className = "problem-done";
+  doneEl.title = "Solved";
+  doneEl.setAttribute("aria-label", "Solved");
+  doneEl.textContent = "✓";
+  btn.append(doneEl);
 }
 
 function closeRun() {
@@ -320,6 +406,8 @@ function runTests(name = null) {
   closeRun();
   clearTerminal();
   resetTestStatuses(name);
+  lastFullRunOk = false;
+  currentRunName = name;
   setRunning(true);
   runStatusEl.textContent = "running…";
   runStatusEl.className = "run-status running";
@@ -341,6 +429,7 @@ function runTests(name = null) {
     appendTerminal(data.text, data.stream === "stderr" ? "stderr" : "");
     applyTestResults(outputBuffer);
     const live = parseSummary(outputBuffer);
+    // lastFullRunOk is still false here, so Mark as done stays hidden until exit.
     if (live) renderSummary(live.fail ? "fail" : "ok", live);
   });
 
@@ -348,6 +437,8 @@ function runTests(name = null) {
     const data = JSON.parse(ev.data);
     const code = data.code ?? 1;
     const ok = code === 0;
+    const wasFullRun = currentRunName === null;
+    lastFullRunOk = ok && wasFullRun;
     runStatusEl.textContent = `exit ${code}`;
     runStatusEl.className = `run-status ${ok ? "ok" : "fail"}`;
     appendTerminal(`\n[process exited with code ${code}]\n`, "meta");
@@ -360,6 +451,7 @@ function runTests(name = null) {
 
   eventSource.onerror = () => {
     if (running) {
+      lastFullRunOk = false;
       appendTerminal("\n[connection lost]\n", "stderr");
       runStatusEl.textContent = "error";
       runStatusEl.className = "run-status fail";
@@ -378,6 +470,7 @@ async function stopRun() {
     /* ignore */
   }
   if (running) {
+    lastFullRunOk = false;
     appendTerminal("\n[stopped]\n", "meta");
     runStatusEl.textContent = "stopped";
     runStatusEl.className = "run-status fail";
@@ -419,6 +512,8 @@ function renderTestList(tests) {
 
 async function selectProblem(id) {
   selectedId = id;
+  lastFullRunOk = false;
+  markDoneBusy = false;
 
   for (const btn of problemListEl.querySelectorAll(".problem-item")) {
     btn.classList.toggle("active", btn.dataset.id === id);
@@ -428,6 +523,11 @@ async function selectProblem(id) {
   workspaceEl.hidden = false;
   setTab("readme");
   markdownEl.innerHTML = "<p class='meta'>Loading…</p>";
+  runSummaryEl.hidden = true;
+  runSummaryEl.replaceChildren();
+  clearTerminal();
+  runStatusEl.textContent = "";
+  runStatusEl.className = "run-status";
 
   const [problem, { tests }] = await Promise.all([
     fetchJson(`/api/problems/${encodeURIComponent(id)}`),

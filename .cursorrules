@@ -9,8 +9,10 @@ Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lis
 <problem-id>/
   PROBLEM.md          # statement, examples, constraints, how to run tests
   HINTS.md            # spoilers — open only when stuck
-  <Solution>.ts       # implementation stub / solution
-  <Solution>.test.ts  # node:test suite (import `it` from ../test/it)
+  <Name>.ts           # stub — implement here (tests import this)
+  .<Name>.ts          # hidden stub template (restored on “Mark as done”)
+  <Name>.test.ts      # node:test suite (import `it` from ../test/it)
+  solution.ts         # optional reference solution (spoilers; not used by tests)
 portal/               # local UI + server to browse problems and run tests
 test/it.ts            # shared `it` wrapper with default timeout
 ```
@@ -24,8 +26,9 @@ This repo is for **practice**, not for shipping a solved dump.
 
 - Prefer guiding: ask what was tried, point at complexity targets in `PROBLEM.md`, suggest approaches and edge cases.
 - Do **not** paste a full working solution unless the user explicitly asks for one (e.g. "solve it", "give me the answer", "implement it").
-- Treat `HINTS.md` as spoilers. Do not dump its contents unprompted; nudge toward opening it if the user is stuck.
-- When implementing on request: keep the public function signature and file name; make tests pass; match complexity targets from `PROBLEM.md` when stated.
+- Treat `HINTS.md` and `solution.ts` as spoilers. Do not dump their contents unprompted; nudge toward opening them if the user is stuck.
+- When implementing on request: edit the stub file (not `solution.ts`); keep the public signature; make tests pass; match complexity targets from `PROBLEM.md` when stated.
+- After a correct solution exists in the stub (or via portal “Mark as done”): copy impl → `solution.ts`, then restore the stub by copying `.<Name>.ts` over `<Name>.ts`.
 - Prefer clear, interview-style TypeScript (readable over clever). Avoid unrelated refactors.
 
 ## Adding or editing a problem

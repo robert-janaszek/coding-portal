@@ -1,7 +1,14 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import {
+  copyFileSync,
+  createReadStream,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { extname, join, resolve } from "node:path";
+import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -65,6 +72,23 @@ function findProblem(id: string): Problem | undefined {
   return discoverProblems().find((p) => p.id === id);
 }
 
+/** Resolve the stub/impl `.ts` path from the test file's local import. */
+function findImplFile(problem: Problem): string {
+  const testContent = readFileSync(join(ROOT, problem.testFile), "utf8");
+  const match = testContent.match(/from\s+["']\.\/([^"']+)["']/);
+  if (!match?.[1]) {
+    throw new Error(`No local './…' import found in ${problem.testFile}`);
+  }
+
+  let rel = match[1];
+  if (!rel.endsWith(".ts")) rel += ".ts";
+  const implPath = join(ROOT, problem.id, basename(rel));
+  if (!existsSync(implPath)) {
+    throw new Error(`Implementation file not found: ${problem.id}/${basename(rel)}`);
+  }
+  return implPath;
+}
+
 function parseTestNames(testFileRel: string): string[] {
   const content = readFileSync(join(ROOT, testFileRel), "utf8");
   const names: string[] = [];
@@ -80,11 +104,51 @@ function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function tsxBin(): string {
+  return join(ROOT, "node_modules", ".bin", "tsx");
+}
+
+function buildTestArgs(problem: Problem, testName: string | null): string[] {
+  const args = ["--test", "--test-reporter=spec"];
+  if (testName) {
+    args.push(`--test-name-pattern=^${escapeRegex(testName)}$`);
+  }
+  args.push(problem.testFile);
+  return args;
+}
+
+function runTestsOnce(
+  problem: Problem,
+  testName: string | null = null,
+): Promise<{ code: number; stdout: string; stderr: string }> {
+  return new Promise((resolvePromise, reject) => {
+    const args = buildTestArgs(problem, testName);
+    const child = spawn(tsxBin(), args, {
+      cwd: ROOT,
+      env: { ...process.env, FORCE_COLOR: "0" },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+    child.stdout?.on("data", (chunk: Buffer) => {
+      stdout += chunk.toString("utf8");
+    });
+    child.stderr?.on("data", (chunk: Buffer) => {
+      stderr += chunk.toString("utf8");
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      resolvePromise({ code: code ?? 1, stdout, stderr });
+    });
+  });
+}
+
 function writeSse(res: ServerResponse, event: string, data: unknown) {
   res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 }
 
-function runTests(
+function runTestsSse(
   res: ServerResponse,
   problem: Problem,
   testName: string | null,
@@ -101,19 +165,14 @@ function runTests(
   });
   res.write(":\n\n");
 
-  const args = ["--test", "--test-reporter=spec"];
-  if (testName) {
-    args.push(`--test-name-pattern=^${escapeRegex(testName)}$`);
-  }
-  args.push(problem.testFile);
+  const args = buildTestArgs(problem, testName);
 
   writeSse(res, "status", {
     state: "running",
     command: `tsx ${args.join(" ")}`,
   });
 
-  const tsxBin = join(ROOT, "node_modules", ".bin", "tsx");
-  const child = spawn(tsxBin, args, {
+  const child = spawn(tsxBin(), args, {
     cwd: ROOT,
     env: { ...process.env, FORCE_COLOR: "0" },
     stdio: ["ignore", "pipe", "pipe"],
@@ -152,6 +211,36 @@ function runTests(
       running = null;
     }
   });
+}
+
+/** Hidden stub template next to the impl, e.g. `.climbStairs.ts`. */
+function findStubTemplate(implPath: string): string {
+  const templatePath = join(dirname(implPath), `.${basename(implPath)}`);
+  if (!existsSync(templatePath)) {
+    throw new Error(`Stub template not found: ${basename(dirname(implPath))}/.${basename(implPath)}`);
+  }
+  return templatePath;
+}
+
+async function completeProblem(problem: Problem): Promise<void> {
+  if (running) {
+    running.kill("SIGTERM");
+    running = null;
+  }
+
+  const result = await runTestsOnce(problem);
+  if (result.code !== 0) {
+    throw Object.assign(new Error("Tests must all pass before marking as done"), {
+      status: 400,
+      detail: result.stderr || result.stdout,
+    });
+  }
+
+  const implPath = findImplFile(problem);
+  const stubTemplate = findStubTemplate(implPath);
+
+  copyFileSync(implPath, join(ROOT, problem.id, "solution.ts"));
+  copyFileSync(stubTemplate, implPath);
 }
 
 function reqClose(res: ServerResponse, onClose: () => void) {
@@ -223,6 +312,27 @@ const server = createServer(async (req, res) => {
       return;
     }
 
+    const completeMatch = pathname.match(/^\/api\/problems\/([^/]+)\/complete$/);
+    if (req.method === "POST" && completeMatch) {
+      await readBody(req);
+      const id = decodeURIComponent(completeMatch[1]!);
+      const problem = findProblem(id);
+      if (!problem) {
+        json(res, 404, { error: "Problem not found" });
+        return;
+      }
+      try {
+        await completeProblem(problem);
+        json(res, 200, { ok: true, solved: true });
+      } catch (err) {
+        const status = (err as { status?: number }).status ?? 500;
+        const message = err instanceof Error ? err.message : String(err);
+        const detail = (err as { detail?: string }).detail;
+        json(res, status, { error: message, detail });
+      }
+      return;
+    }
+
     if (req.method === "GET" && pathname === "/api/run") {
       const id = url.searchParams.get("problem");
       const name = url.searchParams.get("name");
@@ -235,7 +345,7 @@ const server = createServer(async (req, res) => {
         json(res, 404, { error: "Problem not found" });
         return;
       }
-      runTests(res, problem, name);
+      runTestsSse(res, problem, name);
       return;
     }
 
