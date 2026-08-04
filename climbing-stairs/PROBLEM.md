@@ -1,4 +1,4 @@
-# 70. Climbing Stairs
+# Climbing Stairs
 
 **Difficulty:** Easy (classic 1D DP intro)  
 **Topics:** Dynamic programming (1D)  

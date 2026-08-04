@@ -1,4 +1,4 @@
-# 72. Edit Distance
+# Edit Distance
 
 **Difficulty:** Hard  
 **Topics:** Strings, DP  

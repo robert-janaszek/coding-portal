@@ -1,4 +1,4 @@
-# 146. LRU Cache
+# LRU Cache
 
 **Difficulty:** Medium  
 **Topics:** Design  

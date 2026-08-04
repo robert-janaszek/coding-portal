@@ -1,4 +1,4 @@
-# 76. Minimum Window Substring
+# Minimum Window Substring
 
 **Difficulty:** Hard  
 **Topics:** Strings  

@@ -1,4 +1,4 @@
-# 84. Largest Rectangle in Histogram
+# Largest Rectangle in Histogram
 
 **Difficulty:** Hard  
 **Topics:** Arrays  

@@ -1,4 +1,4 @@
-# 210. Course Schedule II
+# Course Schedule II
 
 **Difficulty:** Medium  
 **Topics:** Graph  

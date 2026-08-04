@@ -1,4 +1,4 @@
-# 4. Median of Two Sorted Arrays
+# Median of Two Sorted Arrays
 
 **Difficulty:** Hard  
 **Target complexity:** `O(log(m + n))` time, `O(1)` extra space

@@ -35,7 +35,7 @@ This repo is for **practice**, not for shipping a solved dump.
 
 When creating a new exercise, mirror an existing folder (e.g. `climbing-stairs/`):
 
-1. `PROBLEM.md` — title (`# N. Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
+1. `PROBLEM.md` — title (`# Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
 2. Stub `<Name>.ts` — exported signature only; body `throw new Error("Not implemented")`. No comments.
 3. Hidden template `.<Name>.ts` — identical copy of the stub; used by the portal to restore the file after “Mark as done”.
 4. `.test.ts` — `node:assert/strict` + `describe` from `node:test` + `it` from `../test/it`. Cover examples and important edge cases.

@@ -1,4 +1,4 @@
-# 124. Binary Tree Maximum Path Sum
+# Binary Tree Maximum Path Sum
 
 **Difficulty:** Hard  
 **Topics:** Binary tree  
