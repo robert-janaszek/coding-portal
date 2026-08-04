@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe } from "node:test";
 import { it } from "../test/it";
-import { heapSort } from "./heapSort.ts";
+import { heapSort } from "./heapSort";
 
 function sortedCopy(nums: number[]): number[] {
   return [...nums].sort((a, b) => a - b);

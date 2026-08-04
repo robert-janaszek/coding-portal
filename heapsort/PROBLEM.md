@@ -1,4 +1,4 @@
-# Heap Sort (Sortowanie przez kopcowanie)
+# Heap Sort
 
 **Difficulty:** Medium  
 **Target complexity:** `O(n log n)` time, `O(1)` extra space (in-place)
