@@ -106,7 +106,7 @@ describe("lowestCommonAncestor", () => {
     const p = findByVal(root, 6);
     const q = findByVal(root, 4);
     const lca = lowestCommonAncestor(root, p, q);
-    assert.equal(lca?.val, 2);
+    assert.equal(lca?.val, 5);
   });
 
   it("p equals q returns p", () => {
@@ -114,6 +114,50 @@ describe("lowestCommonAncestor", () => {
     const p = findByVal(root, 2);
     const lca = lowestCommonAncestor(root, p, p);
     assert.equal(lca?.val, 2);
+  });
+
+  it("q is ancestor of p", () => {
+    const root = buildTree([
+      3,
+      5,
+      1,
+      6,
+      2,
+      0,
+      8,
+      null,
+      null,
+      7,
+      4,
+    ]);
+    const p = findByVal(root, 4);
+    const q = findByVal(root, 5);
+    const lca = lowestCommonAncestor(root, p, q);
+    assert.equal(lca, q);
+  });
+
+  it("duplicate values: matches by node identity", () => {
+    //   3
+    //  / \
+    // 5   5
+    const left5 = new TreeNode(5);
+    const right5 = new TreeNode(5);
+    const root = new TreeNode(3, left5, right5);
+    const lca = lowestCommonAncestor(root, left5, right5);
+    assert.equal(lca, root);
+  });
+
+  it("right-skewed tree", () => {
+    // 1
+    //  \
+    //   2
+    //    \
+    //     3
+    const three = new TreeNode(3);
+    const two = new TreeNode(2, null, three);
+    const root = new TreeNode(1, null, two);
+    const lca = lowestCommonAncestor(root, two, three);
+    assert.equal(lca, two);
   });
 });
 

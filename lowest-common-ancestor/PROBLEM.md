@@ -29,7 +29,7 @@ Output: 5
 
 ```
 Input:  root = [3,5,1,6,2,0,8,null,null,7,4], p = 6, q = 4
-Output: 2
+Output: 5
 ```
 
 ## Constraints (exercise)
