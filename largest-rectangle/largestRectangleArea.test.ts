@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe } from "node:test";
 import { it } from "../test/it";
-import { largestRectangleArea } from "./largestRectangleArea.ts";
+import { largestRectangleArea } from "./largestRectangleArea";
 
 /** O(n^2) reference for small cases. */
 function naive(heights: number[]): number {
@@ -50,6 +50,18 @@ describe("largestRectangleArea", () => {
     assert.equal(largestRectangleArea([1, 2, 3, 2, 1]), 6);
   });
 
+  it("additional", () => {
+    assert.equal(largestRectangleArea([1, 3, 2, 1, 2]), 5);
+  });
+
+  it("two peaks", () => {
+    assert.equal(largestRectangleArea([1, 2, 3, 2, 1, 2, 3, 2, 1]), 9);
+  });
+
+  it("repeated histogram pattern", () => {
+    assert.equal(largestRectangleArea([2, 1, 5, 6, 2, 3, 2, 1, 5, 6, 2, 3]), 12);
+  });
+
   it("naive cross-check batch", () => {
     const cases = [
       [1],
@@ -59,6 +71,13 @@ describe("largestRectangleArea", () => {
       [2, 1, 2],
       [6, 2, 5, 4, 5, 1, 6],
       [1, 3, 2, 1, 2],
+      [1, 2, 3, 2, 1, 2, 3, 2, 1],
+      [2, 1, 5, 6, 2, 3, 2, 1, 5, 6, 2, 3],
+      [4, 2, 0, 3, 2, 5],
+      [1, 0, 1],
+      [9, 0, 9],
+      [3, 6, 2, 5, 3],
+      [1, 2, 3, 2, 1, 2, 3, 2, 1, 2, 3, 2, 1],
     ];
     for (const h of cases) {
       assert.equal(largestRectangleArea(h), naive(h), `failed on [${h}]`);
