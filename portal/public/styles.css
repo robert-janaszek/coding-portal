@@ -117,13 +117,24 @@ body {
   font-size: 0.9rem;
 }
 
-.problem-item .problem-done {
+.problem-item .problem-status-badge {
   flex-shrink: 0;
   margin-top: 0.15rem;
-  color: var(--accent);
   font-size: 0.95rem;
   font-weight: 600;
   line-height: 1;
+}
+
+.problem-item.status-pass .problem-status-badge {
+  color: var(--accent);
+}
+
+.problem-item.status-softpass .problem-status-badge {
+  color: #c9a227;
+}
+
+.problem-item.status-fail .problem-status-badge {
+  color: var(--danger);
 }
 
 .main {
@@ -190,15 +201,88 @@ body {
 }
 
 #panel-readme {
-  overflow: auto;
-  padding: 1.5rem 1.75rem;
+  overflow: hidden;
+  padding: 0;
   background:
     radial-gradient(ellipse 80% 50% at 10% 0%, rgba(61, 154, 106, 0.08), transparent),
     var(--bg);
 }
 
+.problem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0.85rem 1.75rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.problem-status-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.problem-status-label[data-status="pass"] {
+  color: #b6e6c9;
+}
+
+.problem-status-label[data-status="softpass"] {
+  color: #e6d28a;
+}
+
+.problem-status-label[data-status="fail"] {
+  color: #e8a0a0;
+}
+
+.problem-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.btn-give-up {
+  border-color: #7a3a3a;
+  color: #e8a0a0;
+}
+
+.btn-give-up:hover:not(:disabled) {
+  background: rgba(196, 92, 92, 0.18);
+  border-color: var(--danger);
+  color: #f0c0c0;
+}
+
+.btn-softpass {
+  border-color: #7a6520;
+  color: #e6d28a;
+}
+
+.btn-softpass:hover:not(:disabled) {
+  background: rgba(201, 162, 39, 0.16);
+  border-color: #c9a227;
+  color: #f0e2a8;
+}
+
+.btn-mark-done {
+  border-color: var(--accent);
+  color: #b6e6c9;
+}
+
+.btn-mark-done:hover:not(:disabled) {
+  background: rgba(61, 154, 106, 0.18);
+  color: #d4f5e2;
+  border-color: var(--accent-hover);
+}
+
 .markdown {
   max-width: 52rem;
+  padding: 1.5rem 1.75rem 2.5rem;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .markdown h1,
@@ -543,18 +627,6 @@ body.resizing-results {
   align-items: baseline;
   gap: 0.65rem 1.25rem;
   min-width: 0;
-}
-
-.run-summary .btn-mark-done {
-  flex-shrink: 0;
-  border-color: var(--accent);
-  color: #b6e6c9;
-}
-
-.run-summary .btn-mark-done:hover:not(:disabled) {
-  background: rgba(61, 154, 106, 0.18);
-  color: #d4f5e2;
-  border-color: var(--accent-hover);
 }
 
 .run-summary.running {

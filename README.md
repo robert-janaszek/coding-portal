@@ -18,9 +18,9 @@ npm run portal
 
 Open [http://localhost:3456](http://localhost:3456).
 
-- Browse problems in the sidebar (green ✓ = reference `solution.ts` exists)
+- Browse problems in the sidebar (`✓` pass, `~` soft pass, `✗` gave up — from `progress.json`)
 - Read the statement, run all tests or a single case
-- After a full suite passes, use **Mark as done** to save your code to `solution.ts` and restore the stub from the hidden template
+- On the problem page: **Give up**, **Soft pass**, or **Mark as done** (done requires a green full suite). Each action archives the current impl under `<problem-id>/solutions/` and restores the stub
 
 ## Solve a problem
 
@@ -34,7 +34,12 @@ npm run test:climbing-stairs
 npm run test:run -- climbing-stairs/climbStairs.test.ts
 ```
 
-`HINTS.md` and `solution.ts` are spoilers — use only if stuck.
+`HINTS.md` and archives under `<problem-id>/solutions/` are spoilers — use only if stuck.
+
+## Progress & solutions
+
+- [`progress.json`](progress.json) — latest status per problem (`pass` | `softpass` | `fail`)
+- `<problem-id>/solutions/` — timestamped archives of each finished attempt
 
 ## Problem layout
 
@@ -43,9 +48,11 @@ npm run test:run -- climbing-stairs/climbStairs.test.ts
   PROBLEM.md       # statement, examples, constraints
   HINTS.md         # spoilers
   <Name>.ts        # implement here
-  .<Name>.ts       # stub template (restored on Mark as done)
+  .<Name>.ts       # stub template (restored when finishing an attempt)
   <Name>.test.ts   # tests
-  solution.ts      # optional reference solution
+  solutions/       # archived attempts
+
+progress.json      # latest status flags (edited by the portal)
 ```
 
 A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.ts` file.

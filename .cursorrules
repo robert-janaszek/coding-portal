@@ -10,9 +10,10 @@ Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lis
   PROBLEM.md          # statement, examples, constraints, how to run tests
   HINTS.md            # spoilers — open only when stuck
   <Name>.ts           # stub — implement here (tests import this)
-  .<Name>.ts          # hidden stub template (restored on “Mark as done”)
+  .<Name>.ts          # hidden stub template (restored when finishing an attempt)
   <Name>.test.ts      # node:test suite (import `it` from ../test/it)
-  solution.ts         # optional reference solution (spoilers; not used by tests)
+  solutions/          # archived attempts (spoilers; not used by tests)
+progress.json         # latest status per problem (pass | softpass | fail); portal updates this
 portal/               # local UI + server to browse problems and run tests
 test/it.ts            # shared `it` wrapper with default timeout
 ```
@@ -26,9 +27,9 @@ This repo is for **practice**, not for shipping a solved dump.
 
 - Prefer guiding: ask what was tried, point at complexity targets in `PROBLEM.md`, suggest approaches and edge cases.
 - Do **not** paste a full working solution unless the user explicitly asks for one (e.g. "solve it", "give me the answer", "implement it").
-- Treat `HINTS.md` and `solution.ts` as spoilers. Do not dump their contents unprompted; nudge toward opening them if the user is stuck.
-- When implementing on request: edit the stub file (not `solution.ts`); keep the public signature; make tests pass; match complexity targets from `PROBLEM.md` when stated.
-- After a correct solution exists in the stub (or via portal “Mark as done”): copy impl → `solution.ts`, then restore the stub by copying `.<Name>.ts` over `<Name>.ts`.
+- Treat `HINTS.md` and files under `<problem-id>/solutions/` as spoilers. Do not dump their contents unprompted; nudge toward opening them if the user is stuck.
+- When implementing on request: edit the stub file (not archives under `solutions/`); keep the public signature; make tests pass; match complexity targets from `PROBLEM.md` when stated.
+- After finishing an attempt via the portal: impl is archived under `<problem-id>/solutions/`, status is written to `progress.json`, and the stub is restored from `.<Name>.ts`.
 - Prefer clear, interview-style TypeScript (readable over clever). Avoid unrelated refactors.
 
 ## Adding or editing a problem
@@ -37,11 +38,10 @@ When creating a new exercise, mirror an existing folder (e.g. `climbing-stairs/`
 
 1. `PROBLEM.md` — title (`# Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
 2. Stub `<Name>.ts` — exported signature only; body `throw new Error("Not implemented")`. No comments.
-3. Hidden template `.<Name>.ts` — identical copy of the stub; used by the portal to restore the file after “Mark as done”.
+3. Hidden template `.<Name>.ts` — identical copy of the stub; used by the portal to restore the file after finishing an attempt.
 4. `.test.ts` — `node:assert/strict` + `describe` from `node:test` + `it` from `../test/it`. Cover examples and important edge cases.
 5. `HINTS.md` — progressive spoilers (idea → recurrence/structure → complexity note). Mark as spoilers at the top.
-6. Optional `solution.ts` — reference implementation; not imported by tests.
-7. Optional `package.json` script: `"test:<id>": "npm run test:run -- <dir>/<file>.test.ts"`.
+6. Optional `package.json` script: `"test:<id>": "npm run test:run -- <dir>/<file>.test.ts"`.
 
 Do not change unrelated problems or the portal unless the task requires it.
 

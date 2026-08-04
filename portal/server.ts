@@ -10,6 +10,14 @@ import {
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  archiveImpl,
+  getStatus,
+  isProgressStatus,
+  migrateLegacySolutions,
+  setStatus,
+  type ProgressStatus,
+} from "./progress";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const PUBLIC = join(ROOT, "portal", "public");
@@ -30,8 +38,8 @@ type Problem = {
   id: string;
   title: string;
   testFile: string;
-  /** True when `solution.ts` exists in the problem folder. */
-  solved: boolean;
+  /** Latest attempt status from progress.json, or null if unset. */
+  status: ProgressStatus | null;
 };
 
 let running: ChildProcess | null = null;
@@ -67,7 +75,7 @@ function discoverProblems(): Problem[] {
       id: entry.name,
       title: titleMatch?.[1]?.trim() ?? entry.name,
       testFile: join(entry.name, testFile),
-      solved: existsSync(join(dir, "solution.ts")),
+      status: getStatus(ROOT, entry.name),
     });
   }
 
@@ -308,25 +316,31 @@ function findStubTemplate(implPath: string): string {
   return templatePath;
 }
 
-async function completeProblem(problem: Problem): Promise<void> {
+async function finishProblem(
+  problem: Problem,
+  status: ProgressStatus,
+): Promise<{ status: ProgressStatus; archive: string }> {
   if (running) {
     forceKill(running);
     running = null;
   }
 
-  const result = await runTestsOnce(problem);
-  if (result.code !== 0) {
-    throw Object.assign(new Error("Tests must all pass before marking as done"), {
-      status: 400,
-      detail: result.stderr || result.stdout,
-    });
+  if (status === "pass") {
+    const result = await runTestsOnce(problem);
+    if (result.code !== 0) {
+      throw Object.assign(new Error("Tests must all pass before marking as done"), {
+        status: 400,
+        detail: result.stderr || result.stdout,
+      });
+    }
   }
 
   const implPath = findImplFile(problem);
   const stubTemplate = findStubTemplate(implPath);
-
-  copyFileSync(implPath, join(ROOT, problem.id, "solution.ts"));
+  const archive = archiveImpl(ROOT, problem.id, implPath, status);
   copyFileSync(stubTemplate, implPath);
+  setStatus(ROOT, problem.id, status);
+  return { status, archive };
 }
 
 function reqClose(res: ServerResponse, onClose: () => void) {
@@ -398,18 +412,29 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    const completeMatch = pathname.match(/^\/api\/problems\/([^/]+)\/complete$/);
-    if (req.method === "POST" && completeMatch) {
-      await readBody(req);
-      const id = decodeURIComponent(completeMatch[1]!);
+    const finishMatch = pathname.match(/^\/api\/problems\/([^/]+)\/finish$/);
+    if (req.method === "POST" && finishMatch) {
+      const raw = await readBody(req);
+      let body: { status?: unknown } = {};
+      try {
+        body = raw ? (JSON.parse(raw) as { status?: unknown }) : {};
+      } catch {
+        json(res, 400, { error: "Invalid JSON body" });
+        return;
+      }
+      if (!isProgressStatus(body.status)) {
+        json(res, 400, { error: "Body must include status: pass | softpass | fail" });
+        return;
+      }
+      const id = decodeURIComponent(finishMatch[1]!);
       const problem = findProblem(id);
       if (!problem) {
         json(res, 404, { error: "Problem not found" });
         return;
       }
       try {
-        await completeProblem(problem);
-        json(res, 200, { ok: true, solved: true });
+        const result = await finishProblem(problem, body.status);
+        json(res, 200, { ok: true, ...result });
       } catch (err) {
         const status = (err as { status?: number }).status ?? 500;
         const message = err instanceof Error ? err.message : String(err);
@@ -460,6 +485,8 @@ const server = createServer(async (req, res) => {
     }
   }
 });
+
+migrateLegacySolutions(ROOT);
 
 server.listen(PORT, () => {
   console.log(`Coding portal: http://localhost:${PORT}`);

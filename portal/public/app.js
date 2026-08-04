@@ -10,6 +10,10 @@ const runSummaryEl = document.getElementById("run-summary");
 const runStatusEl = document.getElementById("run-status");
 const btnRunAll = document.getElementById("btn-run-all");
 const btnStop = document.getElementById("btn-stop");
+const btnGiveUp = document.getElementById("btn-give-up");
+const btnSoftpass = document.getElementById("btn-softpass");
+const btnMarkDone = document.getElementById("btn-mark-done");
+const problemStatusLabelEl = document.getElementById("problem-status-label");
 const tabButtons = document.querySelectorAll(".tab");
 const panelReadme = document.getElementById("panel-readme");
 const panelTests = document.getElementById("panel-tests");
@@ -23,6 +27,8 @@ const RESULTS_HEIGHT_KEY = "coding-portal-results-height";
 const RESULTS_COLLAPSED_KEY = "coding-portal-results-collapsed";
 const RESULTS_MIN = 120;
 const RESULTS_DEFAULT = 280;
+
+/** @typedef {"pass" | "softpass" | "fail"} ProgressStatus */
 
 /** @type {string | null} */
 let selectedId = null;
@@ -38,7 +44,17 @@ let resultsCollapsed = false;
 let lastFullRunOk = false;
 /** @type {string | null} name of the in-flight run, or null for RUN all */
 let currentRunName = null;
-let markDoneBusy = false;
+let finishBusy = false;
+/** @type {ProgressStatus | null} */
+let currentStatus = null;
+/** @type {Map<string, ProgressStatus | null>} */
+const problemStatuses = new Map();
+
+const STATUS_META = {
+  pass: { mark: "✓", title: "Passed", label: "Status: passed" },
+  softpass: { mark: "~", title: "Soft pass", label: "Status: soft pass" },
+  fail: { mark: "✗", title: "Gave up", label: "Status: gave up" },
+};
 
 marked.setOptions({ gfm: true, breaks: false });
 
@@ -284,11 +300,12 @@ function renderSummary(state, stats = null) {
   }
 
   if (state === "saved") {
+    const meta = currentStatus ? STATUS_META[currentStatus] : null;
     runSummaryEl.innerHTML = `
       <div class="summary-main">
-        <div class="summary-title">Saved to solution.ts</div>
+        <div class="summary-title">${meta ? meta.title : "Saved"}</div>
         <div class="summary-stats">
-          <span class="stat">Stub restored — ready for the next attempt</span>
+          <span class="stat">Archived in this problem's solutions/ folder — stub restored</span>
         </div>
       </div>`;
     return;
@@ -316,79 +333,103 @@ function renderSummary(state, stats = null) {
   }
 
   const title = fail > 0 || state === "fail" ? "Failed" : "Passed";
-  const showMarkDone = state === "ok" && lastFullRunOk && !markDoneBusy;
   runSummaryEl.innerHTML = `
     <div class="summary-main">
       <div class="summary-title">${title}</div>
       <div class="summary-stats">${parts.join("")}</div>
-    </div>
-    ${
-      showMarkDone
-        ? `<button type="button" class="btn btn-ghost btn-mark-done" id="btn-mark-done">Mark as done</button>`
-        : ""
-    }`;
+    </div>`;
+}
 
-  const btn = document.getElementById("btn-mark-done");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      void markProblemDone();
-    });
-  }
+function updateFinishButtons() {
+  const busy = finishBusy;
+  btnGiveUp.disabled = busy;
+  btnSoftpass.disabled = busy;
+  btnMarkDone.disabled = busy || !lastFullRunOk;
+  btnMarkDone.title = lastFullRunOk
+    ? "Archive solution as passed and restore the stub"
+    : "Run the full test suite successfully first";
 }
 
 /**
- * Mark the selected problem as solved: copy impl → solution.ts, restore stub.
+ * @param {ProgressStatus | null} status
  */
-async function markProblemDone() {
-  if (!selectedId || !lastFullRunOk || markDoneBusy) return;
-
-  const ok = window.confirm(
-    "Copy your solution to solution.ts and restore the stub for the next person?",
-  );
-  if (!ok) return;
-
-  markDoneBusy = true;
-  const markBtn = document.getElementById("btn-mark-done");
-  if (markBtn) {
-    markBtn.disabled = true;
-    markBtn.textContent = "Saving…";
+function renderProblemStatusLabel(status) {
+  if (!status) {
+    problemStatusLabelEl.hidden = true;
+    problemStatusLabelEl.textContent = "";
+    problemStatusLabelEl.removeAttribute("data-status");
+    return;
   }
+  const meta = STATUS_META[status];
+  problemStatusLabelEl.hidden = false;
+  problemStatusLabelEl.dataset.status = status;
+  problemStatusLabelEl.textContent = meta.label;
+}
+
+/**
+ * @param {string} id
+ * @param {ProgressStatus | null} status
+ */
+function setProblemStatusInList(id, status) {
+  problemStatuses.set(id, status);
+  const btn = problemListEl.querySelector(`.problem-item[data-id="${CSS.escape(id)}"]`);
+  if (!btn) return;
+
+  btn.classList.remove("status-pass", "status-softpass", "status-fail");
+  const existing = btn.querySelector(".problem-status-badge");
+  if (existing) existing.remove();
+
+  if (!status) return;
+
+  const meta = STATUS_META[status];
+  btn.classList.add(`status-${status}`);
+  const badge = document.createElement("span");
+  badge.className = "problem-status-badge";
+  badge.title = meta.title;
+  badge.setAttribute("aria-label", meta.title);
+  badge.textContent = meta.mark;
+  btn.append(badge);
+}
+
+/**
+ * @param {ProgressStatus} status
+ */
+async function finishProblem(status) {
+  if (!selectedId || finishBusy) return;
+  if (status === "pass" && !lastFullRunOk) return;
+
+  const confirms = {
+    pass: "Mark as done? Archive under this problem's solutions/ folder and restore the stub.",
+    softpass: "Soft pass? Archive under this problem's solutions/ folder and restore the stub.",
+    fail: "Give up? Archive under this problem's solutions/ folder and restore the stub.",
+  };
+  if (!window.confirm(confirms[status])) return;
+
+  finishBusy = true;
+  updateFinishButtons();
 
   try {
-    const res = await fetch(
-      `/api/problems/${encodeURIComponent(selectedId)}/complete`,
-      { method: "POST" },
-    );
+    const res = await fetch(`/api/problems/${encodeURIComponent(selectedId)}/finish`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       throw new Error(body.error || res.statusText || "Request failed");
     }
     lastFullRunOk = false;
-    markProblemSolvedInList(selectedId);
+    currentStatus = status;
+    setProblemStatusInList(selectedId, status);
+    renderProblemStatusLabel(status);
     renderSummary("saved");
-    appendTerminal("\n[saved to solution.ts — stub restored]\n", "meta");
+    appendTerminal(`\n[archived as ${status} — stub restored]\n`, "meta");
   } catch (err) {
-    appendTerminal(`\n[mark as done failed] ${err}\n`, "stderr");
+    appendTerminal(`\n[finish failed] ${err}\n`, "stderr");
   } finally {
-    markDoneBusy = false;
+    finishBusy = false;
+    updateFinishButtons();
   }
-
-  if (lastFullRunOk) {
-    renderSummary("ok", parseSummary(outputBuffer));
-  }
-}
-
-/** @param {string} id */
-function markProblemSolvedInList(id) {
-  const btn = problemListEl.querySelector(`.problem-item[data-id="${CSS.escape(id)}"]`);
-  if (!btn || btn.classList.contains("solved")) return;
-  btn.classList.add("solved");
-  const doneEl = document.createElement("span");
-  doneEl.className = "problem-done";
-  doneEl.title = "Solved";
-  doneEl.setAttribute("aria-label", "Solved");
-  doneEl.textContent = "✓";
-  btn.append(doneEl);
 }
 
 function closeRun() {
@@ -407,6 +448,7 @@ function runTests(name = null) {
   clearTerminal();
   resetTestStatuses(name);
   lastFullRunOk = false;
+  updateFinishButtons();
   currentRunName = name;
   setRunning(true);
   runStatusEl.textContent = "running…";
@@ -440,6 +482,7 @@ function runTests(name = null) {
     const ok = code === 0 && !timedOut;
     const wasFullRun = currentRunName === null;
     lastFullRunOk = ok && wasFullRun;
+    updateFinishButtons();
     runStatusEl.textContent = timedOut ? "timeout" : `exit ${code}`;
     runStatusEl.className = `run-status ${ok ? "ok" : "fail"}`;
     appendTerminal(
@@ -458,6 +501,7 @@ function runTests(name = null) {
   eventSource.onerror = () => {
     if (running) {
       lastFullRunOk = false;
+      updateFinishButtons();
       appendTerminal("\n[connection lost]\n", "stderr");
       runStatusEl.textContent = "error";
       runStatusEl.className = "run-status fail";
@@ -477,6 +521,7 @@ async function stopRun() {
   }
   if (running) {
     lastFullRunOk = false;
+    updateFinishButtons();
     appendTerminal("\n[stopped]\n", "meta");
     runStatusEl.textContent = "stopped";
     runStatusEl.className = "run-status fail";
@@ -519,7 +564,8 @@ function renderTestList(tests) {
 async function selectProblem(id) {
   selectedId = id;
   lastFullRunOk = false;
-  markDoneBusy = false;
+  finishBusy = false;
+  currentStatus = problemStatuses.get(id) ?? null;
 
   for (const btn of problemListEl.querySelectorAll(".problem-item")) {
     btn.classList.toggle("active", btn.dataset.id === id);
@@ -534,11 +580,19 @@ async function selectProblem(id) {
   clearTerminal();
   runStatusEl.textContent = "";
   runStatusEl.className = "run-status";
+  renderProblemStatusLabel(currentStatus);
+  updateFinishButtons();
 
   const [problem, { tests }] = await Promise.all([
     fetchJson(`/api/problems/${encodeURIComponent(id)}`),
     fetchJson(`/api/problems/${encodeURIComponent(id)}/tests`),
   ]);
+
+  currentStatus = problem.status ?? null;
+  problemStatuses.set(id, currentStatus);
+  setProblemStatusInList(id, currentStatus);
+  renderProblemStatusLabel(currentStatus);
+  updateFinishButtons();
 
   markdownEl.innerHTML = marked.parse(problem.markdown);
   renderTestList(tests);
@@ -548,13 +602,17 @@ async function selectProblem(id) {
 async function init() {
   const problems = await fetchJson("/api/problems");
   problemListEl.replaceChildren();
+  problemStatuses.clear();
 
   for (const p of problems) {
+    /** @type {ProgressStatus | null} */
+    const status = p.status ?? null;
+    problemStatuses.set(p.id, status);
+
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "problem-item";
     btn.dataset.id = p.id;
-    if (p.solved) btn.classList.add("solved");
 
     const textEl = document.createElement("span");
     textEl.className = "problem-text";
@@ -570,13 +628,15 @@ async function init() {
     textEl.append(idEl, titleEl);
     btn.append(textEl);
 
-    if (p.solved) {
-      const doneEl = document.createElement("span");
-      doneEl.className = "problem-done";
-      doneEl.title = "Solved";
-      doneEl.setAttribute("aria-label", "Solved");
-      doneEl.textContent = "✓";
-      btn.append(doneEl);
+    if (status) {
+      const meta = STATUS_META[status];
+      btn.classList.add(`status-${status}`);
+      const badge = document.createElement("span");
+      badge.className = "problem-status-badge";
+      badge.title = meta.title;
+      badge.setAttribute("aria-label", meta.title);
+      badge.textContent = meta.mark;
+      btn.append(badge);
     }
 
     btn.addEventListener("click", () => {
@@ -597,8 +657,18 @@ async function init() {
   btnStop.addEventListener("click", () => {
     stopRun().catch(() => {});
   });
+  btnGiveUp.addEventListener("click", () => {
+    void finishProblem("fail");
+  });
+  btnSoftpass.addEventListener("click", () => {
+    void finishProblem("softpass");
+  });
+  btnMarkDone.addEventListener("click", () => {
+    void finishProblem("pass");
+  });
 
   initResultsPane();
+  updateFinishButtons();
 
   const hash = decodeURIComponent(location.hash.replace(/^#/, ""));
   if (hash && problems.some((p) => p.id === hash)) {
