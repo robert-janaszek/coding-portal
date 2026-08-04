@@ -43,6 +43,10 @@
     "merge-intervals": {
       "status": "pass",
       "updatedAt": "2026-08-04T13:35:36.987Z"
+    },
+    "number-of-islands": {
+      "status": "pass",
+      "updatedAt": "2026-08-04T14:13:29.232Z"
     }
   }
 }
