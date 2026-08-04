@@ -14,6 +14,8 @@
     "test:edit-distance": "npm run test:run -- edit-distance/minDistance.test.ts",
     "test:climbing-stairs": "npm run test:run -- climbing-stairs/climbStairs.test.ts",
     "test:histogram": "npm run test:run -- largest-rectangle/largestRectangleArea.test.ts",
+    "test:daily-temperatures": "npm run test:run -- daily-temperatures/dailyTemperatures.test.ts",
+    "test:maximal-rectangle": "npm run test:run -- maximal-rectangle/maximalRectangle.test.ts",
     "test:min-window": "npm run test:run -- min-window-substring/minWindow.test.ts",
     "test:max-path-sum": "npm run test:run -- max-path-sum/maxPathSum.test.ts",
     "test:lru": "npm run test:run -- lru-cache/LRUCache.test.ts",
