@@ -39,6 +39,10 @@
     "maximal-rectangle": {
       "status": "pass",
       "updatedAt": "2026-08-04T13:12:46.316Z"
+    },
+    "merge-intervals": {
+      "status": "pass",
+      "updatedAt": "2026-08-04T13:35:36.987Z"
     }
   }
 }
