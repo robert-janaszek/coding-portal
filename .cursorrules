@@ -57,6 +57,8 @@ Write commit messages in English, imperative mood, Conventional Commits, subject
 
 Format: `<type>(<scope>): <summary>`
 
+Focus the summary (and optional body) on **why** the change matters for the product or practice workflow — not on process filler. Never use empty justifications such as “for consistency”, “for streamlining”, “for clarity”, “for readability”, “cleanup”, or similar boilerplate; those are obvious and do not belong in the message.
+
 Allowed types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`.
 
 Scopes — pick from what changed:
