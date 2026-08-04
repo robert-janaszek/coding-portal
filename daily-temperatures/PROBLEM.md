@@ -34,7 +34,7 @@ Output: [1,1,0]
 |------|------|
 | `dailyTemperatures.ts` | Stub — implement here |
 | `dailyTemperatures.test.ts` | Tests |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash
