@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe } from "node:test";
 import { it } from "../test/it";
-import { maxPathSum, TreeNode } from "./maxPathSum.ts";
+import { maxPathSum, TreeNode } from "./maxPathSum";
 
 /** Build tree from level-order array with `null` gaps. */
 function tree(vals: (number | null)[]): TreeNode | null {
@@ -64,5 +64,23 @@ describe("maxPathSum", () => {
 
   it("linear positives", () => {
     assert.equal(maxPathSum(tree([1, 2, null, 3, null, 4])), 10);
+  });
+
+  it("discard both negative children — node alone wins", () => {
+    //     -100
+    //      /
+    //     5
+    //    / \
+    //  -1  -2
+    assert.equal(maxPathSum(tree([-100, 5, null, -1, -2])), 5);
+  });
+
+  it("discard one negative child — node plus better child wins", () => {
+    //     -100
+    //      /
+    //     5
+    //    / \
+    //   3  -10
+    assert.equal(maxPathSum(tree([-100, 5, null, 3, -10])), 8);
   });
 });
