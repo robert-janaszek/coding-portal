@@ -18,9 +18,11 @@ npm run portal
 
 Open [http://localhost:3456](http://localhost:3456).
 
-- Browse problems in the sidebar (`✓` pass, `~` soft pass, `✗` gave up — from `progress.json`)
-- Read the statement, run all tests or a single case
-- On the problem page: **Give up**, **Soft pass**, or **Mark as done** (done requires a green full suite). Each action archives the current impl under `<problem-id>/solutions/` and restores the stub
+![Problem view — sidebar, statement, progress](docs/portal.png)
+
+![Tests tab — run suite or a single case, live output](docs/tests.png)
+
+Finish an attempt with **Give up**, **Soft pass**, or **Mark as done** (done needs a green full suite). That archives the impl under `<problem-id>/solutions/` and restores the stub.
 
 ## Solve a problem
 
