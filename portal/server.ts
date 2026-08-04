@@ -27,6 +27,8 @@ type Problem = {
   id: string;
   title: string;
   testFile: string;
+  /** True when `solution.ts` exists in the problem folder. */
+  solved: boolean;
 };
 
 let running: ChildProcess | null = null;
@@ -62,6 +64,7 @@ function discoverProblems(): Problem[] {
       id: entry.name,
       title: titleMatch?.[1]?.trim() ?? entry.name,
       testFile: join(entry.name, testFile),
+      solved: existsSync(join(dir, "solution.ts")),
     });
   }
 

@@ -548,6 +548,10 @@ async function init() {
     btn.type = "button";
     btn.className = "problem-item";
     btn.dataset.id = p.id;
+    if (p.solved) btn.classList.add("solved");
+
+    const textEl = document.createElement("span");
+    textEl.className = "problem-text";
 
     const idEl = document.createElement("span");
     idEl.className = "id";
@@ -557,7 +561,18 @@ async function init() {
     titleEl.className = "title";
     titleEl.textContent = p.title;
 
-    btn.append(idEl, titleEl);
+    textEl.append(idEl, titleEl);
+    btn.append(textEl);
+
+    if (p.solved) {
+      const doneEl = document.createElement("span");
+      doneEl.className = "problem-done";
+      doneEl.title = "Solved";
+      doneEl.setAttribute("aria-label", "Solved");
+      doneEl.textContent = "✓";
+      btn.append(doneEl);
+    }
+
     btn.addEventListener("click", () => {
       selectProblem(p.id).catch((err) => {
         markdownEl.textContent = String(err);

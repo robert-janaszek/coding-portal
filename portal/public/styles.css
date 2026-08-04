@@ -86,6 +86,9 @@ body {
   cursor: pointer;
   font: inherit;
   width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
 }
 
 .problem-item:hover {
@@ -95,6 +98,11 @@ body {
 .problem-item.active {
   background: rgba(61, 154, 106, 0.18);
   color: #b6e6c9;
+}
+
+.problem-item .problem-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .problem-item .id {
@@ -107,6 +115,15 @@ body {
 .problem-item .title {
   display: block;
   font-size: 0.9rem;
+}
+
+.problem-item .problem-done {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .main {
