@@ -38,7 +38,9 @@ npm run test:run -- climbing-stairs/climbStairs.test.ts
 
 ## Progress & solutions
 
-- [`progress.json`](progress.json) — latest status per problem (`pass` | `softpass` | `fail`)
+Local only (gitignored) — a fresh clone starts with no statuses or archives:
+
+- `progress.json` — latest status per problem (`pass` | `softpass` | `fail`)
 - `<problem-id>/solutions/` — timestamped archives of each finished attempt
 
 ## Problem layout
@@ -50,9 +52,9 @@ npm run test:run -- climbing-stairs/climbStairs.test.ts
   <Name>.ts        # implement here
   .<Name>.ts       # stub template (restored when finishing an attempt)
   <Name>.test.ts   # tests
-  solutions/       # archived attempts
+  solutions/       # local archives (gitignored)
 
-progress.json      # latest status flags (edited by the portal)
+progress.json      # local status flags (gitignored; portal creates/updates)
 ```
 
 A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.ts` file.

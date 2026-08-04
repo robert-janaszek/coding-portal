@@ -12,14 +12,15 @@ Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lis
   <Name>.ts           # stub — implement here (tests import this)
   .<Name>.ts          # hidden stub template (restored when finishing an attempt)
   <Name>.test.ts      # node:test suite (import `it` from ../test/it)
-  solutions/          # archived attempts (spoilers; not used by tests)
-progress.json         # latest status per problem (pass | softpass | fail); portal updates this
+  solutions/          # local archived attempts (gitignored; spoilers; not used by tests)
+progress.json         # local status (gitignored; pass | softpass | fail); portal updates this
 portal/               # local UI + server to browse problems and run tests
 test/it.ts            # shared `it` wrapper with default timeout
 ```
 
 Portal discovers a problem when the folder contains `PROBLEM.md` and a `*.test.ts` file.
 Do not put exercise folders under `portal/`, `test/`, or `node_modules/`.
+`progress.json` and `**/solutions/` are gitignored — do not commit user practice state.
 
 ## Role when helping with exercises
 

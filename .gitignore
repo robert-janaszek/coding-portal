@@ -29,3 +29,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Local practice progress (per-user; start from zero on a fresh clone)
+progress.json
+**/solutions/
