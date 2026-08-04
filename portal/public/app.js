@@ -436,12 +436,18 @@ function runTests(name = null) {
   eventSource.addEventListener("exit", (ev) => {
     const data = JSON.parse(ev.data);
     const code = data.code ?? 1;
-    const ok = code === 0;
+    const timedOut = Boolean(data.timedOut);
+    const ok = code === 0 && !timedOut;
     const wasFullRun = currentRunName === null;
     lastFullRunOk = ok && wasFullRun;
-    runStatusEl.textContent = `exit ${code}`;
+    runStatusEl.textContent = timedOut ? "timeout" : `exit ${code}`;
     runStatusEl.className = `run-status ${ok ? "ok" : "fail"}`;
-    appendTerminal(`\n[process exited with code ${code}]\n`, "meta");
+    appendTerminal(
+      timedOut
+        ? "\n[timed out — process killed]\n"
+        : `\n[process exited with code ${code}]\n`,
+      timedOut ? "stderr" : "meta",
+    );
     applyTestResults(outputBuffer);
     const stats = parseSummary(outputBuffer);
     renderSummary(ok ? "ok" : "fail", stats);

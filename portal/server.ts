@@ -15,6 +15,9 @@ const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const PUBLIC = join(ROOT, "portal", "public");
 const PORT = Number(process.env.PORT) || 3456;
 
+/** Kill a test run after this long with no stdout/stderr (covers sync infinite loops). */
+const TEST_STALL_TIMEOUT_MS = 2_000;
+
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
@@ -111,8 +114,52 @@ function tsxBin(): string {
   return join(ROOT, "node_modules", ".bin", "tsx");
 }
 
+/** SIGKILL the whole process group — tsx/node:test spawn grandchildren that hold stdio open. */
+function forceKill(child: ChildProcess) {
+  const pid = child.pid;
+  if (!pid) return;
+  try {
+    process.kill(-pid, "SIGKILL");
+  } catch {
+    try {
+      child.kill("SIGKILL");
+    } catch {
+      /* already dead */
+    }
+  }
+  child.stdout?.destroy();
+  child.stderr?.destroy();
+}
+
+/**
+ * If the child produces no output for TEST_STALL_TIMEOUT_MS, call onStall.
+ * Resets on each stdout/stderr chunk so a suite of fast tests is fine.
+ * Returns a disposer that clears the timer.
+ */
+function watchStall(child: ChildProcess, onStall: () => void): () => void {
+  let timer = setTimeout(onStall, TEST_STALL_TIMEOUT_MS);
+  const bump = () => {
+    clearTimeout(timer);
+    timer = setTimeout(onStall, TEST_STALL_TIMEOUT_MS);
+  };
+  child.stdout?.on("data", bump);
+  child.stderr?.on("data", bump);
+  return () => clearTimeout(timer);
+}
+
+function spawnTests(args: string[]): ChildProcess {
+  return spawn(tsxBin(), args, {
+    cwd: ROOT,
+    env: { ...process.env, FORCE_COLOR: "0" },
+    stdio: ["ignore", "pipe", "pipe"],
+    // New process group so forceKill can SIGKILL tsx + node:test workers together.
+    detached: true,
+  });
+}
+
 function buildTestArgs(problem: Problem, testName: string | null): string[] {
-  const args = ["--test", "--test-reporter=spec"];
+  // isolation=none: one process — sync infinite loops are killable without orphan workers.
+  const args = ["--test", "--test-isolation=none", "--test-reporter=spec"];
   if (testName) {
     args.push(`--test-name-pattern=^${escapeRegex(testName)}$`);
   }
@@ -126,23 +173,43 @@ function runTestsOnce(
 ): Promise<{ code: number; stdout: string; stderr: string }> {
   return new Promise((resolvePromise, reject) => {
     const args = buildTestArgs(problem, testName);
-    const child = spawn(tsxBin(), args, {
-      cwd: ROOT,
-      env: { ...process.env, FORCE_COLOR: "0" },
-      stdio: ["ignore", "pipe", "pipe"],
-    });
+    const child = spawnTests(args);
 
     let stdout = "";
     let stderr = "";
+    let timedOut = false;
+    let settled = false;
+
+    const settle = (code: number) => {
+      if (settled) return;
+      settled = true;
+      clearStall();
+      resolvePromise({ code, stdout, stderr });
+    };
+
+    const clearStall = watchStall(child, () => {
+      timedOut = true;
+      stderr += `\n[timeout] No test output for ${TEST_STALL_TIMEOUT_MS / 1000}s — killed (possible infinite loop)\n`;
+      forceKill(child);
+      settle(1);
+    });
+
     child.stdout?.on("data", (chunk: Buffer) => {
       stdout += chunk.toString("utf8");
     });
     child.stderr?.on("data", (chunk: Buffer) => {
       stderr += chunk.toString("utf8");
     });
-    child.on("error", reject);
-    child.on("close", (code) => {
-      resolvePromise({ code: code ?? 1, stdout, stderr });
+    child.on("error", (err) => {
+      clearStall();
+      if (!settled) {
+        settled = true;
+        reject(err);
+      }
+    });
+    // Prefer `exit` over `close` — grandchildren can keep stdio open after the parent dies.
+    child.on("exit", (code) => {
+      settle(timedOut ? 1 : (code ?? 1));
     });
   });
 }
@@ -157,7 +224,7 @@ function runTestsSse(
   testName: string | null,
 ) {
   if (running) {
-    running.kill("SIGTERM");
+    forceKill(running);
     running = null;
   }
 
@@ -175,12 +242,35 @@ function runTestsSse(
     command: `tsx ${args.join(" ")}`,
   });
 
-  const child = spawn(tsxBin(), args, {
-    cwd: ROOT,
-    env: { ...process.env, FORCE_COLOR: "0" },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawnTests(args);
   running = child;
+
+  let timedOut = false;
+  let finished = false;
+
+  const finish = (code: number, signal: NodeJS.Signals | null) => {
+    if (finished) return;
+    finished = true;
+    clearStall();
+    writeSse(res, "exit", {
+      code,
+      signal: timedOut ? "SIGKILL" : signal,
+      timedOut,
+    });
+    if (running === child) running = null;
+    res.end();
+  };
+
+  const clearStall = watchStall(child, () => {
+    timedOut = true;
+    writeSse(res, "output", {
+      stream: "stderr",
+      text: `\n[timeout] No test output for ${TEST_STALL_TIMEOUT_MS / 1000}s — killed (possible infinite loop)\n`,
+    });
+    forceKill(child);
+    // Don't wait for exit/close — orphaned workers previously left the UI stuck on "running".
+    finish(1, "SIGKILL");
+  });
 
   const sendChunk = (stream: "stdout" | "stderr", chunk: Buffer) => {
     const text = chunk.toString("utf8");
@@ -191,26 +281,19 @@ function runTestsSse(
   child.stdout?.on("data", (chunk: Buffer) => sendChunk("stdout", chunk));
   child.stderr?.on("data", (chunk: Buffer) => sendChunk("stderr", chunk));
 
-  const cleanup = () => {
-    if (running === child) running = null;
-  };
-
   child.on("error", (err) => {
     writeSse(res, "output", { stream: "stderr", text: String(err) + "\n" });
-    writeSse(res, "exit", { code: 1 });
-    cleanup();
-    res.end();
+    finish(1, null);
   });
 
-  child.on("close", (code, signal) => {
-    writeSse(res, "exit", { code: code ?? 1, signal });
-    cleanup();
-    res.end();
+  child.on("exit", (code, signal) => {
+    finish(timedOut ? 1 : (code ?? 1), signal);
   });
 
   reqClose(res, () => {
+    clearStall();
     if (running === child) {
-      child.kill("SIGTERM");
+      forceKill(child);
       running = null;
     }
   });
@@ -227,7 +310,7 @@ function findStubTemplate(implPath: string): string {
 
 async function completeProblem(problem: Problem): Promise<void> {
   if (running) {
-    running.kill("SIGTERM");
+    forceKill(running);
     running = null;
   }
 
@@ -355,7 +438,7 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/api/stop") {
       await readBody(req);
       if (running) {
-        running.kill("SIGTERM");
+        forceKill(running);
         running = null;
       }
       json(res, 200, { ok: true });
