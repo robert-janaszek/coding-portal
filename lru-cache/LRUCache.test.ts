@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe } from "node:test";
 import { it } from "../test/it";
-import { LRUCache } from "./LRUCache.ts";
+import { LRUCache } from "./LRUCache";
 
 describe("LRUCache", () => {
   it("example", () => {
@@ -66,6 +66,57 @@ describe("LRUCache", () => {
     cache.put(3, 3);
     assert.equal(cache.get(1), -1);
     assert.equal(cache.get(2), 2);
+    assert.equal(cache.get(3), 3);
+  });
+
+  it("update at capacity does not evict other keys", () => {
+    const cache = new LRUCache(2);
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cache.put(2, 20);
+    assert.equal(cache.get(1), 1);
+    assert.equal(cache.get(2), 20);
+  });
+
+  it("overwrite below capacity does not inflate size", () => {
+    const cache = new LRUCache(2);
+    cache.put(1, 1);
+    cache.put(1, 100);
+    cache.put(2, 2);
+    assert.equal(cache.get(1), 100);
+    assert.equal(cache.get(2), 2);
+  });
+
+  it("overwrite with spare capacity keeps other keys", () => {
+    const cache = new LRUCache(3);
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cache.put(1, 10);
+    cache.put(3, 3);
+    assert.equal(cache.get(1), 10);
+    assert.equal(cache.get(2), 2);
+    assert.equal(cache.get(3), 3);
+  });
+
+  it("update middle key at capacity does not evict others", () => {
+    const cache = new LRUCache(3);
+    cache.put(1, 1);
+    cache.put(2, 2);
+    cache.put(3, 3);
+    cache.put(2, 20);
+    assert.equal(cache.get(1), 1);
+    assert.equal(cache.get(2), 20);
+    assert.equal(cache.get(3), 3);
+  });
+
+  it("stored -1 is a real value and refreshes recency", () => {
+    const cache = new LRUCache(2);
+    cache.put(1, -1);
+    cache.put(2, 2);
+    assert.equal(cache.get(1), -1);
+    cache.put(3, 3);
+    assert.equal(cache.get(2), -1);
+    assert.equal(cache.get(1), -1);
     assert.equal(cache.get(3), 3);
   });
 });
