@@ -38,6 +38,14 @@ describe("numIslands", () => {
 
   it("single row", () => {
     const grid = [["1", "1", "1", "0", "1"]];
+    assert.equal(numIslands(grid), 2);
+  });
+
+  it("T-shape land is one island", () => {
+    const grid = [
+      ["0", "1", "0"],
+      ["1", "1", "1"],
+    ];
     assert.equal(numIslands(grid), 1);
   });
 });
