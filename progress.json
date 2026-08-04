@@ -36,10 +36,6 @@
       "status": "pass",
       "updatedAt": "2026-08-04T13:12:46.316Z"
     },
-    "maximal-rectangle": {
-      "status": "pass",
-      "updatedAt": "2026-08-04T13:12:46.316Z"
-    },
     "merge-intervals": {
       "status": "pass",
       "updatedAt": "2026-08-04T13:35:36.987Z"
@@ -47,6 +43,10 @@
     "number-of-islands": {
       "status": "pass",
       "updatedAt": "2026-08-04T14:13:29.232Z"
+    },
+    "largest-rectangle": {
+      "status": "softpass",
+      "updatedAt": "2026-08-04T14:14:22.376Z"
     }
   }
 }
