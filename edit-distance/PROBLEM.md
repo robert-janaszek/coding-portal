@@ -35,7 +35,7 @@ Output: 5
 | File | Role |
 |------|------|
 | `minDistance.ts` | Stub — implement here |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `minDistance.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 

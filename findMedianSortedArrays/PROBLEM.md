@@ -41,7 +41,7 @@ Explanation: merged = [1,2,3,4], median = (2 + 3) / 2 = 2.5
 | File | Role |
 |------|------|
 | `findMedianSortedArrays.ts` | Stub — implement here |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `findMedianSortedArrays.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 

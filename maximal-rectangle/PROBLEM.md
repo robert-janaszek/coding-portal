@@ -40,7 +40,7 @@ Output: 1
 |------|------|
 | `maximalRectangle.ts` | Stub — implement here |
 | `maximalRectangle.test.ts` | Tests |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

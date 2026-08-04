@@ -37,7 +37,7 @@ Explanation:
 |------|------|
 | `climbStairs.ts` | Stub — implement here |
 | `climbStairs.test.ts` | Tests |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

@@ -38,7 +38,7 @@ Output: 0
 |------|------|
 | `binarySearch.ts` | Stub — implement here |
 | `binarySearch.test.ts` | Tests |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

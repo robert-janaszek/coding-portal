@@ -46,7 +46,7 @@ Output: 4
 | File | Role |
 |------|------|
 | `findKthSortedArrays.ts` | Stub — implement here |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `findKthSortedArrays.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 

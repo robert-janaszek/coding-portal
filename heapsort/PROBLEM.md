@@ -44,6 +44,7 @@ Output: []
 | `heapSort.ts` | Stub |
 | `heapSort.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
+| `solutions/` | Archived attempts (spoilers) |
 
 ```bash
 npm run test:heapsort

@@ -42,6 +42,7 @@ lRUCache.get(4);    // return 4
 | `LRUCache.ts` | Stub class |
 | `LRUCache.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
+| `solutions/` | Archived attempts (spoilers) |
 
 ```bash
 npm run test:lru

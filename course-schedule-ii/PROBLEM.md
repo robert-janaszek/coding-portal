@@ -37,7 +37,7 @@ Output: [0]
 | File | Role |
 |------|------|
 | `findOrder.ts` | Stub — implement here |
-| `solution.ts` | Reference solution (spoilers) |
+| `solutions/` | Archived attempts (spoilers) |
 | `findOrder.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 
