@@ -17,6 +17,11 @@
     "test:min-window": "npm run test:run -- min-window-substring/minWindow.test.ts",
     "test:max-path-sum": "npm run test:run -- max-path-sum/maxPathSum.test.ts",
     "test:lru": "npm run test:run -- lru-cache/LRUCache.test.ts",
+    "test:number-islands": "npm run test:run -- number-of-islands/numIslands.test.ts",
+    "test:combinations": "npm run test:run -- combinations/combine.test.ts",
+    "test:lowest-common-ancestor": "npm run test:run -- lowest-common-ancestor/lowestCommonAncestor.test.ts",
+    "test:linked-list-cycle": "npm run test:run -- linked-list-cycle/linkedListCycle.test.ts",
+    "test:merge-intervals": "npm run test:run -- merge-intervals/mergeIntervals.test.ts",
     "test:day1": "npm run test:run -- course-schedule-ii/findOrder.test.ts edit-distance/minDistance.test.ts largest-rectangle/largestRectangleArea.test.ts",
     "test:day2": "npm run test:run -- min-window-substring/minWindow.test.ts max-path-sum/maxPathSum.test.ts lru-cache/LRUCache.test.ts"
   },
