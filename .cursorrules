@@ -14,7 +14,7 @@ Each problem lives in its own folder; a small HTTP portal (`npm run portal`) lis
   <Name>.test.ts      # node:test suite (import `it` from ../test/it)
   solutions/          # local archived attempts (gitignored; spoilers; not used by tests)
 progress.json         # local status (gitignored; pass | softpass | fail); portal updates this
-portal/               # local UI + server to browse problems and run tests
+portal/               # React+Vite UI (src/) + Node API (server.ts); practice timer in localStorage
 test/it.ts            # shared `it` wrapper with default timeout
 ```
 
@@ -50,7 +50,7 @@ Do not change unrelated problems or the portal unless the task requires it.
 
 - Runner: `tsx --test` (`npm run test:run -- <path>` or a named `test:*` script).
 - Always import `it` from `../test/it` (not raw `node:test`) so the default timeout applies.
-- Portal: `npm run portal` (default port 3456).
+- Portal: `npm run portal` (API on 3456 + Vite UI on 5173). `portal:build` then API can also serve `portal/dist`.
 
 ## Git commit messages
 

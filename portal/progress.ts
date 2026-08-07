@@ -91,6 +91,7 @@ export function archiveSolutionPath(
 
 /**
  * Copy impl into `<problem-id>/solutions/…` and ensure the directory exists.
+ * Optionally prepends a meta comment with total solving time (not part of the status filename).
  * Returns the relative archive path from repo root.
  */
 export function archiveImpl(
@@ -98,11 +99,35 @@ export function archiveImpl(
   problemId: string,
   implPath: string,
   status: ProgressStatus,
+  meta?: { elapsedMs: number },
 ): string {
   const dest = archiveSolutionPath(root, problemId, status);
   mkdirSync(problemSolutionsDir(root, problemId), { recursive: true });
-  copyFileSync(implPath, dest);
+  const source = readFileSync(implPath, "utf8");
+  const body =
+    meta && Number.isFinite(meta.elapsedMs) && meta.elapsedMs >= 0
+      ? `${formatArchiveMeta(status, meta.elapsedMs)}${source}`
+      : source;
+  writeFileSync(dest, body, "utf8");
   return dest.slice(root.length + 1);
+}
+
+function formatElapsedComment(ms: number): string {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(totalSec / 60);
+  const seconds = totalSec % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatArchiveMeta(status: ProgressStatus, elapsedMs: number): string {
+  return (
+    `/**\n` +
+    ` * @coding-portal-meta\n` +
+    ` * status: ${status}\n` +
+    ` * elapsedMs: ${Math.round(elapsedMs)}\n` +
+    ` * elapsed: ${formatElapsedComment(elapsedMs)}\n` +
+    ` */\n\n`
+  );
 }
 
 /**

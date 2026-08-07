@@ -20,8 +20,10 @@ import {
 } from "./progress";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const PUBLIC = join(ROOT, "portal", "public");
+const DIST = join(ROOT, "portal", "dist");
 const PORT = Number(process.env.PORT) || 3456;
+/** When set (e.g. `portal:api` next to Vite), do not serve portal/dist — avoid stale UI on :3456. */
+const API_ONLY = process.env.PORTAL_API_ONLY === "1";
 
 /** Kill a test run after this long with no stdout/stderr (covers sync infinite loops). */
 const TEST_STALL_TIMEOUT_MS = 2_000;
@@ -37,10 +39,24 @@ const MIME: Record<string, string> = {
 type Problem = {
   id: string;
   title: string;
+  difficulty: string | null;
   testFile: string;
   /** Latest attempt status from progress.json, or null if unset. */
   status: ProgressStatus | null;
 };
+
+/** Parse `**Difficulty:** Easy …` → primary label (Easy / Medium / Hard) or trimmed line. */
+function parseDifficulty(md: string): string | null {
+  const m = md.match(/\*\*Difficulty:\*\*\s*(.+)/i);
+  if (!m?.[1]) return null;
+  const line = m[1].trim();
+  const primary = line.match(/^(Easy|Medium|Hard)\b/i);
+  if (primary?.[1]) {
+    return primary[1]![0]!.toUpperCase() + primary[1]!.slice(1).toLowerCase();
+  }
+  const short = line.split(/[(\n]/)[0]?.trim();
+  return short || null;
+}
 
 let running: ChildProcess | null = null;
 
@@ -74,6 +90,7 @@ function discoverProblems(): Problem[] {
     problems.push({
       id: entry.name,
       title: titleMatch?.[1]?.trim() ?? entry.name,
+      difficulty: parseDifficulty(md),
       testFile: join(entry.name, testFile),
       status: getStatus(ROOT, entry.name),
     });
@@ -319,7 +336,8 @@ function findStubTemplate(implPath: string): string {
 async function finishProblem(
   problem: Problem,
   status: ProgressStatus,
-): Promise<{ status: ProgressStatus; archive: string }> {
+  elapsedMs?: number,
+): Promise<{ status: ProgressStatus; archive: string; elapsedMs?: number }> {
   if (running) {
     forceKill(running);
     running = null;
@@ -337,10 +355,14 @@ async function finishProblem(
 
   const implPath = findImplFile(problem);
   const stubTemplate = findStubTemplate(implPath);
-  const archive = archiveImpl(ROOT, problem.id, implPath, status);
+  const meta =
+    typeof elapsedMs === "number" && Number.isFinite(elapsedMs) && elapsedMs >= 0
+      ? { elapsedMs }
+      : undefined;
+  const archive = archiveImpl(ROOT, problem.id, implPath, status, meta);
   copyFileSync(stubTemplate, implPath);
   setStatus(ROOT, problem.id, status);
-  return { status, archive };
+  return { status, archive, ...(meta ? { elapsedMs: meta.elapsedMs } : {}) };
 }
 
 function reqClose(res: ServerResponse, onClose: () => void) {
@@ -348,21 +370,37 @@ function reqClose(res: ServerResponse, onClose: () => void) {
 }
 
 function serveStatic(reqPath: string, res: ServerResponse) {
-  let filePath: string;
-  if (reqPath === "/vendor/marked.esm.js") {
-    filePath = join(ROOT, "node_modules", "marked", "lib", "marked.esm.js");
-  } else {
-    const relative = reqPath === "/" ? "/index.html" : reqPath;
-    filePath = resolve(join(PUBLIC, relative));
-    if (!filePath.startsWith(PUBLIC)) {
+  if (API_ONLY || !existsSync(DIST)) {
+    json(res, 503, {
+      error: API_ONLY
+        ? "API-only mode. Open the Vite UI (default http://localhost:5173)."
+        : "UI not built. Run `npm run portal:ui` (dev) or `npm run portal:build`.",
+    });
+    return;
+  }
+
+  const relative = reqPath === "/" ? "/index.html" : reqPath;
+  let filePath = resolve(join(DIST, relative));
+  if (!filePath.startsWith(DIST)) {
+    json(res, 404, { error: "Not found" });
+    return;
+  }
+
+  // SPA fallback: unknown paths without a file extension → index.html
+  if (!existsSync(filePath) || !statSync(filePath).isFile()) {
+    if (extname(relative) === "") {
+      filePath = join(DIST, "index.html");
+    } else {
       json(res, 404, { error: "Not found" });
       return;
     }
   }
+
   if (!existsSync(filePath) || !statSync(filePath).isFile()) {
     json(res, 404, { error: "Not found" });
     return;
   }
+
   const type = MIME[extname(filePath)] ?? "application/octet-stream";
   res.writeHead(200, { "Content-Type": type });
   createReadStream(filePath).pipe(res);
@@ -415,9 +453,9 @@ const server = createServer(async (req, res) => {
     const finishMatch = pathname.match(/^\/api\/problems\/([^/]+)\/finish$/);
     if (req.method === "POST" && finishMatch) {
       const raw = await readBody(req);
-      let body: { status?: unknown } = {};
+      let body: { status?: unknown; elapsedMs?: unknown } = {};
       try {
-        body = raw ? (JSON.parse(raw) as { status?: unknown }) : {};
+        body = raw ? (JSON.parse(raw) as { status?: unknown; elapsedMs?: unknown }) : {};
       } catch {
         json(res, 400, { error: "Invalid JSON body" });
         return;
@@ -426,6 +464,10 @@ const server = createServer(async (req, res) => {
         json(res, 400, { error: "Body must include status: pass | softpass | fail" });
         return;
       }
+      const elapsedMs =
+        typeof body.elapsedMs === "number" && Number.isFinite(body.elapsedMs)
+          ? body.elapsedMs
+          : undefined;
       const id = decodeURIComponent(finishMatch[1]!);
       const problem = findProblem(id);
       if (!problem) {
@@ -433,7 +475,7 @@ const server = createServer(async (req, res) => {
         return;
       }
       try {
-        const result = await finishProblem(problem, body.status);
+        const result = await finishProblem(problem, body.status, elapsedMs);
         json(res, 200, { ok: true, ...result });
       } catch (err) {
         const status = (err as { status?: number }).status ?? 500;
@@ -489,5 +531,12 @@ const server = createServer(async (req, res) => {
 migrateLegacySolutions(ROOT);
 
 server.listen(PORT, () => {
-  console.log(`Coding portal: http://localhost:${PORT}`);
+  console.log(`Coding portal API: http://localhost:${PORT}`);
+  if (API_ONLY) {
+    console.log(`API-only (no static UI). Open Vite: http://localhost:5173`);
+  } else if (existsSync(DIST)) {
+    console.log(`Serving UI from portal/dist`);
+  } else {
+    console.log(`UI: run \`npm run portal:ui\` (Vite) or \`npm run portal:build\``);
+  }
 });

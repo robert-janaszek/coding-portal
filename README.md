@@ -16,13 +16,18 @@ Requires Node.js (with `tsx` via the project deps).
 npm run portal
 ```
 
-Open [http://localhost:3456](http://localhost:3456).
+That starts two processes:
+
+- **UI (Vite):** [http://localhost:5173](http://localhost:5173) — open this in the browser
+- **API:** [http://localhost:3456](http://localhost:3456) — test runner / progress; Vite proxies `/api` here
+
+In API-only mode the backend does not serve the UI (so `:3456` is not the app). After `npm run portal:build`, you can run the API without `PORTAL_API_ONLY` to serve the built UI from `portal/dist` on `:3456`.
 
 ![Problem view — sidebar, statement, progress](docs/portal.png)
 
 ![Tests tab — run suite or a single case, live output](docs/tests.png)
 
-Finish an attempt with **Give up**, **Soft pass**, or **Mark as done** (done needs a green full suite). That archives the impl under `<problem-id>/solutions/` and restores the stub.
+Each problem starts behind a **Start timer** gate (title + difficulty). While solving, a small clock icon shows that the timer is running; open it for elapsed time, pause/resume, or reset. Finish an attempt with **Give up**, **Soft pass**, or **Mark as done** (done needs a green full suite). That archives the impl under `<problem-id>/solutions/` (with elapsed time in a `@coding-portal-meta` comment), stops the timer, and restores the stub.
 
 ## Solve a problem
 
