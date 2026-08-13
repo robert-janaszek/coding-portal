@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { familyRank } from "../catalog";
 import {
   elapsedMs,
   formatElapsed,
@@ -33,6 +34,8 @@ type ProblemListItem = {
   id: string;
   title: string;
   difficulty: string | null;
+  family: string | null;
+  topics: string[];
   status: ProgressStatus | null;
 };
 
@@ -171,8 +174,7 @@ export default function App() {
         }
         setActiveTimers(timers);
         const hash = decodeURIComponent(location.hash.replace(/^#/, ""));
-        const initial =
-          hash && list.some((p) => p.id === hash) ? hash : list[0]?.id ?? null;
+        const initial = hash && list.some((p) => p.id === hash) ? hash : null;
         if (initial) await selectProblem(initial, list);
       } catch (err) {
         if (!cancelled) setLoadError(String(err));
@@ -226,6 +228,15 @@ export default function App() {
     setTerminalChunks([]);
   }
 
+  function showCatalog() {
+    closeRun();
+    setSelectedId(null);
+    setProblem(null);
+    setTimerModalOpen(false);
+    setTimer(idleFor(null));
+    history.replaceState(null, "", location.pathname);
+  }
+
   async function selectProblem(id: string, list?: ProblemListItem[]) {
     const fromList = (list ?? problems).find((p) => p.id === id);
     setSelectedId(id);
@@ -252,7 +263,17 @@ export default function App() {
       setProblem(detail);
       setCurrentStatus(detail.status ?? null);
       setProblems((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, status: detail.status, difficulty: detail.difficulty } : p)),
+        prev.map((p) =>
+          p.id === id
+            ? {
+                ...p,
+                status: detail.status,
+                difficulty: detail.difficulty,
+                family: detail.family,
+                topics: detail.topics,
+              }
+            : p,
+        ),
       );
       setMarkdownHtml(marked.parse(detail.markdown) as string);
       setTests(testsRes.tests);
@@ -507,8 +528,10 @@ export default function App() {
     <>
       <aside className="sidebar">
         <header className="sidebar-header">
-          <h1>Coding portal</h1>
-          <p>Run &amp; review tests</p>
+          <button type="button" className="sidebar-home" onClick={showCatalog}>
+            <h1>Coding portal</h1>
+            <p>Run &amp; review tests</p>
+          </button>
         </header>
         <nav className="problem-list" aria-label="Problems">
           {problems.map((p) => {
@@ -557,7 +580,7 @@ export default function App() {
 
       <main className="main">
         {!selectedId ? (
-          <div className="empty-state">Select a problem</div>
+          <CatalogTable problems={problems} onSelect={(id) => void selectProblem(id)} />
         ) : !solving ? (
           <div className="gate">
             <h2 className="gate-title">{selected?.title ?? selectedId}</h2>
@@ -826,6 +849,78 @@ export default function App() {
 
 function idleFor(_id: string | null): TimerState {
   return { status: "idle", accumulatedMs: 0, startedAt: null };
+}
+
+function CatalogTable({
+  problems,
+  onSelect,
+}: {
+  problems: ProblemListItem[];
+  onSelect: (id: string) => void;
+}) {
+  const grouped = [...problems].sort((a, b) => {
+    const byFamily = familyRank(a.family) - familyRank(b.family);
+    if (byFamily !== 0) return byFamily;
+    const fa = (a.family ?? "").localeCompare(b.family ?? "");
+    if (fa !== 0) return fa;
+    return a.title.localeCompare(b.title);
+  });
+  const familyCount = new Set(problems.map((p) => p.family).filter(Boolean)).size;
+
+  return (
+    <section className="catalog">
+      <header className="catalog-header">
+        <h2>Problems</h2>
+        <p>
+          {problems.length} exercises · {familyCount} families
+        </p>
+      </header>
+      <div className="catalog-table-wrap">
+        <table className="catalog-table">
+          <thead>
+            <tr>
+              <th className="col-problem">Problem</th>
+              <th className="col-family">Family</th>
+              <th className="col-difficulty">Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {grouped.map((p) => (
+              <tr key={p.id}>
+                <td className="col-problem">
+                  <a
+                    href={`#${encodeURIComponent(p.id)}`}
+                    className="catalog-link"
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      onSelect(p.id);
+                    }}
+                  >
+                    <span className="catalog-title">{p.title}</span>
+                    <span className="catalog-id">{p.id}</span>
+                  </a>
+                </td>
+                <td className="col-family">
+                  {p.topics.length > 0 ? p.topics.join(", ") : (p.family ?? "—")}
+                </td>
+                <td className="col-difficulty">
+                  {p.difficulty ? (
+                    <span
+                      className={`difficulty-badge difficulty-${p.difficulty.toLowerCase()}`}
+                    >
+                      {p.difficulty}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
 }
 
 function TimerGlyph({ running }: { running: boolean }) {

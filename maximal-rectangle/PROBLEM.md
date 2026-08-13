@@ -1,7 +1,7 @@
 # Maximal Rectangle
 
 **Difficulty:** Hard  
-**Topics:** Arrays, Dynamic programming, Monotonic stack  
+**Topics:** Arrays  
 **Target:** `O(rows * cols)` time
 
 ## Problem

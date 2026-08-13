@@ -1,7 +1,7 @@
 # Binary Search (Bisection)
 
 **Difficulty:** Easy → Medium  
-**Topics:** Arrays, search  
+**Topics:** Arrays, Search  
 **Target:** `O(log n)` time, `O(1)` space
 
 ## Problem

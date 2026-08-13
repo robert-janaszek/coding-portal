@@ -1,7 +1,7 @@
 # Linked List Cycle
 
 **Difficulty:** Medium
-**Topics:** Linked List, Two Pointers
+**Topics:** Linked List
 **Target:** `O(n)` time, `O(1)` extra space
 
 ## Problem

@@ -31,6 +31,13 @@
     "test:lowest-common-ancestor": "npm run test:run -- lowest-common-ancestor/lowestCommonAncestor.test.ts",
     "test:linked-list-cycle": "npm run test:run -- linked-list-cycle/linkedListCycle.test.ts",
     "test:merge-intervals": "npm run test:run -- merge-intervals/mergeIntervals.test.ts",
+    "test:clone-graph": "npm run test:run -- clone-graph/cloneGraph.test.ts",
+    "test:number-provinces": "npm run test:run -- number-of-provinces/findProvinces.test.ts",
+    "test:shortest-path": "npm run test:run -- shortest-path/shortestPath.test.ts",
+    "test:kth-largest": "npm run test:run -- kth-largest/findKthLargest.test.ts",
+    "test:knapsack": "npm run test:run -- knapsack/knapsack.test.ts",
+    "test:tsp": "npm run test:run -- traveling-salesman/tsp.test.ts",
+    "test:knight-probability": "npm run test:run -- knight-probability/knightProbability.test.ts",
     "test:day1": "npm run test:run -- course-schedule-ii/findOrder.test.ts edit-distance/minDistance.test.ts largest-rectangle/largestRectangleArea.test.ts",
     "test:day2": "npm run test:run -- min-window-substring/minWindow.test.ts max-path-sum/maxPathSum.test.ts lru-cache/LRUCache.test.ts"
   },

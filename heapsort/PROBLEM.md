@@ -1,6 +1,7 @@
 # Heap Sort
 
 **Difficulty:** Medium  
+**Topics:** Sorting, Heap  
 **Target complexity:** `O(n log n)` time, `O(1)` extra space (in-place)
 
 ## Problem

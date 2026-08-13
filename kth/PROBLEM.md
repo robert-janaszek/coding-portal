@@ -1,6 +1,7 @@
 # K-th Element in Two Sorted Arrays
 
 **Difficulty:** Hard  
+**Topics:** Arrays  
 **Target complexity:** `O(log(min(m, n)))` time, `O(1)` extra space
 
 ## Problem

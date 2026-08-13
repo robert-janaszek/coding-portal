@@ -1,7 +1,7 @@
 # Daily Temperatures
 
 **Difficulty:** Medium  
-**Topics:** Arrays, Monotonic stack  
+**Topics:** Arrays  
 **Target:** `O(n)` time, `O(n)` space
 
 ## Problem

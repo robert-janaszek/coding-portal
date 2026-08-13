@@ -1,6 +1,7 @@
 # Median of Two Sorted Arrays
 
 **Difficulty:** Hard  
+**Topics:** Arrays  
 **Target complexity:** `O(log(m + n))` time, `O(1)` extra space
 
 ## Problem

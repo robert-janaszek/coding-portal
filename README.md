@@ -81,6 +81,13 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 | `npm run test:min-window` | Minimum window substring |
 | `npm run test:max-path-sum` | Binary tree max path sum |
 | `npm run test:lru` | LRU cache |
+| `npm run test:clone-graph` | Clone graph |
+| `npm run test:number-provinces` | Number of provinces |
+| `npm run test:shortest-path` | Shortest path (unweighted) |
+| `npm run test:kth-largest` | Kth largest element |
+| `npm run test:knapsack` | 0/1 knapsack |
+| `npm run test:tsp` | Traveling salesman |
+| `npm run test:knight-probability` | Knight probability |
 | `npm run test:day1` / `test:day2` | Grouped suites |
 
 ## Add a new exercise

@@ -1,7 +1,7 @@
 # Number of Islands
 
 **Difficulty:** Medium
-**Topics:** BFS, DFS, Graph (Grid)
+**Topics:** Graph, Grid
 **Target:** `O(m*n)` time, `O(m*n)` space
 
 ## Problem

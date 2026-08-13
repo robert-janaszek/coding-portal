@@ -1,7 +1,7 @@
 # Merge Intervals
 
 **Difficulty:** Medium
-**Topics:** Arrays, Intervals, Sorting
+**Topics:** Arrays, Intervals
 **Target:** `O(n log n)` time, `O(n)` space (or `O(1)` extra excluding output)
 
 ## Problem

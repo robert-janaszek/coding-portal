@@ -1,7 +1,7 @@
 # Edit Distance
 
 **Difficulty:** Hard  
-**Topics:** Strings, DP  
+**Topics:** Strings  
 **Target:** `O(m * n)` time
 
 ## Problem

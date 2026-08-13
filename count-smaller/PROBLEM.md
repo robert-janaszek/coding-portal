@@ -1,7 +1,7 @@
 # Count Smaller After Self
 
 **Difficulty:** Hard  
-**Topics:** Arrays, Ordered set, Divide and conquer  
+**Topics:** Arrays  
 **Target:** `O(n log n)` time
 
 ## Problem

@@ -1,7 +1,7 @@
 # Climbing Stairs
 
-**Difficulty:** Easy (classic 1D DP intro)  
-**Topics:** Dynamic programming (1D)  
+**Difficulty:** Easy  
+**Topics:** Counting  
 **Target:** `O(n)` time, `O(1)` or `O(n)` space
 
 ## Problem

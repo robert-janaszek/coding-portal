@@ -40,6 +40,8 @@ type Problem = {
   id: string;
   title: string;
   difficulty: string | null;
+  family: string | null;
+  topics: string[];
   testFile: string;
   /** Latest attempt status from progress.json, or null if unset. */
   status: ProgressStatus | null;
@@ -56,6 +58,16 @@ function parseDifficulty(md: string): string | null {
   }
   const short = line.split(/[(\n]/)[0]?.trim();
   return short || null;
+}
+
+/** Parse `**Topics:** Graph, DFS` → trimmed topic tags. */
+function parseTopics(md: string): string[] {
+  const m = md.match(/\*\*Topics:\*\*\s*(.+)/i);
+  if (!m?.[1]) return [];
+  return m[1]
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
 }
 
 let running: ChildProcess | null = null;
@@ -87,10 +99,13 @@ function discoverProblems(): Problem[] {
 
     const md = readFileSync(problemMd, "utf8");
     const titleMatch = md.match(/^#\s+(.+)$/m);
+    const topics = parseTopics(md);
     problems.push({
       id: entry.name,
       title: titleMatch?.[1]?.trim() ?? entry.name,
       difficulty: parseDifficulty(md),
+      family: topics[0] ?? null,
+      topics,
       testFile: join(entry.name, testFile),
       status: getStatus(ROOT, entry.name),
     });

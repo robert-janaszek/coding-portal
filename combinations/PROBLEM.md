@@ -1,7 +1,7 @@
 # Combinations (n choose k)
 
 **Difficulty:** Medium
-**Topics:** Backtracking
+**Topics:** Combinatorics
 **Target:** `O(C(n,k) * k)` time, `O(k)` extra space (excluding output)
 
 ## Problem

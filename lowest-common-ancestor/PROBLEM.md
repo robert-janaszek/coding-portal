@@ -1,7 +1,7 @@
 # Lowest Common Ancestor (LCA) in Binary Tree
 
 **Difficulty:** Medium
-**Topics:** Binary tree, DFS
+**Topics:** Binary tree
 **Target:** `O(n)` time, `O(h)` space (recursion stack)
 
 ## Problem
