@@ -65,28 +65,97 @@ describe("cloneGraph", () => {
     assert.equal(cloneGraph(null), null);
   });
 
-  it("single node, no neighbors", () => {
-    const g = buildGraph([[]]);
-    assertDeepCopy(g, cloneGraph(g));
+  it("single node", () => {
+    const node = new GraphNode(1);
+    const cloned = cloneGraph(node);
+    assert.ok(cloned);
+    assert.notEqual(cloned, node);
+    assert.equal(cloned.val, 1);
+    assert.deepEqual(cloned.neighbors, []);
+  });
+
+  it("one directed edge 1 -> 2", () => {
+    const a = new GraphNode(1);
+    const b = new GraphNode(2);
+    a.neighbors = [b];
+
+    const cloned = cloneGraph(a)!;
+    assert.equal(cloned.val, 1);
+    assert.equal(cloned.neighbors.length, 1);
+    assert.equal(cloned.neighbors[0]!.val, 2);
+    assert.deepEqual(cloned.neighbors[0]!.neighbors, []);
+    assert.notEqual(cloned, a);
+    assert.notEqual(cloned.neighbors[0], b);
+  });
+
+  it("chain 1 -> 2 -> 3", () => {
+    const a = new GraphNode(1);
+    const b = new GraphNode(2);
+    const c = new GraphNode(3);
+    a.neighbors = [b];
+    b.neighbors = [c];
+
+    const cloned = cloneGraph(a)!;
+    assert.equal(cloned.val, 1);
+    const n2 = cloned.neighbors[0]!;
+    assert.equal(n2.val, 2);
+    assert.equal(n2.neighbors.length, 1);
+    assert.equal(n2.neighbors[0]!.val, 3);
+    assert.deepEqual(n2.neighbors[0]!.neighbors, []);
+    assert.notEqual(cloned, a);
+    assert.notEqual(n2, b);
+    assert.notEqual(n2.neighbors[0], c);
+  });
+
+  it("star, one-way from center", () => {
+    const center = new GraphNode(1);
+    const leaves = [new GraphNode(2), new GraphNode(3), new GraphNode(4)];
+    center.neighbors = leaves;
+
+    const cloned = cloneGraph(center)!;
+    assert.equal(cloned.val, 1);
+    assert.deepEqual(
+      cloned.neighbors.map((n) => n.val),
+      [2, 3, 4],
+    );
+    for (const n of cloned.neighbors) {
+      assert.deepEqual(n.neighbors, []);
+    }
+    assert.notEqual(cloned, center);
+    assert.notEqual(cloned.neighbors[0], leaves[0]);
+  });
+
+  it("two nodes, undirected (back-edge)", () => {
+    const a = new GraphNode(1);
+    const b = new GraphNode(2);
+    a.neighbors = [b];
+    b.neighbors = [a];
+
+    const cloned = cloneGraph(a)!;
+    assert.equal(cloned.val, 1);
+    assert.equal(cloned.neighbors.length, 1);
+    assert.equal(cloned.neighbors[0]!.val, 2);
+    assert.equal(cloned.neighbors[0]!.neighbors[0], cloned);
+    assert.notEqual(cloned, a);
+    assert.notEqual(cloned.neighbors[0], b);
   });
 
   it("square (example)", () => {
-    const g = buildGraph([[2, 4], [1, 3], [2, 4], [1, 3]]);
+    const g = buildGraph([
+      [2, 4],
+      [1, 3],
+      [2, 4],
+      [1, 3],
+    ]);
     assertDeepCopy(g, cloneGraph(g));
   });
 
-  it("line of three", () => {
-    const g = buildGraph([[2], [1, 3], [2]]);
-    assertDeepCopy(g, cloneGraph(g));
-  });
-
-  it("triangle (cycle)", () => {
-    const g = buildGraph([[2, 3], [1, 3], [1, 2]]);
-    assertDeepCopy(g, cloneGraph(g));
-  });
-
-  it("star", () => {
-    const g = buildGraph([[2, 3, 4], [1], [1], [1]]);
+  it("triangle", () => {
+    const g = buildGraph([
+      [2, 3],
+      [1, 3],
+      [1, 2],
+    ]);
     assertDeepCopy(g, cloneGraph(g));
   });
 });

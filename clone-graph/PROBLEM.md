@@ -6,18 +6,26 @@
 
 ## Problem
 
-Given a reference to a node in a **connected undirected graph**, return a **deep copy** of the graph.
+Given a reference to a node in a **connected graph**, return a **deep copy** of the graph.
 
 Each node has a unique `val` (`1` … `n`) and a list of `neighbors`. The copy must have the same connectivity, but **no node object from the original graph** may appear in the copy.
+
+Neighbor lists may be **one-way** (a chain or a star) or **bidirectional** (undirected edges, which form cycles through object pointers).
 
 If `node` is `null`, return `null`.
 
 ## Examples
 
 ```
+Input:  1 -> 2
+Output: a new node 1 whose only neighbor is a new node 2 (2 has no neighbors)
+
+Input:  1 -> 2 -> 3
+Output: a new chain with the same vals and one-way edges
+
 Input:  adjList = [[2,4],[1,3],[2,4],[1,3]]
 Output: [[2,4],[1,3],[2,4],[1,3]]
-Explanation: four nodes 1—2—3—4—1 (a square)
+Explanation: four nodes 1—2—3—4—1 (an undirected square)
 
 Input:  adjList = [[]]
 Output: [[]]
@@ -33,7 +41,7 @@ Output: null
 
 - `0 <= n <= 100` (`n = 0` means `node` is `null`)
 - `1 <= Node.val <= n` (unique)
-- the graph is connected and undirected (no duplicate edges, no self-loops in tests)
+- the graph is connected (no duplicate edges, no self-loops in tests)
 
 ## Files
 
