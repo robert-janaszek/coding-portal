@@ -10,6 +10,7 @@ import {
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { basename, dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseTestsFromSource } from "./parseTests";
 import {
   archiveImpl,
   getStatus,
@@ -135,15 +136,8 @@ function findImplFile(problem: Problem): string {
   return implPath;
 }
 
-function parseTestNames(testFileRel: string): string[] {
-  const content = readFileSync(join(ROOT, testFileRel), "utf8");
-  const names: string[] = [];
-  const re = /\bit\s*\(\s*(['"`])((?:\\.|(?!\1).)*)\1/g;
-  let match: RegExpExecArray | null;
-  while ((match = re.exec(content)) !== null) {
-    names.push(match[2]!.replace(/\\(['"`])/g, "$1"));
-  }
-  return names;
+function parseTests(testFileRel: string) {
+  return parseTestsFromSource(readFileSync(join(ROOT, testFileRel), "utf8"));
 }
 
 function escapeRegex(s: string): string {
@@ -461,7 +455,7 @@ const server = createServer(async (req, res) => {
         json(res, 404, { error: "Problem not found" });
         return;
       }
-      json(res, 200, { tests: parseTestNames(problem.testFile) });
+      json(res, 200, { tests: parseTests(problem.testFile) });
       return;
     }
 

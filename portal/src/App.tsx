@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { familyRank } from "../catalog";
+import { parseSpecResults, type ParsedTest } from "../parseTests";
 import {
   elapsedMs,
   formatElapsed,
@@ -71,18 +72,35 @@ async function fetchJson<T>(url: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-function parseTestResults(text: string): Map<string, "pass" | "fail" | "skip"> {
-  const results = new Map<string, "pass" | "fail" | "skip">();
-  const re = /^[ \t]*([✔✖◯﹣-])[ \t]+(.+?)[ \t]+\([\d.]+m?s\)[ \t]*$/gm;
-  let match: RegExpExecArray | null;
-  while ((match = re.exec(text)) !== null) {
-    const mark = match[1]!;
-    const name = match[2]!.trim();
-    if (mark === "✔") results.set(name, "pass");
-    else if (mark === "✖") results.set(name, "fail");
-    else results.set(name, "skip");
-  }
-  return results;
+type TestTableRow =
+  | { kind: "suite"; label: string; depth: number; key: string }
+  | { kind: "test"; test: ParsedTest; index: number };
+
+function flattenTestRows(tests: ParsedTest[]): TestTableRow[] {
+  const rows: TestTableRow[] = [];
+  let prev: string[] = [];
+  tests.forEach((test, index) => {
+    const { suites } = test;
+    let diverge = 0;
+    while (
+      diverge < prev.length &&
+      diverge < suites.length &&
+      prev[diverge] === suites[diverge]
+    ) {
+      diverge++;
+    }
+    for (let d = diverge; d < suites.length; d++) {
+      rows.push({
+        kind: "suite",
+        label: suites[d]!,
+        depth: d,
+        key: `suite:${suites.slice(0, d + 1).join("\0")}`,
+      });
+    }
+    rows.push({ kind: "test", test, index });
+    prev = suites;
+  });
+  return rows;
 }
 
 function parseSummary(text: string): RunStats | null {
@@ -112,7 +130,7 @@ export default function App() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [problem, setProblem] = useState<ProblemDetail | null>(null);
-  const [tests, setTests] = useState<string[]>([]);
+  const [tests, setTests] = useState<ParsedTest[]>([]);
   const [testStatuses, setTestStatuses] = useState<Record<string, TestRowStatus>>({});
   const [activeTab, setActiveTab] = useState<Tab>("readme");
   const [markdownHtml, setMarkdownHtml] = useState("");
@@ -258,7 +276,7 @@ export default function App() {
     try {
       const [detail, testsRes] = await Promise.all([
         fetchJson<ProblemDetail>(`/api/problems/${encodeURIComponent(id)}`),
-        fetchJson<{ tests: string[] }>(`/api/problems/${encodeURIComponent(id)}/tests`),
+        fetchJson<{ tests: ParsedTest[] }>(`/api/problems/${encodeURIComponent(id)}/tests`),
       ]);
       setProblem(detail);
       setCurrentStatus(detail.status ?? null);
@@ -277,7 +295,9 @@ export default function App() {
       );
       setMarkdownHtml(marked.parse(detail.markdown) as string);
       setTests(testsRes.tests);
-      setTestStatuses(Object.fromEntries(testsRes.tests.map((n) => [n, "pending" as const])));
+      setTestStatuses(
+        Object.fromEntries(testsRes.tests.map((t) => [t.fullName, "pending" as const])),
+      );
       history.replaceState(null, "", `#${encodeURIComponent(id)}`);
     } catch (err) {
       setMarkdownHtml(`<p class="meta">${String(err)}</p>`);
@@ -285,7 +305,7 @@ export default function App() {
   }
 
   function applyResultsFromBuffer(buf: string) {
-    const results = parseTestResults(buf);
+    const results = parseSpecResults(buf);
     if (results.size === 0) return;
     setTestStatuses((prev) => {
       const next = { ...prev };
@@ -706,22 +726,48 @@ export default function App() {
                           </tr>
                         </thead>
                         <tbody>
-                          {tests.map((name) => {
-                            const status = testStatuses[name] ?? "pending";
+                          {flattenTestRows(tests).map((row) => {
+                            if (row.kind === "suite") {
+                              return (
+                                <tr key={row.key} className="suite-row">
+                                  <td colSpan={3} className="test-suite">
+                                    <span
+                                      className="test-indent"
+                                      style={{ paddingLeft: `${row.depth * 0.9}rem` }}
+                                    >
+                                      {row.label}
+                                    </span>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                            const { test, index } = row;
+                            const status = testStatuses[test.fullName] ?? "pending";
                             return (
-                              <tr key={name} data-name={name} data-status={status}>
+                              <tr
+                                key={`${test.fullName}#${index}`}
+                                data-name={test.fullName}
+                                data-status={status}
+                              >
                                 <td className={`test-status status-${status}`}>
                                   {rowLabel(status)}
                                 </td>
-                                <td className="test-name" title={name}>
-                                  {name}
+                                <td className="test-name" title={test.fullName}>
+                                  <span
+                                    className="test-indent"
+                                    style={{
+                                      paddingLeft: `${test.suites.length * 0.9}rem`,
+                                    }}
+                                  >
+                                    {test.name}
+                                  </span>
                                 </td>
                                 <td className="test-action">
                                   <button
                                     type="button"
                                     className="btn btn-run btn-sm"
                                     disabled={testsRunning}
-                                    onClick={() => runTests(name)}
+                                    onClick={() => runTests(test.fullName)}
                                   >
                                     RUN
                                   </button>

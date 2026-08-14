@@ -53,78 +53,121 @@ const example = tree([1, 2, 3, 4, 5, 6, 7]);
 const DFS = [1, 2, 4, 5, 3, 6, 7];
 const BFS = [1, 2, 3, 4, 5, 6, 7];
 
-describe("iterator protocol", () => {
-  it("dfsPreorder and bfsLevelOrder are generator functions", () => {
+describe("dfsPreorder", () => {
+  it("is a generator function", () => {
     assert.equal(isGeneratorFunction(dfsPreorder), true);
-    assert.equal(isGeneratorFunction(bfsLevelOrder), true);
   });
 
-  it("createDfsIterator / createBfsIterator return a non-generator with next()", () => {
-    const dfs = createDfsIterator(example);
-    const bfs = createBfsIterator(example);
-    assert.equal(typeof dfs.next, "function");
-    assert.equal(typeof bfs.next, "function");
-    assert.equal(isGeneratorObject(dfs), false);
-    assert.equal(isGeneratorObject(bfs), false);
-  });
-});
-
-describe("examples", () => {
-  it("full tree — generator DFS / BFS", () => {
+  it("full tree", () => {
     assert.deepEqual([...dfsPreorder(example)], DFS);
-    assert.deepEqual([...bfsLevelOrder(example)], BFS);
   });
 
-  it("full tree — next() DFS / BFS", () => {
-    assert.deepEqual(drain(createDfsIterator(example)), DFS);
-    assert.deepEqual(drain(createBfsIterator(example)), BFS);
-  });
-});
-
-describe("edge cases", () => {
   it("null root", () => {
     assert.deepEqual([...dfsPreorder(null)], []);
-    assert.deepEqual([...bfsLevelOrder(null)], []);
-    assert.deepEqual(drain(createDfsIterator(null)), []);
-    assert.deepEqual(drain(createBfsIterator(null)), []);
   });
 
   it("single node", () => {
-    const root = new TreeNode(42);
-    assert.deepEqual([...dfsPreorder(root)], [42]);
-    assert.deepEqual([...bfsLevelOrder(root)], [42]);
-    assert.deepEqual(drain(createDfsIterator(root)), [42]);
-    assert.deepEqual(drain(createBfsIterator(root)), [42]);
+    assert.deepEqual([...dfsPreorder(new TreeNode(42))], [42]);
   });
 
   it("left spine", () => {
-    const root = tree([1, 2, null, 3]);
-    assert.deepEqual([...dfsPreorder(root)], [1, 2, 3]);
-    assert.deepEqual([...bfsLevelOrder(root)], [1, 2, 3]);
-    assert.deepEqual(drain(createDfsIterator(root)), [1, 2, 3]);
-    assert.deepEqual(drain(createBfsIterator(root)), [1, 2, 3]);
+    assert.deepEqual([...dfsPreorder(tree([1, 2, null, 3]))], [1, 2, 3]);
   });
 
   it("right spine", () => {
-    const root = tree([1, null, 2, null, 3]);
-    assert.deepEqual([...dfsPreorder(root)], [1, 2, 3]);
-    assert.deepEqual([...bfsLevelOrder(root)], [1, 2, 3]);
-    assert.deepEqual(drain(createDfsIterator(root)), [1, 2, 3]);
-    assert.deepEqual(drain(createBfsIterator(root)), [1, 2, 3]);
+    assert.deepEqual([...dfsPreorder(tree([1, null, 2, null, 3]))], [1, 2, 3]);
   });
 
-  it("unbalanced — DFS and BFS differ", () => {
-    const root = tree([1, 2, 3, 4, null, null, 5]);
-    const dfs = [1, 2, 4, 3, 5];
-    const bfs = [1, 2, 3, 4, 5];
-    assert.deepEqual([...dfsPreorder(root)], dfs);
-    assert.deepEqual([...bfsLevelOrder(root)], bfs);
-    assert.deepEqual(drain(createDfsIterator(root)), dfs);
-    assert.deepEqual(drain(createBfsIterator(root)), bfs);
+  it("unbalanced", () => {
+    assert.deepEqual(
+      [...dfsPreorder(tree([1, 2, 3, 4, null, null, 5]))],
+      [1, 2, 4, 3, 5],
+    );
+  });
+
+  it("next() matches the protocol", () => {
+    const g = dfsPreorder(new TreeNode(9));
+    assert.deepEqual(g.next(), { value: 9, done: false });
+    assert.equal(g.next().done, true);
   });
 });
 
-describe("next() semantics", () => {
+describe("bfsLevelOrder", () => {
+  it("is a generator function", () => {
+    assert.equal(isGeneratorFunction(bfsLevelOrder), true);
+  });
+
+  it("full tree", () => {
+    assert.deepEqual([...bfsLevelOrder(example)], BFS);
+  });
+
+  it("null root", () => {
+    assert.deepEqual([...bfsLevelOrder(null)], []);
+  });
+
+  it("single node", () => {
+    assert.deepEqual([...bfsLevelOrder(new TreeNode(42))], [42]);
+  });
+
+  it("left spine", () => {
+    assert.deepEqual([...bfsLevelOrder(tree([1, 2, null, 3]))], [1, 2, 3]);
+  });
+
+  it("right spine", () => {
+    assert.deepEqual([...bfsLevelOrder(tree([1, null, 2, null, 3]))], [1, 2, 3]);
+  });
+
+  it("unbalanced", () => {
+    assert.deepEqual(
+      [...bfsLevelOrder(tree([1, 2, 3, 4, null, null, 5]))],
+      [1, 2, 3, 4, 5],
+    );
+  });
+
+  it("next() matches the protocol", () => {
+    const g = bfsLevelOrder(new TreeNode(9));
+    assert.deepEqual(g.next(), { value: 9, done: false });
+    assert.equal(g.next().done, true);
+  });
+});
+
+describe("createDfsIterator", () => {
+  it("returns a non-generator with next()", () => {
+    const it = createDfsIterator(example);
+    assert.equal(typeof it.next, "function");
+    assert.equal(isGeneratorObject(it), false);
+  });
+
+  it("full tree", () => {
+    assert.deepEqual(drain(createDfsIterator(example)), DFS);
+  });
+
+  it("null root", () => {
+    assert.deepEqual(drain(createDfsIterator(null)), []);
+  });
+
+  it("single node", () => {
+    assert.deepEqual(drain(createDfsIterator(new TreeNode(42))), [42]);
+  });
+
+  it("left spine", () => {
+    assert.deepEqual(drain(createDfsIterator(tree([1, 2, null, 3]))), [1, 2, 3]);
+  });
+
+  it("right spine", () => {
+    assert.deepEqual(
+      drain(createDfsIterator(tree([1, null, 2, null, 3]))),
+      [1, 2, 3],
+    );
+  });
+
+  it("unbalanced", () => {
+    assert.deepEqual(
+      drain(createDfsIterator(tree([1, 2, 3, 4, null, null, 5]))),
+      [1, 2, 4, 3, 5],
+    );
+  });
+
   it("yields one value at a time", () => {
     const it = createDfsIterator(example);
     assert.deepEqual(it.next(), { value: 1, done: false });
@@ -133,16 +176,61 @@ describe("next() semantics", () => {
   });
 
   it("stays done after the walk finishes", () => {
-    const it = createBfsIterator(new TreeNode(7));
+    const it = createDfsIterator(new TreeNode(7));
     assert.equal(it.next().done, false);
-    const end = it.next();
-    assert.equal(end.done, true);
+    assert.equal(it.next().done, true);
     assert.equal(it.next().done, true);
   });
+});
 
-  it("generator next() matches the protocol", () => {
-    const g = dfsPreorder(new TreeNode(9));
-    assert.deepEqual(g.next(), { value: 9, done: false });
-    assert.equal(g.next().done, true);
+describe("createBfsIterator", () => {
+  it("returns a non-generator with next()", () => {
+    const it = createBfsIterator(example);
+    assert.equal(typeof it.next, "function");
+    assert.equal(isGeneratorObject(it), false);
+  });
+
+  it("full tree", () => {
+    assert.deepEqual(drain(createBfsIterator(example)), BFS);
+  });
+
+  it("null root", () => {
+    assert.deepEqual(drain(createBfsIterator(null)), []);
+  });
+
+  it("single node", () => {
+    assert.deepEqual(drain(createBfsIterator(new TreeNode(42))), [42]);
+  });
+
+  it("left spine", () => {
+    assert.deepEqual(drain(createBfsIterator(tree([1, 2, null, 3]))), [1, 2, 3]);
+  });
+
+  it("right spine", () => {
+    assert.deepEqual(
+      drain(createBfsIterator(tree([1, null, 2, null, 3]))),
+      [1, 2, 3],
+    );
+  });
+
+  it("unbalanced", () => {
+    assert.deepEqual(
+      drain(createBfsIterator(tree([1, 2, 3, 4, null, null, 5]))),
+      [1, 2, 3, 4, 5],
+    );
+  });
+
+  it("yields one value at a time", () => {
+    const it = createBfsIterator(example);
+    assert.deepEqual(it.next(), { value: 1, done: false });
+    assert.deepEqual(it.next(), { value: 2, done: false });
+    assert.deepEqual(it.next(), { value: 3, done: false });
+  });
+
+  it("stays done after the walk finishes", () => {
+    const it = createBfsIterator(new TreeNode(7));
+    assert.equal(it.next().done, false);
+    assert.equal(it.next().done, true);
+    assert.equal(it.next().done, true);
   });
 });
