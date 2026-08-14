@@ -41,9 +41,8 @@ describe("MyCalendar", () => {
   it("rejected booking does not persist", () => {
     const cal = new MyCalendar();
     assert.equal(cal.book(10, 20), true);
-    assert.equal(cal.book(15, 18), false);
+    assert.equal(cal.book(15, 25), false);
     assert.equal(cal.book(20, 25), true);
-    assert.equal(cal.book(18, 20), true);
   });
 
   it("contained interval rejected", () => {

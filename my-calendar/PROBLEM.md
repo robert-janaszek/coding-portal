@@ -6,33 +6,33 @@
 
 ## Problem
 
-Implement a calendar that stores events as half-open intervals `[start, end)` (start inclusive, end exclusive).
+Implement a calendar of events from `start` to `end` (think meeting times). Back-to-back is allowed: 15:00–15:30 and 15:30–16:00 do not conflict.
 
 `MyCalendar`:
 
 - `MyCalendar()` — empty calendar
 - `book(start, end)` — try to add the event. Return `true` and store it if it does **not** cause a double booking; otherwise return `false` and leave the calendar unchanged.
 
-A **double booking** is when two events share a non-empty open intersection: they overlap if `start < otherEnd && end > otherStart`. Touching at an endpoint is allowed (e.g. `[10, 20)` and `[20, 30)` do not overlap).
+A **double booking** is when two events overlap in time. Events that only meet at an endpoint do not overlap (e.g. 10–20 and 20–30).
 
 ## Examples
 
 ```
 const cal = new MyCalendar();
 cal.book(10, 20); // true
-cal.book(15, 25); // false — overlaps [10, 20)
-cal.book(20, 30); // true — touches at 20 only
+cal.book(15, 25); // false — overlaps 10–20
+cal.book(20, 30); // true — back-to-back at 20
 ```
 
 ```
 const cal = new MyCalendar();
 cal.book(47, 50); // true
 cal.book(33, 41); // true
-cal.book(39, 45); // false — overlaps [33, 41)
+cal.book(39, 45); // false — overlaps 33–41
 cal.book(33, 42); // false
 cal.book(25, 32); // true
 cal.book(26, 35); // false
-cal.book(19, 25); // true — touches [25, 32) at 25
+cal.book(19, 25); // true — back-to-back with 25–32
 cal.book(3, 8);   // true
 cal.book(8, 13);  // true
 cal.book(18, 27); // false
