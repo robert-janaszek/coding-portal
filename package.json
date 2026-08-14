@@ -38,6 +38,7 @@
     "test:knapsack": "npm run test:run -- knapsack/knapsack.test.ts",
     "test:tsp": "npm run test:run -- traveling-salesman/tsp.test.ts",
     "test:knight-probability": "npm run test:run -- knight-probability/knightProbability.test.ts",
+    "test:tree-iterator": "npm run test:run -- tree-iterator/treeIterator.test.ts",
     "test:day1": "npm run test:run -- course-schedule-ii/findOrder.test.ts edit-distance/minDistance.test.ts largest-rectangle/largestRectangleArea.test.ts",
     "test:day2": "npm run test:run -- min-window-substring/minWindow.test.ts max-path-sum/maxPathSum.test.ts lru-cache/LRUCache.test.ts"
   },

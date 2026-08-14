@@ -88,6 +88,7 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 | `npm run test:knapsack` | 0/1 knapsack |
 | `npm run test:tsp` | Traveling salesman |
 | `npm run test:knight-probability` | Knight probability |
+| `npm run test:tree-iterator` | Tree iterator (DFS / BFS) |
 | `npm run test:day1` / `test:day2` | Grouped suites |
 
 ## Add a new exercise
