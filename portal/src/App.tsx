@@ -73,7 +73,7 @@ async function fetchJson<T>(url: string): Promise<T> {
 }
 
 type TestTableRow =
-  | { kind: "suite"; label: string; depth: number; key: string }
+  | { kind: "suite"; label: string; depth: number; key: string; fullName: string }
   | { kind: "test"; test: ParsedTest; index: number };
 
 function flattenTestRows(tests: ParsedTest[]): TestTableRow[] {
@@ -90,17 +90,30 @@ function flattenTestRows(tests: ParsedTest[]): TestTableRow[] {
       diverge++;
     }
     for (let d = diverge; d < suites.length; d++) {
+      const path = suites.slice(0, d + 1);
       rows.push({
         kind: "suite",
         label: suites[d]!,
         depth: d,
-        key: `suite:${suites.slice(0, d + 1).join("\0")}`,
+        key: `suite:${path.join("\0")}`,
+        fullName: path.join(" "),
       });
     }
     rows.push({ kind: "test", test, index });
     prev = suites;
   });
   return rows;
+}
+
+/** True if `runName` is this test, or an ancestor `describe` path (space-joined). */
+function belongsToRun(test: ParsedTest, runName: string): boolean {
+  if (test.fullName === runName) return true;
+  let acc = "";
+  for (let i = 0; i < test.suites.length; i++) {
+    acc = i === 0 ? test.suites[i]! : `${acc} ${test.suites[i]!}`;
+    if (acc === runName) return true;
+  }
+  return false;
 }
 
 function parseSummary(text: string): RunStats | null {
@@ -319,9 +332,9 @@ export default function App() {
   function resetTestStatuses(onlyName: string | null = null) {
     setTestStatuses((prev) => {
       const next = { ...prev };
-      for (const name of Object.keys(next)) {
-        if (onlyName !== null && name !== onlyName) continue;
-        next[name] = onlyName !== null ? "running" : "pending";
+      for (const test of tests) {
+        if (onlyName !== null && !belongsToRun(test, onlyName)) continue;
+        next[test.fullName] = onlyName !== null ? "running" : "pending";
       }
       return next;
     });
@@ -730,13 +743,24 @@ export default function App() {
                             if (row.kind === "suite") {
                               return (
                                 <tr key={row.key} className="suite-row">
-                                  <td colSpan={3} className="test-suite">
+                                  <td className="test-status" />
+                                  <td className="test-suite" title={row.fullName}>
                                     <span
                                       className="test-indent"
                                       style={{ paddingLeft: `${row.depth * 0.9}rem` }}
                                     >
                                       {row.label}
                                     </span>
+                                  </td>
+                                  <td className="test-action">
+                                    <button
+                                      type="button"
+                                      className="btn btn-run btn-sm"
+                                      disabled={testsRunning}
+                                      onClick={() => runTests(row.fullName)}
+                                    >
+                                      RUN
+                                    </button>
                                   </td>
                                 </tr>
                               );
