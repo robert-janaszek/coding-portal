@@ -1,12 +1,56 @@
 import assert from "node:assert/strict";
 import { describe } from "node:test";
 import { it } from "../test/it";
-import { AVLTree } from "./AVLTree";
+import { AVLTree, type AVLArray } from "./AVLTree";
 
 /** Loose upper bound: still O(log n), fails for a linked-list BST. */
 function maxAllowedHeight(n: number): number {
   if (n <= 0) return 0;
   return 2 * Math.ceil(Math.log2(n + 1));
+}
+
+function isSnapshot(value: unknown): value is AVLArray {
+  if (!Array.isArray(value)) return false;
+  if (value.length === 0) return true;
+  if (value.length !== 3) return false;
+  const [key, left, right] = value;
+  return typeof key === "number" && isSnapshot(left) && isSnapshot(right);
+}
+
+function heightOf(snapshot: AVLArray): number {
+  if (snapshot.length === 0) return 0;
+  return 1 + Math.max(heightOf(snapshot[1]), heightOf(snapshot[2]));
+}
+
+function inOrder(snapshot: AVLArray): number[] {
+  if (snapshot.length === 0) return [];
+  return [...inOrder(snapshot[1]), snapshot[0], ...inOrder(snapshot[2])];
+}
+
+function assertAvl(snapshot: unknown, expectedKeys: number[]): void {
+  assert.ok(isSnapshot(snapshot), "toArray() must be [] or [key, left, right]");
+  const keys = inOrder(snapshot);
+  assert.deepEqual(keys, expectedKeys);
+
+  function check(node: AVLArray, min: number, max: number): number {
+    if (node.length === 0) return 0;
+    const [key, left, right] = node;
+    assert.ok(key > min && key < max, `BST violated at ${key}`);
+    const leftH = check(left, min, key);
+    const rightH = check(right, key, max);
+    assert.ok(
+      Math.abs(leftH - rightH) <= 1,
+      `unbalanced at ${key}: left height ${leftH}, right height ${rightH}`,
+    );
+    return 1 + Math.max(leftH, rightH);
+  }
+
+  const h = check(snapshot, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+  assert.equal(h, heightOf(snapshot));
+  assert.ok(
+    h <= maxAllowedHeight(expectedKeys.length),
+    `height ${h} > ${maxAllowedHeight(expectedKeys.length)}`,
+  );
 }
 
 describe("AVLTree", () => {
@@ -15,34 +59,28 @@ describe("AVLTree", () => {
     t.insert(30);
     t.insert(20);
     t.insert(10);
-    assert.deepEqual(t.toArray(), [10, 20, 30]);
-    assert.equal(t.height(), 2);
-    assert.equal(t.size(), 3);
-    assert.equal(t.contains(20), true);
+    assert.deepEqual(t.toArray(), [20, [10, [], []], [30, [], []]]);
 
     t.insert(40);
     t.insert(50);
-    assert.deepEqual(t.toArray(), [10, 20, 30, 40, 50]);
-    assert.equal(t.delete(20), true);
-    assert.equal(t.contains(20), false);
+    assert.deepEqual(t.toArray(), [
+      20,
+      [10, [], []],
+      [40, [30, [], []], [50, [], []]],
+    ]);
+    assertAvl(t.toArray(), [10, 20, 30, 40, 50]);
   });
 
   it("empty tree", () => {
     const t = new AVLTree();
-    assert.equal(t.size(), 0);
-    assert.equal(t.height(), 0);
     assert.deepEqual(t.toArray(), []);
-    assert.equal(t.contains(1), false);
-    assert.equal(t.delete(1), false);
   });
 
   it("duplicate insert is no-op", () => {
     const t = new AVLTree();
     t.insert(5);
     t.insert(5);
-    assert.equal(t.size(), 1);
-    assert.deepEqual(t.toArray(), [5]);
-    assert.equal(t.height(), 1);
+    assert.deepEqual(t.toArray(), [5, [], []]);
   });
 
   it("LR rotation case", () => {
@@ -50,9 +88,7 @@ describe("AVLTree", () => {
     t.insert(30);
     t.insert(10);
     t.insert(20);
-    assert.deepEqual(t.toArray(), [10, 20, 30]);
-    assert.equal(t.height(), 2);
-    assert.ok(t.height() <= maxAllowedHeight(3));
+    assert.deepEqual(t.toArray(), [20, [10, [], []], [30, [], []]]);
   });
 
   it("RL rotation case", () => {
@@ -60,34 +96,42 @@ describe("AVLTree", () => {
     t.insert(10);
     t.insert(30);
     t.insert(20);
-    assert.deepEqual(t.toArray(), [10, 20, 30]);
-    assert.equal(t.height(), 2);
+    assert.deepEqual(t.toArray(), [20, [10, [], []], [30, [], []]]);
   });
 
-  it("sorted ascending inserts stay logarithmic height", () => {
+  it("sorted ascending inserts stay balanced", () => {
     const t = new AVLTree();
     const n = 200;
     for (let i = 1; i <= n; i++) t.insert(i);
-    assert.equal(t.size(), n);
-    assert.deepEqual(
-      t.toArray(),
+    const snapshot = t.toArray();
+    assertAvl(
+      snapshot,
       Array.from({ length: n }, (_, i) => i + 1),
     );
     assert.ok(
-      t.height() <= maxAllowedHeight(n),
-      `height ${t.height()} > ${maxAllowedHeight(n)}`,
+      heightOf(snapshot as AVLArray) < n / 2,
+      "height looks linear — missing rotations?",
     );
-    assert.ok(t.height() < n / 2, "height looks linear — missing rotations?");
   });
 
-  it("sorted descending inserts stay logarithmic height", () => {
+  it("sorted descending inserts stay balanced", () => {
     const t = new AVLTree();
     const n = 200;
     for (let i = n; i >= 1; i--) t.insert(i);
-    assert.equal(t.size(), n);
-    assert.ok(t.height() <= maxAllowedHeight(n));
-    assert.equal(t.contains(1), true);
-    assert.equal(t.contains(n), true);
+    assertAvl(
+      t.toArray(),
+      Array.from({ length: n }, (_, i) => i + 1),
+    );
+  });
+
+  it("sequential 1..7 is a complete tree", () => {
+    const t = new AVLTree();
+    for (let i = 1; i <= 7; i++) t.insert(i);
+    assert.deepEqual(t.toArray(), [
+      4,
+      [2, [1, [], []], [3, [], []]],
+      [6, [5, [], []], [7, [], []]],
+    ]);
   });
 
   it("negative keys", () => {
@@ -96,56 +140,12 @@ describe("AVLTree", () => {
     t.insert(-2);
     t.insert(3);
     t.insert(-5);
-    assert.deepEqual(t.toArray(), [-5, -2, 0, 3]);
-    assert.equal(t.contains(-2), true);
+    assertAvl(t.toArray(), [-5, -2, 0, 3]);
   });
 
-  it("delete leaf", () => {
-    const t = new AVLTree();
-    t.insert(2);
-    t.insert(1);
-    t.insert(3);
-    assert.equal(t.delete(1), true);
-    assert.deepEqual(t.toArray(), [2, 3]);
-    assert.equal(t.size(), 2);
-  });
-
-  it("delete node with two children", () => {
+  it("mixed insertion order stays balanced", () => {
     const t = new AVLTree();
     for (const k of [50, 25, 75, 10, 30, 60, 90]) t.insert(k);
-    assert.equal(t.delete(50), true);
-    assert.equal(t.contains(50), false);
-    assert.deepEqual(t.toArray(), [10, 25, 30, 60, 75, 90]);
-    assert.ok(t.height() <= maxAllowedHeight(6));
-  });
-
-  it("delete missing returns false", () => {
-    const t = new AVLTree();
-    t.insert(1);
-    assert.equal(t.delete(99), false);
-    assert.equal(t.size(), 1);
-  });
-
-  it("delete all keeps empty invariants", () => {
-    const t = new AVLTree();
-    for (let i = 1; i <= 15; i++) t.insert(i);
-    for (let i = 1; i <= 15; i++) assert.equal(t.delete(i), true);
-    assert.equal(t.size(), 0);
-    assert.equal(t.height(), 0);
-    assert.deepEqual(t.toArray(), []);
-  });
-
-  it("interleaved inserts and deletes stay balanced", () => {
-    const t = new AVLTree();
-    for (let i = 1; i <= 50; i++) t.insert(i);
-    for (let i = 1; i <= 50; i += 2) assert.equal(t.delete(i), true);
-    assert.equal(t.size(), 25);
-    assert.ok(t.height() <= maxAllowedHeight(25));
-    assert.deepEqual(
-      t.toArray(),
-      Array.from({ length: 25 }, (_, i) => (i + 1) * 2),
-    );
-    for (let i = 51; i <= 80; i++) t.insert(i);
-    assert.ok(t.height() <= maxAllowedHeight(t.size()));
+    assertAvl(t.toArray(), [10, 25, 30, 50, 60, 75, 90]);
   });
 });

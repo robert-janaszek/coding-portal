@@ -4,7 +4,9 @@ Spoilers. Read only after you have tried on your own.
 
 ## Idea
 
-Each node stores `key`, `left`, `right`, and either `height` or a balance factor. After a recursive insert/delete, update height and, if `|balance| > 1`, rotate.
+Each node stores `key`, `left`, `right`, and either `height` or a balance factor. After a recursive insert, update height and, if `|balance| > 1`, rotate.
+
+`toArray()` is just a recursive dump of that structure: empty → `[]`, else `[node.key, toArray(left), toArray(right)]`.
 
 ## Four imbalance cases
 
@@ -15,20 +17,14 @@ Balance = `height(left) - height(right)`.
 - **LR** (balance > 1 and key went into left-right): `leftRotate(node.left)` then `rightRotate(node)`
 - **RL** (balance < -1 and key went into right-left): `rightRotate(node.right)` then `leftRotate(node)`
 
-Same cases apply on the way up after `delete` (choose the side by the child's balance when ambiguous).
+## Height (on nodes, not as a public method)
 
-## Delete
-
-Standard BST delete (0 / 1 / 2 children). With two children, replace with in-order successor (min of right subtree), then delete that successor node and rebalance upward.
-
-## Height
-
-If you store height on each node (empty child = 0 with this problem’s convention: missing subtree contributes `0`, leaf node height `1`):
+If you store height on each node (empty child = 0; leaf height = 1):
 
 `height(node) = 1 + max(height(left), height(right))`
 
-Public `height()` is the root’s height (or `0` if empty).
+Use it only to compute balance factors and decide rotations.
 
 ## Complexity
 
-Rotations are `O(1)`; you touch `O(log n)` nodes on the path → `O(log n)` per update.
+Rotations are `O(1)`; you touch `O(log n)` nodes on the path → `O(log n)` per insert.
