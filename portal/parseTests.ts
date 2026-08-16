@@ -16,6 +16,11 @@ function unescapeQuoted(value: string): string {
   return value.replace(/\\(['"`\\])/g, "$1");
 }
 
+/** True when `it(\`…${…}\`)` is a runtime-generated title, not a node:test name. */
+export function testNameIsDynamic(name: string): boolean {
+  return name.includes("${");
+}
+
 /** Parse a JS/TS string or template at `i`. Template interpolations are kept as source text. */
 function parseQuoted(src: string, i: number): { value: string; end: number } | null {
   const q = src[i];
@@ -68,6 +73,9 @@ function skipQuoted(src: string, i: number): number {
 /**
  * Collect `it(...)` cases with enclosing `describe` titles from a test file.
  * `fullName` is what node:test matches with `--test-name-pattern="^…$"`.
+ *
+ * Interpolated titles (`it(\`n=${n}\`)`) never exist at runtime, so `fullName`
+ * is the enclosing describe path — node:test then runs every generated child.
  */
 export function parseTestsFromSource(source: string): ParsedTest[] {
   const tests: ParsedTest[] = [];
@@ -135,7 +143,10 @@ export function parseTestsFromSource(source: string): ParsedTest[] {
             } else {
               const suites = suiteStack.map((s) => s.name);
               const name = quoted.value;
-              const fullName = [...suites, name].join(" ");
+              const fullName =
+                testNameIsDynamic(name) && suites.length > 0
+                  ? suites.join(" ")
+                  : [...suites, name].join(" ");
               tests.push({ name, fullName, suites: [...suites] });
             }
             i = quoted.end;
@@ -203,4 +214,38 @@ export function parseSpecResults(text: string): Map<string, SpecStatus> {
   }
 
   return results;
+}
+
+function descendantStatus(
+  fullName: string,
+  results: Map<string, SpecStatus>,
+): SpecStatus | undefined {
+  let saw = false;
+  let fail = false;
+  let skip = false;
+  for (const [name, status] of results) {
+    if (name !== fullName && !name.startsWith(`${fullName} `)) continue;
+    saw = true;
+    if (status === "fail") fail = true;
+    else if (status === "skip") skip = true;
+  }
+  if (!saw) return undefined;
+  if (fail) return "fail";
+  if (skip) return "skip";
+  return "pass";
+}
+
+/** Map spec results onto parsed tests (generated `it` titles match descendant names). */
+export function statusesFromSpecResults(
+  tests: ParsedTest[],
+  results: Map<string, SpecStatus>,
+): Map<string, SpecStatus> {
+  const next = new Map<string, SpecStatus>();
+  for (const test of tests) {
+    const status = testNameIsDynamic(test.name)
+      ? descendantStatus(test.fullName, results)
+      : results.get(test.fullName);
+    if (status) next.set(test.fullName, status);
+  }
+  return next;
 }

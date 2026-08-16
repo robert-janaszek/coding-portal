@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { familyRank } from "../catalog";
-import { parseSpecResults, type ParsedTest } from "../parseTests";
+import { parseSpecResults, statusesFromSpecResults, type ParsedTest } from "../parseTests";
 import {
   elapsedMs,
   formatElapsed,
@@ -320,9 +320,11 @@ export default function App() {
   function applyResultsFromBuffer(buf: string) {
     const results = parseSpecResults(buf);
     if (results.size === 0) return;
+    const mapped = statusesFromSpecResults(tests, results);
+    if (mapped.size === 0) return;
     setTestStatuses((prev) => {
       const next = { ...prev };
-      for (const [name, status] of results) {
+      for (const [name, status] of mapped) {
         if (name in next) next[name] = status;
       }
       return next;
