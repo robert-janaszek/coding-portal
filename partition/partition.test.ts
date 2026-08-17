@@ -49,6 +49,7 @@ function check(nums: number[], left: number, right: number) {
 describe("partition", () => {
   describe("examples", () => {
     it("example 1", () => {
+      // console.log(partition([5, 1, 2, 4, 3], 0, 4));
       check([5, 1, 2, 4, 3], 0, 4);
     });
 
