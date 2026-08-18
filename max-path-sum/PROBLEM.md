@@ -1,7 +1,7 @@
 # Binary Tree Maximum Path Sum
 
 **Difficulty:** Hard  
-**Topics:** Binary tree  
+**Topics:** Binary tree, Post-order  
 **Target:** `O(n)` time
 
 ## Problem
@@ -11,6 +11,8 @@ A **path** in a binary tree is a sequence of nodes where each pair of adjacent n
 The **path sum** is the sum of node values on the path.
 
 Given the `root`, return the maximum path sum of any non-empty path.
+
+This is a **post-order** problem: you need both children’s answers before you can decide what this node contributes (best downward gain vs a path that bends here).
 
 `TreeNode` is exported from the stub file.
 
