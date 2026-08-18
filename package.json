@@ -21,6 +21,7 @@
     "test:reverse-pairs": "npm run test:run -- reverse-pairs/reversePairs.test.ts",
     "test:course-schedule": "npm run test:run -- course-schedule-ii/findOrder.test.ts",
     "test:edit-distance": "npm run test:run -- edit-distance/minDistance.test.ts",
+    "test:common-subsequence": "npm run test:run -- common-subsequence/commonSubseqLen.test.ts",
     "test:climbing-stairs": "npm run test:run -- climbing-stairs/climbStairs.test.ts",
     "test:histogram": "npm run test:run -- largest-rectangle/largestRectangleArea.test.ts",
     "test:daily-temperatures": "npm run test:run -- daily-temperatures/dailyTemperatures.test.ts",
