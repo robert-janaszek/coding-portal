@@ -35,6 +35,7 @@
     "test:count-smaller": "npm run test:run -- count-smaller/countSmaller.test.ts",
     "test:avl-tree": "npm run test:run -- avl-tree/AVLTree.test.ts",
     "test:number-islands": "npm run test:run -- number-of-islands/numIslands.test.ts",
+    "test:spreading-fire": "npm run test:run -- spreading-fire/timeToBurn.test.ts",
     "test:combinations": "npm run test:run -- combinations/combine.test.ts",
     "test:subsets": "npm run test:run -- subsets/subsets.test.ts",
     "test:permutations": "npm run test:run -- permutations/permute.test.ts",
