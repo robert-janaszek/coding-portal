@@ -31,14 +31,14 @@ Each problem starts behind a **Start timer** gate (title + difficulty). While so
 
 ## Solve a problem
 
-1. Open the stub (e.g. `climbing-stairs/climbStairs.ts`) — implement there.
+1. Open the stub (e.g. `stair-climbing-ways/stairClimbingWays.ts`) — implement there.
 2. Read `PROBLEM.md` in that folder (also shown in the portal).
 3. Run tests from the portal or the CLI:
 
 ```bash
-npm run test:climbing-stairs
+npm run test:stair-climbing-ways
 # or
-npm run test:run -- climbing-stairs/climbStairs.test.ts
+npm run test:run -- stair-climbing-ways/stairClimbingWays.test.ts
 ```
 
 `HINTS.md` and archives under `<problem-id>/solutions/` are spoilers — use only if stuck.
@@ -71,30 +71,30 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 | Script | Problem |
 |--------|---------|
 | `npm run test:bisection` | Binary search |
-| `npm run test:climbing-stairs` | Climbing stairs |
-| `npm run test:course-schedule` | Course schedule II |
-| `npm run test:edit-distance` | Edit distance |
-| `npm run test:findMedianSortedArrays` | Median of two sorted arrays |
+| `npm run test:stair-climbing-ways` | Stair climbing ways |
+| `npm run test:course-order` | Course order |
+| `npm run test:string-conversion-cost` | String conversion cost |
+| `npm run test:median-two-sorted-sequences` | Median of two sorted sequences |
 | `npm run test:heapsort` | Heap sort |
 | `npm run test:kth` | K-th in two sorted arrays |
-| `npm run test:histogram` | Largest rectangle in histogram |
-| `npm run test:min-window` | Minimum window substring |
-| `npm run test:max-path-sum` | Binary tree max path sum |
-| `npm run test:lru` | LRU cache |
-| `npm run test:clone-graph` | Clone graph |
-| `npm run test:number-provinces` | Number of provinces |
+| `npm run test:histogram-max-rectangle` | Histogram max rectangle |
+| `npm run test:shortest-covering-window` | Shortest covering window |
+| `npm run test:max-path-sum-in-a-tree` | Max path sum in a tree |
+| `npm run test:least-recently-used-map` | Least-recently-used map |
+| `npm run test:deep-copy-graph` | Deep copy a graph |
+| `npm run test:connected-city-groups` | Connected city groups |
 | `npm run test:shortest-path` | Shortest path (unweighted) |
-| `npm run test:kth-largest` | Kth largest element |
+| `npm run test:kth-largest-in-array` | K-th largest in an array |
 | `npm run test:knapsack` | 0/1 knapsack |
-| `npm run test:tsp` | Traveling salesman |
-| `npm run test:knight-probability` | Knight probability |
+| `npm run test:traveling-salesman` | Traveling salesman |
+| `npm run test:knight-survival-probability` | Knight survival probability |
 | `npm run test:tree-iterator` | Tree iterator (DFS / BFS) |
 | `npm run test:circular-queue` | Queue |
 | `npm run test:day1` / `test:day2` | Grouped suites |
 
 ## Add a new exercise
 
-Mirror an existing folder (e.g. `climbing-stairs/`):
+Mirror an existing folder (e.g. `stair-climbing-ways/`):
 
 1. `PROBLEM.md` + `HINTS.md`
 2. Stub `<Name>.ts` and identical hidden template `.<Name>.ts`

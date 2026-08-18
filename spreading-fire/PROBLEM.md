@@ -60,8 +60,8 @@ Output: 0
 
 | File | Role |
 |------|------|
-| `timeToBurn.ts` | Stub — implement here |
-| `timeToBurn.test.ts` | Tests |
+| `spreadingFire.ts` | Stub — implement here |
+| `spreadingFire.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

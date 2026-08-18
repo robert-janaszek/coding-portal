@@ -15,16 +15,16 @@
     "portal/**/*.ts",
     "portal/**/*.tsx",
     "test/**/*.ts",
-    "findMedianSortedArrays/**/*.ts",
+    "median-two-sorted-sequences/**/*.ts",
     "bisection/**/*.ts",
     "kth/**/*.ts",
     "heapsort/**/*.ts",
-    "course-schedule-ii/**/*.ts",
-    "edit-distance/**/*.ts",
-    "climbing-stairs/**/*.ts",
-    "largest-rectangle/**/*.ts",
-    "min-window-substring/**/*.ts",
-    "max-path-sum/**/*.ts",
-    "lru-cache/**/*.ts"
+    "course-order/**/*.ts",
+    "string-conversion-cost/**/*.ts",
+    "stair-climbing-ways/**/*.ts",
+    "histogram-max-rectangle/**/*.ts",
+    "shortest-covering-window/**/*.ts",
+    "max-path-sum-in-a-tree/**/*.ts",
+    "least-recently-used-map/**/*.ts"
   ]
 }

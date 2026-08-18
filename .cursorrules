@@ -35,7 +35,7 @@ This repo is for **practice**, not for shipping a solved dump.
 
 ## Adding or editing a problem
 
-When creating a new exercise, mirror an existing folder (e.g. `climbing-stairs/`):
+When creating a new exercise, mirror an existing folder (e.g. `stair-climbing-ways/`):
 
 1. `PROBLEM.md` — title (`# Name`), difficulty, topics, target complexity, statement, examples, constraints, file table, test command.
 2. Stub `<Name>.ts` — exported signature only; body `throw new Error("Not implemented")`. No comments.
@@ -64,7 +64,7 @@ Allowed types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`.
 
 Scopes — pick from what changed:
 
-- problem folder id (e.g. `climbing-stairs`, `edit-distance`)
+- problem folder id (e.g. `stair-climbing-ways`, `string-conversion-cost`)
 - `portal` — portal server or UI
 - `test` — shared test helpers
 - `config` — `package.json`, `tsconfig.json`, tooling
@@ -73,9 +73,9 @@ Scopes — pick from what changed:
 Examples:
 
 ```
-feat(climbing-stairs): add climbing stairs exercise stub and tests
-fix(edit-distance): handle empty-string base cases
-docs(lru-cache): clarify O(1) get/put target in PROBLEM.md
-test(min-window): cover duplicate-character windows
+feat(stair-climbing-ways): add stair climbing ways exercise stub and tests
+fix(string-conversion-cost): handle empty-string base cases
+docs(least-recently-used-map): clarify O(1) get/put target in PROBLEM.md
+test(shortest-covering-window): cover duplicate-character windows
 chore(portal): stream test output without buffering
 ```

@@ -333,7 +333,7 @@ function runTestsSse(
   });
 }
 
-/** Hidden stub template next to the impl, e.g. `.climbStairs.ts`. */
+/** Hidden stub template next to the impl, e.g. `.stairClimbingWays.ts`. */
 function findStubTemplate(implPath: string): string {
   const templatePath = join(dirname(implPath), `.${basename(implPath)}`);
   if (!existsSync(templatePath)) {

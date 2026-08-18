@@ -44,8 +44,8 @@ Output: false
 
 | File | Role |
 |------|------|
-| `searchSortedMatrix.ts` | Stub — implement here |
-| `searchSortedMatrix.test.ts` | Tests |
+| `sortedMatrixSearch.ts` | Stub — implement here |
+| `sortedMatrixSearch.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

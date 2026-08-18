@@ -52,8 +52,8 @@ Output: 8
 
 | File | Role |
 |------|------|
-| `kthSmallest.ts` | Stub (+ `TreeNode`) |
-| `kthSmallest.test.ts` | Tests |
+| `kthSmallestBst.ts` | Stub (+ `TreeNode`) |
+| `kthSmallestBst.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash

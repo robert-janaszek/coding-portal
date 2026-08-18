@@ -1,0 +1,86 @@
+import assert from "node:assert/strict";
+import { describe } from "node:test";
+import { it } from "../test/it";
+import { maxPathSumInATree, TreeNode } from "./maxPathSumInATree";
+
+/** Build tree from level-order array with `null` gaps. */
+function tree(vals: (number | null)[]): TreeNode | null {
+  if (vals.length === 0 || vals[0] == null) return null;
+  const root = new TreeNode(vals[0]);
+  const q: TreeNode[] = [root];
+  let i = 1;
+  while (q.length && i < vals.length) {
+    const node = q.shift()!;
+    if (i < vals.length) {
+      const v = vals[i++];
+      if (v != null) {
+        node.left = new TreeNode(v);
+        q.push(node.left);
+      }
+    }
+    if (i < vals.length) {
+      const v = vals[i++];
+      if (v != null) {
+        node.right = new TreeNode(v);
+        q.push(node.right);
+      }
+    }
+  }
+  return root;
+}
+
+describe("maxPathSumInATree", () => {
+  it("example 1", () => {
+    assert.equal(maxPathSumInATree(tree([2, -1, 3])), 4);
+  });
+
+  it("example 2", () => {
+    assert.equal(maxPathSumInATree(tree([4, -2, 7, null, null, 3, 1])), 14);
+  });
+
+  it("single node", () => {
+    assert.equal(maxPathSumInATree(tree([5])), 5);
+  });
+
+  it("single negative node", () => {
+    assert.equal(maxPathSumInATree(tree([-3])), -3);
+  });
+
+  it("all negative — pick least bad node", () => {
+    assert.equal(maxPathSumInATree(tree([-2, -1, -3])), -1);
+  });
+
+  it("left chain", () => {
+    assert.equal(maxPathSumInATree(tree([1, 2, null, 3])), 6);
+  });
+
+  it("right chain", () => {
+    assert.equal(maxPathSumInATree(tree([1, null, 2, null, 3])), 6);
+  });
+
+  it("bend better than root alone", () => {
+    assert.equal(maxPathSumInATree(tree([9, 6, -3, null, null, -6, 2, null, null, 2, null, -6, -6, -6])), 16);
+  });
+
+  it("linear positives", () => {
+    assert.equal(maxPathSumInATree(tree([1, 2, null, 3, null, 4])), 10);
+  });
+
+  it("discard both negative children — node alone wins", () => {
+    //     -100
+    //      /
+    //     5
+    //    / \
+    //  -1  -2
+    assert.equal(maxPathSumInATree(tree([-100, 5, null, -1, -2])), 5);
+  });
+
+  it("discard one negative child — node plus better child wins", () => {
+    //     -100
+    //      /
+    //     5
+    //    / \
+    //   3  -10
+    assert.equal(maxPathSumInATree(tree([-100, 5, null, 3, -10])), 8);
+  });
+});

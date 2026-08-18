@@ -38,11 +38,11 @@ Output: 0
 
 | File | Role |
 |------|------|
-| `tsp.ts` | Stub — implement here |
-| `tsp.test.ts` | Tests |
+| `travelingSalesman.ts` | Stub — implement here |
+| `travelingSalesman.test.ts` | Tests |
 | `solutions/` | Archived attempts (spoilers) |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash
-npm run test:tsp
+npm run test:traveling-salesman
 ```

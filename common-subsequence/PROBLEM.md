@@ -35,8 +35,8 @@ Output: 0
 
 | File | Role |
 |------|------|
-| `commonSubseqLen.ts` | Stub — implement here |
-| `commonSubseqLen.test.ts` | Tests |
+| `commonSubsequence.ts` | Stub — implement here |
+| `commonSubsequence.test.ts` | Tests |
 | `HINTS.md` | Spoilers — open only if stuck |
 
 ```bash
