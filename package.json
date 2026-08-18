@@ -13,6 +13,7 @@
     "test:bisection": "npm run test:run -- bisection/binarySearch.test.ts",
     "test:search-rotated": "npm run test:run -- search-rotated/searchRotated.test.ts",
     "test:search-bitonic": "npm run test:run -- search-bitonic/searchBitonic.test.ts",
+    "test:sorted-matrix-search": "npm run test:run -- sorted-matrix-search/searchSortedMatrix.test.ts",
     "test:kth": "npm run test:run -- kth/findKthSortedArrays.test.ts",
     "test:heapsort": "npm run test:run -- heapsort/heapSort.test.ts",
     "test:partition": "npm run test:run -- partition/partition.test.ts",
