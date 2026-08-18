@@ -21,17 +21,17 @@ function naive(temperatures: number[]): number[] {
 describe("dailyTemperatures", () => {
   it("example 1", () => {
     assert.deepEqual(
-      dailyTemperatures([73, 74, 75, 71, 69, 72, 76, 73]),
-      [1, 1, 4, 2, 1, 1, 0, 0],
+      dailyTemperatures([18, 21, 19, 24, 22]),
+      [1, 2, 1, 0, 0],
     );
   });
 
   it("example 2", () => {
-    assert.deepEqual(dailyTemperatures([30, 40, 50, 60]), [1, 1, 1, 0]);
+    assert.deepEqual(dailyTemperatures([5, 6, 7]), [1, 1, 0]);
   });
 
   it("example 3", () => {
-    assert.deepEqual(dailyTemperatures([30, 60, 90]), [1, 1, 0]);
+    assert.deepEqual(dailyTemperatures([9, 4, 4]), [0, 0, 0]);
   });
 
   it("single day", () => {

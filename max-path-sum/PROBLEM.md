@@ -1,4 +1,4 @@
-# Binary Tree Maximum Path Sum
+# Max Path Sum in a Tree
 
 **Difficulty:** Hard  
 **Topics:** Binary tree, Post-order  
@@ -6,26 +6,24 @@
 
 ## Problem
 
-A **path** in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge. Nodes appear at most once. The path **does not need to pass through the root**.
+A path is a walk along tree edges that does not repeat a node. It may start and end anywhere — it does **not** have to include the root.
 
-The **path sum** is the sum of node values on the path.
+Return the largest sum of node values on any non-empty path.
 
-Given the `root`, return the maximum path sum of any non-empty path.
-
-This is a **post-order** problem: you need both children’s answers before you can decide what this node contributes (best downward gain vs a path that bends here).
+Work **post-order**: both children’s results are needed before this node can choose a downward gain vs a path that bends here.
 
 `TreeNode` is exported from the stub file.
 
 ## Examples
 
 ```
-Input:  root = [1,2,3]
-Output: 6
-Explanation: path 2 → 1 → 3
+Input:  root = [2, -1, 3]
+Output: 4
+Explanation: path -1 → 2 → 3
 
-Input:  root = [-10,9,20,null,null,15,7]
-Output: 42
-Explanation: path 15 → 20 → 7
+Input:  root = [4, -2, 7, null, null, 3, 1]
+Output: 14
+Explanation: path 4 → 7 → 3
 ```
 
 ## Constraints

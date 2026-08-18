@@ -1,4 +1,4 @@
-# Course Schedule II
+# Course Order
 
 **Difficulty:** Medium  
 **Topics:** Graph  
@@ -6,18 +6,18 @@
 
 ## Problem
 
-There are `numCourses` courses labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` means you must take course `bi` before course `ai`.
+There are `numCourses` classes numbered `0 … numCourses - 1`. Each pair `[a, b]` in `prerequisites` means **`b` must come before `a`**.
 
-Return **any** valid order of courses to finish all. If it is impossible (cycle), return an empty array.
+Return any permutation that respects every pair. If a cycle makes that impossible, return `[]`.
 
 ## Examples
 
 ```
-Input:  numCourses = 2, prerequisites = [[1,0]]
-Output: [0,1]
+Input:  numCourses = 3, prerequisites = [[1,0],[2,1]]
+Output: [0, 1, 2]
 
-Input:  numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
-Output: [0,1,2,3]   // or [0,2,1,3]
+Input:  numCourses = 3, prerequisites = [[1,0],[2,0],[2,1]]
+Output: [0, 1, 2]   // [0, 1, 2] is the only order
 
 Input:  numCourses = 1, prerequisites = []
 Output: [0]

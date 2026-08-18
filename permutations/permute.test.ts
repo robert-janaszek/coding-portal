@@ -16,6 +16,13 @@ function assertSamePerms(actual: number[][], expected: number[][]) {
 
 describe("permute", () => {
   it("example 1", () => {
+    assertSamePerms(permute([4, 8]), [
+      [4, 8],
+      [8, 4],
+    ]);
+  });
+
+  it("three elements", () => {
     assertSamePerms(permute([1, 2, 3]), [
       [1, 2, 3],
       [1, 3, 2],
@@ -27,10 +34,7 @@ describe("permute", () => {
   });
 
   it("example 2", () => {
-    assertSamePerms(permute([0, 1]), [
-      [0, 1],
-      [1, 0],
-    ]);
+    assertSamePerms(permute([9]), [[9]]);
   });
 
   it("example 3", () => {

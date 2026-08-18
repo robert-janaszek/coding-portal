@@ -1,4 +1,4 @@
-# Reverse Linked List
+# Flip a Singly Linked List
 
 **Difficulty:** Easy
 **Topics:** Linked List
@@ -6,24 +6,24 @@
 
 ## Problem
 
-Given the `head` of a singly linked list, reverse the list and return the new head.
+Given `head`, reverse the chain and return the node that used to be last.
 
-Reverse **in place** by rewiring `next` pointers. Do not allocate a new chain of nodes. Recursion uses `O(n)` call-stack space, so it does not meet the space target.
+Rewire `next` pointers on the existing nodes. Building a second list of new nodes does not meet the space target. Recursion uses `O(n)` call-stack space, so it also fails the target.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  head = [1, 2, 3, 4, 5]
-Output: [5, 4, 3, 2, 1]
+Input:  head = [8, 3, 1, 6]
+Output: [6, 1, 3, 8]
 ```
 
 ### Example 2
 
 ```
-Input:  head = [1, 2]
-Output: [2, 1]
+Input:  head = [4, 9]
+Output: [9, 4]
 ```
 
 ### Example 3

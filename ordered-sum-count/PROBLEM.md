@@ -6,22 +6,18 @@
 
 ## Problem
 
-Given an array of **distinct** positive integers `nums` and a target integer `target`, return the number of sequences that sum to `target`. You may reuse a number **unlimited** times.
-
-Order matters: `[1, 2]` and `[2, 1]` are two different sequences.
+Given distinct positive integers `nums` and a `target`, count sequences that sum to `target`. Values may be reused. Order matters: `[1, 3]` and `[3, 1]` are different.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums = [1, 2, 3], target = 4
-Output: 7
+Input:  nums = [1, 3], target = 4
+Output: 4
 Explanation:
 [1,1,1,1]
-[1,1,2], [1,2,1], [2,1,1]
-[1,3], [3,1]
-[2,2]
+[1,1,3], [1,3,1], [3,1,1]
 ```
 
 ### Example 2
@@ -34,10 +30,9 @@ Output: 0
 ### Example 3
 
 ```
-Input:  nums = [2, 3, 6, 7], target = 7
-Output: 4
-Explanation:
-[2,2,3], [2,3,2], [3,2,2], [7]
+Input:  nums = [2, 5], target = 7
+Output: 2
+Explanation: [2, 5] and [5, 2]
 ```
 
 ## Constraints (exercise)

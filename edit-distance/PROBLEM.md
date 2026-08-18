@@ -1,4 +1,4 @@
-# Edit Distance
+# String Conversion Cost
 
 **Difficulty:** Hard  
 **Topics:** Strings  
@@ -6,23 +6,22 @@
 
 ## Problem
 
-Given two strings `word1` and `word2`, return the minimum number of operations required to convert `word1` to `word2`.
+Turn `word1` into `word2` using the fewest edits. Each of these counts as one edit:
 
-Allowed operations (each costs 1):
-
-- Insert a character
-- Delete a character
-- Replace a character
+- insert one character
+- delete one character
+- replace one character with another
 
 ## Examples
 
 ```
-Input:  word1 = "horse", word2 = "ros"
-Output: 3
-Explanation: horse → rorse → rose → ros
+Input:  word1 = "kitten", word2 = "mitten"
+Output: 1
+Explanation: replace k → m
 
-Input:  word1 = "intention", word2 = "execution"
-Output: 5
+Input:  word1 = "cart", word2 = "cats"
+Output: 1
+Explanation: replace r → s
 ```
 
 ## Constraints

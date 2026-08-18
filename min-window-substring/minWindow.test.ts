@@ -16,15 +16,15 @@ function covers(window: string, t: string): boolean {
 
 describe("minWindow", () => {
   it("example 1", () => {
-    assert.equal(minWindow("ADOBECODEBANC", "ABC"), "BANC");
+    assert.equal(minWindow("mmxymzym", "xyz"), "xymz");
   });
 
   it("example 2", () => {
-    assert.equal(minWindow("a", "a"), "a");
+    assert.equal(minWindow("k", "k"), "k");
   });
 
   it("example 3: impossible", () => {
-    assert.equal(minWindow("a", "aa"), "");
+    assert.equal(minWindow("k", "kk"), "");
   });
 
   it("whole string needed", () => {

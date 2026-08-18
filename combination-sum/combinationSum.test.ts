@@ -16,22 +16,21 @@ function assertSameCombos(actual: number[][], expected: number[][]) {
 
 describe("combinationSum", () => {
   it("example 1", () => {
-    assertSameCombos(combinationSum([2, 3, 6, 7], 7), [
-      [2, 2, 3],
-      [7],
+    assertSameCombos(combinationSum([3, 5, 8], 8), [
+      [3, 5],
+      [8],
     ]);
   });
 
   it("example 2", () => {
-    assertSameCombos(combinationSum([2, 3, 5], 8), [
-      [2, 2, 2, 2],
-      [2, 3, 3],
-      [3, 5],
+    assertSameCombos(combinationSum([4, 5, 6], 10), [
+      [4, 6],
+      [5, 5],
     ]);
   });
 
   it("example 3 — no combination", () => {
-    assertSameCombos(combinationSum([2], 1), []);
+    assertSameCombos(combinationSum([4], 3), []);
   });
 
   it("exact single candidate", () => {

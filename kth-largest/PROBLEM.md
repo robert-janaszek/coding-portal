@@ -1,4 +1,4 @@
-# Kth Largest Element
+# K-th Largest in an Array
 
 **Difficulty:** Medium  
 **Topics:** Arrays  
@@ -6,23 +6,21 @@
 
 ## Problem
 
-Given an integer array `nums` and an integer `k`, return the `k`-th **largest** element in the array (1-indexed: `k = 1` is the maximum).
+Return the `k`-th largest value in `nums` (`k = 1` is the maximum). Duplicates count separately — this is rank in sorted order, not distinct values.
 
-This is the `k`-th largest in **sorted order**, not the `k`-th distinct value.
-
-Do **not** use the language built-in sort (`Array.prototype.sort`, etc.) inside the solution.
+Do **not** call the language sort (`Array.prototype.sort`, etc.) inside the solution.
 
 ## Examples
 
 ```
-Input:  nums = [3,2,1,5,6,4], k = 2
-Output: 5
+Input:  nums = [9, 3, 7, 1], k = 2
+Output: 7
 
-Input:  nums = [3,2,3,1,2,4,5,5,6], k = 4
+Input:  nums = [4, 4, 1, 8, 4], k = 3
 Output: 4
 
-Input:  nums = [1], k = 1
-Output: 1
+Input:  nums = [2], k = 1
+Output: 2
 ```
 
 ## Constraints

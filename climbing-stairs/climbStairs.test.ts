@@ -11,12 +11,12 @@ function naive(n: number): number {
 
 describe("climbStairs", () => {
   describe("examples", () => {
-    it("n = 2", () => {
-      assert.equal(climbStairs(2), 2);
+    it("n = 4", () => {
+      assert.equal(climbStairs(4), 5);
     });
 
-    it("n = 3", () => {
-      assert.equal(climbStairs(3), 3);
+    it("n = 1", () => {
+      assert.equal(climbStairs(1), 1);
     });
   });
 

@@ -1,4 +1,4 @@
-# Climbing Stairs
+# Stair Climbing Ways
 
 **Difficulty:** Easy  
 **Topics:** Counting  
@@ -6,25 +6,19 @@
 
 ## Problem
 
-You are climbing a staircase. It takes `n` steps to reach the top.
+A flight has `n` steps. From a landing you may go up **1** step or **2** steps. Count how many sequences of strides reach the top.
 
-Each time you can either climb **1** or **2** steps. In how many distinct ways can you climb to the top?
+Order matters: `1` then `2` is different from `2` then `1`.
 
 ## Examples
 
 ```
-Input:  n = 2
-Output: 2
-Explanation:
-1. 1 + 1
-2. 2
+Input:  n = 4
+Output: 5
+Explanation: 1+1+1+1, 1+1+2, 1+2+1, 2+1+1, 2+2
 
-Input:  n = 3
-Output: 3
-Explanation:
-1. 1 + 1 + 1
-2. 1 + 2
-3. 2 + 1
+Input:  n = 1
+Output: 1
 ```
 
 ## Constraints

@@ -9,21 +9,15 @@ function assertSameStrings(actual: string[], expected: string[]) {
 
 describe("generateParenthesis", () => {
   it("example 1", () => {
-    assertSameStrings(generateParenthesis(3), [
-      "((()))",
-      "(()())",
-      "(())()",
-      "()(())",
-      "()()()",
-    ]);
+    assertSameStrings(generateParenthesis(2), ["(())", "()()"]);
   });
 
   it("example 2", () => {
     assertSameStrings(generateParenthesis(1), ["()"]);
   });
 
-  it("example 3", () => {
-    assertSameStrings(generateParenthesis(2), ["(())", "()()"]);
+  it("three pairs has Catalan(3) = 5 strings", () => {
+    assert.equal(generateParenthesis(3).length, 5);
   });
 
   it("n = 4 has 14 strings (Catalan)", () => {

@@ -33,8 +33,8 @@ function close(actual: number, expected: number) {
 }
 
 describe("knightProbability", () => {
-  it("example: 3x3, 2 moves from corner", () => {
-    close(knightProbability(3, 2, 0, 0), 0.0625);
+  it("example: 3x3, one move from a corner", () => {
+    close(knightProbability(3, 1, 0, 0), 0.25);
   });
 
   it("k = 0 is always 1", () => {

@@ -1,4 +1,4 @@
-# Combination Sum
+# Unbounded Combinations
 
 **Difficulty:** Medium
 **Topics:** Combinatorics
@@ -6,36 +6,35 @@
 
 ## Problem
 
-Given an array of **distinct** positive integers `candidates` and a target integer `target`, return all unique combinations where the chosen numbers sum to `target`.
+`candidates` are distinct positive integers. List every multiset drawn from them that sums to `target`. A value may be reused any number of times.
 
-You may reuse the same number from `candidates` **unlimited** times.
+Two lists are the same combination if they have the same counts. `[3, 5]` and `[5, 3]` are one combination. Order of the returned list does not matter.
 
-Two combinations are unique if the frequency of at least one number differs. Order inside a combination does not matter (treat `[2,2,3]` and `[2,3,2]` as the same). Order of the returned list does not matter.
-
-This is combinations again: a `start` index avoids permutations of the same multiset. The twist is you may stay on the same index (reuse) instead of always advancing.
+Keep a `start` index so you do not emit permutations of the same multiset; staying on that index is how reuse works.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  candidates = [2, 3, 6, 7], target = 7
-Output: [[2,2,3], [7]]
+Input:  candidates = [3, 5, 8], target = 8
+Output: [[3, 5], [8]]
 ```
 
 ### Example 2
 
 ```
-Input:  candidates = [2, 3, 5], target = 8
-Output: [[2,2,2,2], [2,3,3], [3,5]]
+Input:  candidates = [4, 5, 6], target = 10
+Output: [[4, 6], [5, 5]]
 ```
 
 ### Example 3
 
 ```
-Input:  candidates = [2], target = 1
+Input:  candidates = [4], target = 3
 Output: []
 ```
+
 
 ## Constraints (exercise)
 

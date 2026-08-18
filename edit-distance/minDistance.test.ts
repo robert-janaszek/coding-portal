@@ -4,12 +4,12 @@ import { it } from "../test/it";
 import { minDistance } from "./minDistance";
 
 describe("minDistance (Edit Distance)", () => {
-  it("example: horse → ros", () => {
-    assert.equal(minDistance("horse", "ros"), 3);
+  it("example: kitten → mitten", () => {
+    assert.equal(minDistance("kitten", "mitten"), 1);
   });
 
-  it("example: intention → execution", () => {
-    assert.equal(minDistance("intention", "execution"), 5);
+  it("example: cart → cats", () => {
+    assert.equal(minDistance("cart", "cats"), 1);
   });
 
   it("identical strings", () => {

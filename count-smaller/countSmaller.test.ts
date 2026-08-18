@@ -5,15 +5,15 @@ import { countSmaller } from "./countSmaller";
 
 describe("countSmaller", () => {
   it("example 1", () => {
-    assert.deepEqual(countSmaller([5, 2, 6, 1]), [2, 1, 1, 0]);
+    assert.deepEqual(countSmaller([8, 1, 5, 2]), [3, 0, 1, 0]);
   });
 
   it("example 2", () => {
-    assert.deepEqual(countSmaller([-1]), [0]);
+    assert.deepEqual(countSmaller([4]), [0]);
   });
 
   it("example 3 equal values", () => {
-    assert.deepEqual(countSmaller([-1, -1]), [0, 0]);
+    assert.deepEqual(countSmaller([2, 2]), [0, 0]);
   });
 
   it("strictly decreasing", () => {

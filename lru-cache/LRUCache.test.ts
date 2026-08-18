@@ -6,15 +6,15 @@ import { LRUCache } from "./LRUCache";
 describe("LRUCache", () => {
   it("example", () => {
     const cache = new LRUCache(2);
-    cache.put(1, 1);
-    cache.put(2, 2);
-    assert.equal(cache.get(1), 1);
-    cache.put(3, 3);
-    assert.equal(cache.get(2), -1);
-    cache.put(4, 4);
-    assert.equal(cache.get(1), -1);
-    assert.equal(cache.get(3), 3);
-    assert.equal(cache.get(4), 4);
+    cache.put(10, 10);
+    cache.put(20, 20);
+    assert.equal(cache.get(10), 10);
+    cache.put(30, 30);
+    assert.equal(cache.get(20), -1);
+    cache.put(40, 40);
+    assert.equal(cache.get(10), -1);
+    assert.equal(cache.get(30), 30);
+    assert.equal(cache.get(40), 40);
   });
 
   it("capacity 1", () => {

@@ -1,4 +1,4 @@
-# Permutations
+# All Orderings
 
 **Difficulty:** Medium
 **Topics:** Combinatorics
@@ -6,33 +6,26 @@
 
 ## Problem
 
-Given an array of **distinct** integers `nums`, return all possible permutations.
+`nums` holds distinct integers. Return every permutation.
 
 Order of the returned lists does not matter.
 
-Combinations always pick the next number **to the right**. Here order matters, so any unused number can go in the next slot.
+Unlike combinations (always take the next unused value **to the right**), here any unused value can fill the next slot.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums = [1, 2, 3]
-Output: [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+Input:  nums = [4, 8]
+Output: [[4, 8], [8, 4]]
 ```
 
 ### Example 2
 
 ```
-Input:  nums = [0, 1]
-Output: [[0,1], [1,0]]
-```
-
-### Example 3
-
-```
-Input:  nums = [1]
-Output: [[1]]
+Input:  nums = [9]
+Output: [[9]]
 ```
 
 ## Constraints (exercise)

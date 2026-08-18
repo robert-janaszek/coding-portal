@@ -26,15 +26,15 @@ function close(actual: number, expected: number) {
 
 describe("champagneTower", () => {
   it("example: 1 cup, query row 1 is empty", () => {
-    close(champagneTower(1, 1, 1), 0);
+    close(champagneTower(1, 1, 0), 0);
   });
 
   it("example: 2 cups, row 1 is half full", () => {
-    close(champagneTower(2, 1, 1), 0.5);
+    close(champagneTower(3, 1, 0), 1);
   });
 
   it("example: huge pour fills (33, 17)", () => {
-    close(champagneTower(100_000_009, 33, 17), 1);
+    close(champagneTower(8, 2, 1), 1);
   });
 
   it("poured = 0 is always empty", () => {

@@ -1,37 +1,36 @@
-# Merge Intervals
+# Combine Overlapping Ranges
 
 **Difficulty:** Medium
 **Topics:** Arrays, Intervals
 **Target:** `O(n log n)` time, `O(n)` space (or `O(1)` extra excluding output)
 
 ## Problem
-Given an array of intervals where each interval is `[start, end]`, merge all overlapping intervals.
 
-Two intervals overlap if they share at least one point. In particular, intervals that touch at the boundary (e.g. `[1,4]` and `[4,5]`) should be merged.
+Each range is a closed pair `[start, end]`. Fuse every pair that overlaps or merely **touches** at an endpoint (`[2, 5]` and `[5, 8]` become `[2, 8]`).
 
-Return the merged intervals as an array of `[start, end]`, sorted by `start`.
+Return the fused ranges, sorted by `start`.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  intervals = [[1,3],[2,6],[8,10],[15,18]]
-Output: [[1,6],[8,10],[15,18]]
+Input:  intervals = [[2, 5], [1, 3], [9, 12], [8, 10]]
+Output: [[1, 5], [8, 12]]
 ```
 
 ### Example 2
 
 ```
-Input:  intervals = [[1,4],[0,4]]
-Output: [[0,4]]
+Input:  intervals = [[4, 7], [0, 4]]
+Output: [[0, 7]]
 ```
 
 ### Example 3
 
 ```
-Input:  intervals = [[1,4],[4,5]]
-Output: [[1,5]]
+Input:  intervals = [[3, 6], [6, 9]]
+Output: [[3, 9]]
 ```
 
 ## Constraints (exercise)

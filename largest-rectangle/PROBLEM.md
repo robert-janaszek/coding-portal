@@ -1,4 +1,4 @@
-# Largest Rectangle in Histogram
+# Histogram Max Rectangle
 
 **Difficulty:** Hard  
 **Topics:** Arrays  
@@ -6,17 +6,17 @@
 
 ## Problem
 
-Given an array of integers `heights` representing the histogram's bar height where the width of each bar is `1`, return the area of the largest rectangle in the histogram.
+`heights[i]` is the height of bar `i`; every bar has width `1`. Find the largest axis-aligned rectangle that fits inside the histogram (the rectangle’s top may span several consecutive bars, limited by the shortest of them).
 
 ## Examples
 
 ```
-Input:  heights = [2,1,5,6,2,3]
-Output: 10
-Explanation: rectangle of height 5 covering indices [2,3] → area 10
+Input:  heights = [2, 4, 2]
+Output: 6
+Explanation: height 2 across all three bars
 
-Input:  heights = [2,4]
-Output: 4
+Input:  heights = [3, 1]
+Output: 3
 ```
 
 ## Constraints

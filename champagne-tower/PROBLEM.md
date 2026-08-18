@@ -1,4 +1,4 @@
-# Champagne Tower
+# Overflow Pyramid
 
 **Difficulty:** Medium  
 **Topics:** Probability  
@@ -6,28 +6,24 @@
 
 ## Problem
 
-Glasses are stacked in a pyramid: row `0` has 1 glass, row `1` has 2, …, row `r` has `r + 1` glasses. Each glass holds **1** cup.
+Glasses form a pyramid: row `r` has `r + 1` glasses, each holding **1** unit. You pour `poured` units into the top glass `(0, 0)`. Overflow splits **evenly** to the two glasses below. Anything that runs off the bottom row is lost.
 
-You pour `poured` cups into the **top** glass `(0, 0)`. Any overflow splits **equally** to the two glasses below (left and right). Overflow from the bottom row is lost.
+How full is glass `queryGlass` in row `queryRow` (both 0-based)? Full is `1`, empty is `0`, otherwise a fraction in `(0, 1)`.
 
-Return how full glass `queryGlass` in row `queryRow` is (both **0-indexed**). A full glass is `1`; an empty glass is `0`. Partial fill is a fraction in `(0, 1)`.
-
-Answers within `10^{-6}` of the true value are accepted.
-
-You cannot simulate one cup at a time — `poured` can be up to `10^9`.
+Answers within `10^{-6}` are accepted. Do not simulate one unit at a time — `poured` can be huge.
 
 ## Examples
 
 ```
-Input:  poured = 1, queryRow = 1, queryGlass = 1
+Input:  poured = 1, queryRow = 1, queryGlass = 0
 Output: 0
-Explanation: one cup fills only the top glass; row 1 stays empty
+Explanation: the single unit stays in the top glass
 
-Input:  poured = 2, queryRow = 1, queryGlass = 1
-Output: 0.5
-Explanation: top keeps 1 and overflows 1; that 1 splits 0.5 / 0.5 to the two glasses in row 1
+Input:  poured = 3, queryRow = 1, queryGlass = 0
+Output: 1
+Explanation: top keeps 1 and sends 1 to each glass in row 1
 
-Input:  poured = 100000009, queryRow = 33, queryGlass = 17
+Input:  poured = 8, queryRow = 2, queryGlass = 1
 Output: 1
 ```
 

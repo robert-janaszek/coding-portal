@@ -1,4 +1,4 @@
-# Reverse Pairs
+# Heavy Inversions
 
 **Difficulty:** Hard  
 **Topics:** Arrays, Divide and Conquer  
@@ -6,41 +6,37 @@
 
 ## Problem
 
-Given an integer array `nums`, return the number of **reverse pairs**.
+Count pairs of indices `(i, j)` with `i < j` and `nums[i] > 2 * nums[j]`.
 
-A reverse pair is a pair of indices `(i, j)` such that:
-
-- `0 <= i < j < nums.length`
-- `nums[i] > 2 * nums[j]`
-
-Same family as **Count Smaller After Self**: divide by index, merge-sort the halves, count crossing pairs during merge. The comparison for counting is `>` vs `2 *`, not just `<`.
+Same merge-sort family as **Right-Side Smaller Counts**, but the crossing test is `>` vs `2 *`, not just `<`.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums = [1, 3, 2, 3, 1]
+Input:  nums = [6, 1, 2]
 Output: 2
 ```
 
-Pairs: `(1, 4)` → `3 > 2 * 1`, and `(3, 4)` → `3 > 2 * 1`.
+Pairs: `6 > 2 * 1` and `6 > 2 * 2`.
 
 ### Example 2
 
 ```
-Input:  nums = [2, 4, 3, 5, 1]
-Output: 3
+Input:  nums = [9, 2, 3]
+Output: 2
 ```
 
-Pairs: `(1, 4)` → `4 > 2`, `(2, 4)` → `3 > 2`, `(3, 4)` → `5 > 2`.
+Pairs: `9 > 2 * 2` and `9 > 2 * 3`. `2 > 2 * 3` is false.
 
 ### Example 3
 
 ```
-Input:  nums = [5, 4, 3, 2, 1]
-Output: 4
+Input:  nums = [4, 1]
+Output: 1
 ```
+
 
 ## Constraints
 

@@ -31,11 +31,11 @@ function tree(vals: (number | null)[]): TreeNode | null {
 
 describe("maxPathSum", () => {
   it("example 1", () => {
-    assert.equal(maxPathSum(tree([1, 2, 3])), 6);
+    assert.equal(maxPathSum(tree([2, -1, 3])), 4);
   });
 
   it("example 2", () => {
-    assert.equal(maxPathSum(tree([-10, 9, 20, null, null, 15, 7])), 42);
+    assert.equal(maxPathSum(tree([4, -2, 7, null, null, 3, 1])), 14);
   });
 
   it("single node", () => {

@@ -5,16 +5,16 @@ import { searchRotated } from "./searchRotated";
 
 describe("searchRotated", () => {
   describe("examples", () => {
-    it("finds target in the right (rotated) half", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], 0), 4);
+    it("finds target in the right (pivoted) half", () => {
+      assert.equal(searchRotated([8, 14, -3, 0, 2], 0), 3);
     });
 
     it("missing target", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], 3), -1);
+      assert.equal(searchRotated([8, 14, -3, 0, 2], 5), -1);
     });
 
     it("single element miss", () => {
-      assert.equal(searchRotated([1], 0), -1);
+      assert.equal(searchRotated([4], 1), -1);
     });
   });
 
@@ -31,12 +31,12 @@ describe("searchRotated", () => {
       assert.equal(searchRotated([6, 7, 1, 2, 3, 4, 5], 7), 1);
     });
 
-    it("target is the smallest (new head after rotation)", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], 4), 0);
+    it("target is the smallest (new head after pivot)", () => {
+      assert.equal(searchRotated([8, 14, -3, 0, 2], 8), 0);
     });
 
     it("target is the last element", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], 2), 6);
+      assert.equal(searchRotated([8, 14, -3, 0, 2], 2), 4);
     });
   });
 
@@ -62,11 +62,11 @@ describe("searchRotated", () => {
     });
 
     it("target smaller than all", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], -1), -1);
+      assert.equal(searchRotated([8, 14, -3, 0, 2], -4), -1);
     });
 
     it("target larger than all", () => {
-      assert.equal(searchRotated([4, 5, 6, 7, 0, 1, 2], 8), -1);
+      assert.equal(searchRotated([8, 14, -3, 0, 2], 15), -1);
     });
   });
 

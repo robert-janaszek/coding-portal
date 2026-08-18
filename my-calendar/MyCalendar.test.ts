@@ -6,12 +6,12 @@ import { MyCalendar } from "./MyCalendar";
 describe("MyCalendar", () => {
   it("example 1", () => {
     const cal = new MyCalendar();
-    assert.equal(cal.book(10, 20), true);
-    assert.equal(cal.book(15, 25), false);
-    assert.equal(cal.book(20, 30), true);
+    assert.equal(cal.book(8, 14), true);
+    assert.equal(cal.book(11, 16), false);
+    assert.equal(cal.book(14, 20), true);
   });
 
-  it("example 2", () => {
+  it("several overlapping and back-to-back bookings", () => {
     const cal = new MyCalendar();
     assert.equal(cal.book(47, 50), true);
     assert.equal(cal.book(33, 41), true);

@@ -1,4 +1,4 @@
-# Hints — Search in Rotated Sorted Array
+# Hints — Search a Pivoted Array
 
 Spoilers. Read only after you have tried on your own.
 

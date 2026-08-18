@@ -1,4 +1,4 @@
-# Median of Two Sorted Arrays
+# Median of Two Sorted Sequences
 
 **Difficulty:** Hard  
 **Topics:** Arrays  
@@ -6,26 +6,26 @@
 
 ## Problem
 
-Given two sorted arrays `nums1` and `nums2` of size `m` and `n` respectively, return the median of the two sorted arrays.
+`nums1` and `nums2` are each sorted non-decreasing. Return the median of the combined multiset, without merging the arrays into one.
 
-The overall run time complexity should be `O(log (m+n))`.
+If the total length is even, return the average of the two middle values (a float).
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums1 = [1,3], nums2 = [2]
-Output: 2.00000
-Explanation: merged = [1,2,3], median = 2
+Input:  nums1 = [2, 8], nums2 = [4]
+Output: 4
+Explanation: combined [2, 4, 8]
 ```
 
 ### Example 2
 
 ```
-Input:  nums1 = [1,2], nums2 = [3,4]
-Output: 2.50000
-Explanation: merged = [1,2,3,4], median = (2 + 3) / 2 = 2.5
+Input:  nums1 = [1, 5], nums2 = [2, 9]
+Output: 3.5
+Explanation: combined [1, 2, 5, 9], middle pair 2 and 5
 ```
 
 ## Constraints

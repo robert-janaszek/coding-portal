@@ -1,4 +1,4 @@
-# Clone Graph
+# Deep Copy a Graph
 
 **Difficulty:** Medium  
 **Topics:** Graph, Objects and pointers  
@@ -6,13 +6,11 @@
 
 ## Problem
 
-Given a reference to a node in a **connected graph**, return a **deep copy** of the graph.
+Given one node of a **connected** graph, return a **deep copy**.
 
-Each node has a unique `val` (`1` … `n`) and a list of `neighbors`. The copy must have the same connectivity, but **no node object from the original graph** may appear in the copy.
+Each node has a unique `val` (`1` … `n`) and a `neighbors` list. The copy must match the connectivity, and **must not reuse** any original node object.
 
-Neighbor lists may be **one-way** (a chain or a star) or **bidirectional** (undirected edges, which form cycles through object pointers).
-
-If `node` is `null`, return `null`.
+Edges may be one-way (a chain) or two-way (an undirected cycle through pointers). `null` copies to `null`.
 
 ## Examples
 
@@ -23,19 +21,18 @@ Output: a new node 1 whose only neighbor is a new node 2 (2 has no neighbors)
 Input:  1 -> 2 -> 3
 Output: a new chain with the same vals and one-way edges
 
-Input:  adjList = [[2,4],[1,3],[2,4],[1,3]]
-Output: [[2,4],[1,3],[2,4],[1,3]]
-Explanation: four nodes 1—2—3—4—1 (an undirected square)
+Input:  adjList = [[2, 3], [1], [1]]
+Output: node 1 linked both ways to 2 and to 3; 2 and 3 are not linked to each other
 
 Input:  adjList = [[]]
 Output: [[]]
-Explanation: one node with no neighbors
+Explanation: one node, no neighbors
 
 Input:  node = null
 Output: null
 ```
 
-`adjList[i]` is the neighbor list of node `i + 1` (1-indexed values).
+`adjList[i]` lists neighbors of node `i + 1` (values are 1-based).
 
 ## Constraints
 

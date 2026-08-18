@@ -1,4 +1,4 @@
-# Coin Change
+# Fewest Coins
 
 **Difficulty:** Medium
 **Topics:** Combinatorics
@@ -6,35 +6,33 @@
 
 ## Problem
 
-You are given an array of **distinct** positive integers `coins` (denominations) and an integer `amount`.
+`coins` is a set of distinct positive denominations. Make exactly `amount` using as **few** coins as possible. Each denomination may be used any number of times.
 
-Return the **fewest** number of coins that sum to `amount`. You may reuse a coin **unlimited** times.
+If it is impossible, return `-1`. `amount = 0` needs `0` coins.
 
-If no combination works, return `-1`. `amount = 0` needs `0` coins.
-
-Order does not matter: `3 + 3` and `4 + 1 + 1` are two different ways to make `6`; you only care that `3 + 3` uses fewer coins.
+You only care about the count, not the order of coins.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  coins = [1, 2, 5], amount = 11
-Output: 3
-Explanation: 11 = 5 + 5 + 1
+Input:  coins = [2, 7, 9], amount = 11
+Output: 2
+Explanation: 9 + 2
 ```
 
 ### Example 2
 
 ```
-Input:  coins = [2], amount = 3
+Input:  coins = [4], amount = 7
 Output: -1
 ```
 
 ### Example 3
 
 ```
-Input:  coins = [1], amount = 0
+Input:  coins = [3], amount = 0
 Output: 0
 ```
 
@@ -43,7 +41,7 @@ Output: 0
 ```
 Input:  coins = [1, 3, 4], amount = 6
 Output: 2
-Explanation: 3 + 3, not 4 + 1 + 1 (greedy by largest coin is wrong here)
+Explanation: 3 + 3 — taking the largest coin first is wrong here
 ```
 
 ## Constraints (exercise)

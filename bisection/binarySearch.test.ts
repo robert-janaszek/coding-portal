@@ -6,15 +6,15 @@ import { binarySearch } from "./binarySearch";
 describe("binarySearch (bisection)", () => {
   describe("examples", () => {
     it("finds target in the middle-right", () => {
-      assert.equal(binarySearch([-1, 0, 3, 5, 9, 12], 9), 4);
+      assert.equal(binarySearch([2, 4, 8, 16, 32], 16), 3);
     });
 
     it("missing target", () => {
-      assert.equal(binarySearch([-1, 0, 3, 5, 9, 12], 2), -1);
+      assert.equal(binarySearch([2, 4, 8, 16, 32], 6), -1);
     });
 
     it("single element hit", () => {
-      assert.equal(binarySearch([5], 5), 0);
+      assert.equal(binarySearch([7], 7), 0);
     });
   });
 

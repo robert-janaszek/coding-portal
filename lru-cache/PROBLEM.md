@@ -1,4 +1,4 @@
-# LRU Cache
+# Least-Recently-Used Map
 
 **Difficulty:** Medium  
 **Topics:** Design  
@@ -6,27 +6,25 @@
 
 ## Problem
 
-Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.
+Build a fixed-capacity key/value store. `get` and `put` both count as a **use**. When `put` would exceed capacity, drop the key that has gone unused the longest.
 
-Implement `LRUCache` class:
-
-- `LRUCache(capacity)` initialize with positive capacity
-- `get(key)` return value if present, else `-1`; counts as use
-- `put(key, value)` insert or update; counts as use; if over capacity, evict **least recently used** key
+- `LRUCache(capacity)` — empty store, `capacity >= 1`
+- `get(key)` — value, or `-1` if missing
+- `put(key, value)` — insert or overwrite
 
 ## Examples
 
 ```
-LRUCache lRUCache = new LRUCache(2);
-lRUCache.put(1, 1); // cache is {1=1}
-lRUCache.put(2, 2); // cache is {1=1, 2=2}
-lRUCache.get(1);    // return 1
-lRUCache.put(3, 3); // evicts key 2 → {1=1, 3=3}
-lRUCache.get(2);    // return -1
-lRUCache.put(4, 4); // evicts key 1 → {3=3, 4=4}
-lRUCache.get(1);    // return -1
-lRUCache.get(3);    // return 3
-lRUCache.get(4);    // return 4
+const cache = new LRUCache(2);
+cache.put(10, 10); // {10}
+cache.put(20, 20); // {10, 20}
+cache.get(10);     // 10  — 10 is now most recent
+cache.put(30, 30); // drops 20 → {10, 30}
+cache.get(20);     // -1
+cache.put(40, 40); // drops 10 → {30, 40}
+cache.get(10);     // -1
+cache.get(30);     // 30
+cache.get(40);     // 40
 ```
 
 ## Constraints

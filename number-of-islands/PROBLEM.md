@@ -1,13 +1,14 @@
-# Number of Islands
+# Count Landmasses
 
 **Difficulty:** Medium
 **Topics:** Graph, Grid
 **Target:** `O(m*n)` time, `O(m*n)` space
 
 ## Problem
-Given an `m x n` 2D grid of characters `grid`, where each character is either `'1'` (land) or `'0'` (water), return the number of islands.
 
-An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are surrounded by water.
+You get an `m x n` map: `'1'` is land, `'0'` is water. Count how many landmasses there are.
+
+A landmass is a group of land cells linked along edges (up / down / left / right — not diagonals). The map is surrounded by water.
 
 ## Examples
 
@@ -15,12 +16,11 @@ An island is surrounded by water and is formed by connecting adjacent lands hori
 
 ```
 Input:  grid = [
-  ["1","1","0","0","0"],
-  ["1","1","0","0","0"],
-  ["0","0","1","0","0"],
-  ["0","0","0","1","1"]
+  ["1","0","1","0"],
+  ["1","0","1","1"],
+  ["0","0","0","1"]
 ]
-Output: 3
+Output: 2
 ```
 
 ### Example 2

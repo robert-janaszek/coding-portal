@@ -1,4 +1,4 @@
-# New 21 Game
+# Stop-at-K Draw Game
 
 **Difficulty:** Medium  
 **Topics:** Probability  
@@ -6,27 +6,24 @@
 
 ## Problem
 
-Alice starts with **0** points. While her score is **strictly less than** `k`, she draws an integer uniformly from `1 … maxPts` and adds it to her score. Draws are independent.
+Score starts at `0`. While it is **strictly less than** `k`, add an independent uniform draw from `1 … maxPts`. Stop at the first score `>= k`.
 
-She **stops** as soon as the score is `>= k`.
-
-Return the probability that her **final** score is `<= n`.
-
-Answers within `10^{-5}` of the true value are accepted.
+Return the probability that the **final** score is `<= n`. Answers within `10^{-5}` are accepted.
 
 ## Examples
 
 ```
-Input:  n = 10, k = 1, maxPts = 10
+Input:  n = 8, k = 1, maxPts = 8
 Output: 1
-Explanation: she draws once (already k = 1) and the result is at most 10
+Explanation: one draw in 1..8, all of which are <= 8
 
-Input:  n = 6, k = 1, maxPts = 10
-Output: 0.6
-Explanation: one draw in 1..10; 6 of 10 outcomes are <= 6
+Input:  n = 4, k = 1, maxPts = 8
+Output: 0.5
+Explanation: one draw; 4 of 8 outcomes are <= 4
 
-Input:  n = 21, k = 17, maxPts = 10
-Output: 0.73278
+Input:  n = 12, k = 8, maxPts = 4
+Output: 1
+Explanation: you stop between 8 and 11, all <= 12
 ```
 
 ## Constraints

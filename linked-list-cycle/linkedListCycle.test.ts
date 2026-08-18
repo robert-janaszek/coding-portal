@@ -22,12 +22,12 @@ describe("linkedListCycle", () => {
   });
 
   it("no cycle", () => {
-    const head = buildList([1, 2], -1);
+    const head = buildList([7], -1);
     assert.equal(hasCycle(head), false);
   });
 
-  it("cycle starting at index 1", () => {
-    const head = buildList([3, 2, 0, -4], 1);
+  it("cycle starting at index 2", () => {
+    const head = buildList([5, 1, 9], 2);
     assert.equal(hasCycle(head), true);
   });
 

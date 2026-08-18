@@ -1,4 +1,4 @@
-# Count Smaller After Self
+# Right-Side Smaller Counts
 
 **Difficulty:** Hard  
 **Topics:** Arrays  
@@ -6,43 +6,39 @@
 
 ## Problem
 
-Given an integer array `nums`, return an array `counts` where `counts[i]` is the number of elements to the **right** of `nums[i]` that are **strictly smaller** than `nums[i]`.
-
-In other words, for each index `i`:
+For each index `i`, count how many values **to the right** are **strictly smaller** than `nums[i]`.
 
 `counts[i] = |{ j | j > i and nums[j] < nums[i] }|`
+
+Equals do not count.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums = [5, 2, 6, 1]
-Output: [2, 1, 1, 0]
+Input:  nums = [8, 1, 5, 2]
+Output: [3, 0, 1, 0]
 ```
 
-Explanation:
-
-- `5` → `2` and `1` are smaller to the right → `2`
-- `2` → only `1` → `1`
-- `6` → only `1` → `1`
-- `1` → nothing → `0`
+- `8` → `1, 5, 2` → `3`
+- `1` → none → `0`
+- `5` → `2` → `1`
+- `2` → none → `0`
 
 ### Example 2
 
 ```
-Input:  nums = [-1]
+Input:  nums = [4]
 Output: [0]
 ```
 
 ### Example 3
 
 ```
-Input:  nums = [-1, -1]
+Input:  nums = [2, 2]
 Output: [0, 0]
 ```
-
-(Strictly smaller — equal values do not count.)
 
 ## Constraints
 

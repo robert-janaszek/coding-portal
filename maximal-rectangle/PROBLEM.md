@@ -1,4 +1,4 @@
-# Maximal Rectangle
+# Largest All-Ones Rectangle
 
 **Difficulty:** Hard  
 **Topics:** Arrays  
@@ -6,19 +6,17 @@
 
 ## Problem
 
-Given a `rows x cols` binary matrix filled with `'0'` and `'1'`, find the largest rectangle containing only `'1'`s and return its area.
+`matrix` is a grid of `'0'` / `'1'` characters. Return the area of the biggest axis-aligned rectangle made entirely of `'1'`s.
 
 ## Examples
 
 ```
 Input:  matrix = [
-  ["1","0","1","0","0"],
-  ["1","0","1","1","1"],
-  ["1","1","1","1","1"],
-  ["1","0","0","1","0"]
+  ["1","1","0"],
+  ["1","1","1"],
+  ["0","1","1"]
 ]
-Output: 6
-Explanation: the rectangle of ones covering the bottom-right 2×3 block (also other rectangles of area 6 exist)
+Output: 4
 
 Input:  matrix = [["0"]]
 Output: 0

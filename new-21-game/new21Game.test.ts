@@ -24,15 +24,15 @@ function close(actual: number, expected: number) {
 
 describe("new21Game", () => {
   it("example: one draw always <= n", () => {
-    close(new21Game(10, 1, 10), 1);
+    close(new21Game(8, 1, 8), 1);
   });
 
   it("example: one draw, 6 of 10 succeed", () => {
-    close(new21Game(6, 1, 10), 0.6);
+    close(new21Game(4, 1, 8), 0.5);
   });
 
-  it("example: n = 21, k = 17, maxPts = 10", () => {
-    close(new21Game(21, 17, 10), 0.732778);
+  it("example: stop window sits under n", () => {
+    close(new21Game(12, 8, 4), 1);
   });
 
   it("k = 0 never draws", () => {

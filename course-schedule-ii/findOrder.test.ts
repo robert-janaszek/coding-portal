@@ -36,12 +36,12 @@ function check(numCourses: number, prerequisites: [number, number][], possible: 
 }
 
 describe("findOrder (Course Schedule II)", () => {
-  it("example: two courses", () => {
-    check(2, [[1, 0]], true);
+  it("example: three courses in a chain", () => {
+    check(3, [[1, 0], [2, 1]], true);
   });
 
-  it("example: four courses", () => {
-    check(4, [[1, 0], [2, 0], [3, 1], [3, 2]], true);
+  it("example: three courses, 0 before both", () => {
+    check(3, [[1, 0], [2, 0], [2, 1]], true);
   });
 
   it("single course", () => {

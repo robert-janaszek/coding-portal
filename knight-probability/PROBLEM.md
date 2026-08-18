@@ -1,4 +1,4 @@
-# Knight Probability on Chessboard
+# Knight Survival Probability
 
 **Difficulty:** Medium  
 **Topics:** Probability  
@@ -6,19 +6,16 @@
 
 ## Problem
 
-On an `n × n` chessboard, a knight starts at `(row, column)`. Each move it chooses one of the **8** knight jumps **uniformly at random**. If a jump would leave the board, the knight is gone and stays gone.
+An `n × n` board, a knight starts at `(row, column)`. Each turn it picks one of the **8** knight jumps uniformly. A jump that leaves the board removes the knight for good.
 
-Return the probability that the knight is still on the board after exactly `k` moves.
-
-Answers within `10^{-6}` of the true value are accepted.
+Probability that it is still on the board after exactly `k` jumps. Answers within `10^{-6}` are accepted.
 
 ## Examples
 
 ```
-Input:  n = 3, k = 2, row = 0, column = 0
-Output: 0.0625
-Explanation: from (0,0) two of eight first moves stay on the board;
-from each of those, only 2/8 second moves stay → (2/8) * (2/8) = 0.0625
+Input:  n = 3, k = 1, row = 0, column = 0
+Output: 0.25
+Explanation: from a corner, 2 of 8 jumps stay on a 3×3 board
 
 Input:  n = 1, k = 0, row = 0, column = 0
 Output: 1

@@ -1,4 +1,4 @@
-# Minimum Window Substring
+# Shortest Covering Window
 
 **Difficulty:** Hard  
 **Topics:** Strings  
@@ -6,20 +6,20 @@
 
 ## Problem
 
-Given two strings `s` and `t`, return the minimum window substring of `s` such that every character in `t` (including duplicates) is included in the window. If there is no such window, return `""`.
+From `s`, pick the shortest contiguous slice that still contains every character of `t` (with at least the same multiplicity). If several slices share that length, keep the **leftmost**. If nothing covers `t`, return `""`.
 
-If multiple windows have the same minimum length, return the one that appears **first**.
+Comparison is case-sensitive.
 
 ## Examples
 
 ```
-Input:  s = "ADOBECODEBANC", t = "ABC"
-Output: "BANC"
+Input:  s = "mmxymzym", t = "xyz"
+Output: "xymz"
 
-Input:  s = "a", t = "a"
-Output: "a"
+Input:  s = "k", t = "k"
+Output: "k"
 
-Input:  s = "a", t = "aa"
+Input:  s = "k", t = "kk"
 Output: ""
 ```
 

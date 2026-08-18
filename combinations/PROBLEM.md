@@ -1,21 +1,22 @@
-# Combinations (n choose k)
+# k-Subsets of 1..n
 
 **Difficulty:** Medium
 **Topics:** Combinatorics
 **Target:** `O(C(n,k) * k)` time, `O(k)` extra space (excluding output)
 
 ## Problem
-Given two integers `n` and `k`, return all possible combinations of `k` numbers chosen from the range `1...n`.
 
-Each combination should be a list of numbers in increasing order.
+Return every way to pick `k` distinct integers from `1 … n`. Each pick should be listed in increasing order.
+
+Order of the returned lists does not matter.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  n = 4, k = 2
-Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
+Input:  n = 3, k = 2
+Output: [[1, 2], [1, 3], [2, 3]]
 ```
 
 ### Example 2

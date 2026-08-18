@@ -1,4 +1,4 @@
-# Daily Temperatures
+# Days Until Warmer
 
 **Difficulty:** Medium  
 **Topics:** Arrays  
@@ -6,27 +6,25 @@
 
 ## Problem
 
-Given an array of integers `temperatures` representing the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the `i`-th day to get a warmer temperature.
-
-If there is no future day for which this is possible, put `0` instead.
+`temperatures[i]` is the high on day `i`. For each day, how many days later does a **strictly higher** high first appear? Put `0` if it never does.
 
 ## Examples
 
 ```
-Input:  temperatures = [73,74,75,71,69,72,76,73]
-Output: [1,1,4,2,1,1,0,0]
+Input:  temperatures = [18, 21, 19, 24, 22]
+Output: [1, 2, 1, 0, 0]
 
-Input:  temperatures = [30,40,50,60]
-Output: [1,1,1,0]
+Input:  temperatures = [5, 6, 7]
+Output: [1, 1, 0]
 
-Input:  temperatures = [30,60,90]
-Output: [1,1,0]
+Input:  temperatures = [9, 4, 4]
+Output: [0, 0, 0]
 ```
 
 ## Constraints
 
-- `1 <= temperatures.length <= 10^5` (tests stay smaller)
-- `30 <= temperatures[i] <= 100`
+- `1 <= temps.length <= 10^5` (tests stay smaller)
+- values fit in JS `number`
 
 ## Files
 

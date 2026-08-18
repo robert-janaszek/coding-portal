@@ -6,45 +6,41 @@
 
 ## Problem
 
-Given an array of **distinct** positive integers `candidates` and a target integer `target`, return **how many** unique combinations sum to `target`.
+`candidates` are distinct positive integers. Count how many **multisets** drawn from them sum to `target`. A value may be reused. Order does not matter: `[3, 5]` and `[5, 3]` are one combination.
 
-You may reuse a candidate **unlimited** times.
-
-Two combinations are unique if the frequency of at least one number differs. Order does not matter: `[2,2,3]` and `[2,3,2]` count as one.
-
-Return the count, not the lists themselves.
+Return the count, not the lists.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  candidates = [2, 3, 6, 7], target = 7
+Input:  candidates = [3, 5, 8], target = 8
 Output: 2
-Explanation: [2,2,3] and [7]
+Explanation: [3, 5] and [8]
 ```
 
 ### Example 2
 
 ```
-Input:  candidates = [2, 3, 5], target = 8
-Output: 3
-Explanation: [2,2,2,2], [2,3,3], [3,5]
+Input:  candidates = [4, 5, 6], target = 10
+Output: 2
+Explanation: [4, 6], [5, 5]
 ```
 
 ### Example 3
 
 ```
-Input:  candidates = [2], target = 1
+Input:  candidates = [4], target = 3
 Output: 0
 ```
 
 ### Example 4
 
 ```
-Input:  candidates = [1, 2, 5], target = 5
+Input:  candidates = [1, 3, 4], target = 6
 Output: 4
-Explanation: [1,1,1,1,1], [1,1,1,2], [1,2,2], [5]
+Explanation: [1,1,1,1,1,1], [1,1,1,3], [1,1,4], [3,3]
 ```
 
 ## Constraints (exercise)

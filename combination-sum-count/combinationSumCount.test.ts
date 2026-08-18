@@ -22,19 +22,19 @@ function naive(candidates: number[], target: number): number {
 
 describe("combinationSumCount", () => {
   it("example 1", () => {
-    assert.equal(combinationSumCount([2, 3, 6, 7], 7), 2);
+    assert.equal(combinationSumCount([3, 5, 8], 8), 2);
   });
 
   it("example 2", () => {
-    assert.equal(combinationSumCount([2, 3, 5], 8), 3);
+    assert.equal(combinationSumCount([4, 5, 6], 10), 2);
   });
 
   it("example 3 — no combination", () => {
-    assert.equal(combinationSumCount([2], 1), 0);
+    assert.equal(combinationSumCount([4], 3), 0);
   });
 
   it("example 4", () => {
-    assert.equal(combinationSumCount([1, 2, 5], 5), 4);
+    assert.equal(combinationSumCount([1, 3, 4], 6), 4);
   });
 
   it("exact single candidate", () => {

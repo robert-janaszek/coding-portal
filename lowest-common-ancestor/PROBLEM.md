@@ -1,35 +1,44 @@
-# Lowest Common Ancestor (LCA) in Binary Tree
+# Deepest Shared Ancestor
 
 **Difficulty:** Medium
 **Topics:** Binary tree
 **Target:** `O(n)` time, `O(h)` space (recursion stack)
 
 ## Problem
-Given the `root` of a binary tree and two nodes `p` and `q`, return the lowest common ancestor (LCA) of `p` and `q`.
 
-The LCA of two nodes is the lowest node in the tree that has both `p` and `q` as descendants (where a node can be a descendant of itself).
+In a binary tree, the deepest shared ancestor of nodes `p` and `q` is the lowest node that has both as descendants. A node is a descendant of itself.
+
+Return that node (not just its value). `p` and `q` are guaranteed to exist.
+
+`TreeNode` is exported from the stub file.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+      8
+     / \
+    3   10
+   / \
+  1   6
+
+Input:  root = [8, 3, 10, 1, 6], p = 1, q = 6
 Output: 3
 ```
 
 ### Example 2
 
 ```
-Input:  root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
-Output: 5
+Input:  same tree, p = 1, q = 10
+Output: 8
 ```
 
 ### Example 3
 
 ```
-Input:  root = [3,5,1,6,2,0,8,null,null,7,4], p = 6, q = 4
-Output: 5
+Input:  same tree, p = 6, q = 3
+Output: 3
 ```
 
 ## Constraints (exercise)

@@ -1,4 +1,4 @@
-# Search in Rotated Sorted Array
+# Search a Pivoted Array
 
 **Difficulty:** Medium
 **Topics:** Arrays, Search
@@ -6,32 +6,30 @@
 
 ## Problem
 
-An array `nums` of unique integers was sorted in ascending order, then **rotated** at an unknown pivot. For example, `[0, 1, 2, 4, 5, 6, 7]` may become `[4, 5, 6, 7, 0, 1, 2]`.
+`nums` is a strictly increasing sequence that was **cut once** and the two pieces swapped. Example: `[-3, 0, 2, 8, 14]` might become `[8, 14, -3, 0, 2]`. A cut of zero (still fully sorted) is allowed.
 
-Given `nums` and `target`, return the **index** of `target`, or `-1` if it is not present.
-
-You must use modified binary search — do not scan linearly. A rotation is optional: a fully sorted array is a valid input (rotation of `0`).
+Find the index of `target`, or `-1` if it is missing. Use modified binary search — a linear scan is too slow for the target.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  nums = [4, 5, 6, 7, 0, 1, 2], target = 0
-Output: 4
+Input:  nums = [8, 14, -3, 0, 2], target = 0
+Output: 3
 ```
 
 ### Example 2
 
 ```
-Input:  nums = [4, 5, 6, 7, 0, 1, 2], target = 3
+Input:  nums = [8, 14, -3, 0, 2], target = 5
 Output: -1
 ```
 
 ### Example 3
 
 ```
-Input:  nums = [1], target = 0
+Input:  nums = [4], target = 1
 Output: -1
 ```
 

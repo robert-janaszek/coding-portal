@@ -16,15 +16,11 @@ function assertSameSets(actual: number[][], expected: number[][]) {
 
 describe("subsets", () => {
   it("example 1", () => {
-    assertSameSets(subsets([1, 2, 3]), [
+    assertSameSets(subsets([4, 8]), [
       [],
-      [1],
-      [2],
-      [3],
-      [1, 2],
-      [1, 3],
-      [2, 3],
-      [1, 2, 3],
+      [4],
+      [8],
+      [4, 8],
     ]);
   });
 

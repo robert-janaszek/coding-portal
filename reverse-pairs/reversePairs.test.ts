@@ -15,15 +15,15 @@ function brute(nums: number[]): number {
 
 describe("reversePairs", () => {
   it("example 1", () => {
-    assert.equal(reversePairs([1, 3, 2, 3, 1]), 2);
+    assert.equal(reversePairs([6, 1, 2]), 2);
   });
 
   it("example 2", () => {
-    assert.equal(reversePairs([2, 4, 3, 5, 1]), 3);
+    assert.equal(reversePairs([9, 2, 3]), 2);
   });
 
   it("example 3 decreasing", () => {
-    assert.equal(reversePairs([5, 4, 3, 2, 1]), 4);
+    assert.equal(reversePairs([4, 1]), 1);
   });
 
   it("single element", () => {

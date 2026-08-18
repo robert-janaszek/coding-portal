@@ -6,12 +6,11 @@ import { numIslands } from "./numIslands";
 describe("numIslands", () => {
   it("example 1", () => {
     const grid = [
-      ["1", "1", "0", "0", "0"],
-      ["1", "1", "0", "0", "0"],
-      ["0", "0", "1", "0", "0"],
-      ["0", "0", "0", "1", "1"],
+      ["1", "0", "1", "0"],
+      ["1", "0", "1", "1"],
+      ["0", "0", "0", "1"],
     ];
-    assert.equal(numIslands(grid), 3);
+    assert.equal(numIslands(grid), 2);
   });
 
   it("example 2", () => {

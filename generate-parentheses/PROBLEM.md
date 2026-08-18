@@ -1,4 +1,4 @@
-# Generate Parentheses
+# Valid Parenthesis Strings
 
 **Difficulty:** Medium
 **Topics:** Combinatorics
@@ -6,19 +6,19 @@
 
 ## Problem
 
-Given `n` pairs of parentheses, return all strings of well-formed parentheses with exactly `n` pairs.
+Return every string of `n` pairs of parentheses that is correctly matched.
 
 Order of the returned strings does not matter.
 
-The search tree is the same as combinations (`push` a choice, recurse, undo), but a choice is illegal if it can never become a valid string.
+The search is the same “push a choice, recurse, undo” pattern as combinations, except a choice is illegal if it can never become balanced.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  n = 3
-Output: ["((()))", "(()())", "(())()", "()(())", "()()()"]
+Input:  n = 2
+Output: ["(())", "()()"]
 ```
 
 ### Example 2
@@ -26,13 +26,6 @@ Output: ["((()))", "(()())", "(())()", "()(())", "()()()"]
 ```
 Input:  n = 1
 Output: ["()"]
-```
-
-### Example 3
-
-```
-Input:  n = 2
-Output: ["(())", "()()"]
 ```
 
 ## Constraints (exercise)

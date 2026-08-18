@@ -7,9 +7,9 @@ describe("findProvinces", () => {
   it("example: two provinces", () => {
     assert.equal(
       findProvinces([
-        [1, 1, 0],
-        [1, 1, 0],
-        [0, 0, 1],
+        [1, 0, 1],
+        [0, 1, 0],
+        [1, 0, 1],
       ]),
       2,
     );

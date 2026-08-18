@@ -50,63 +50,27 @@ function findByVal(root: TreeNode | null, val: number): TreeNode {
 
 describe("lowestCommonAncestor", () => {
   it("example 1", () => {
-    const root = buildTree([
-      3,
-      5,
-      1,
-      6,
-      2,
-      0,
-      8,
-      null,
-      null,
-      7,
-      4,
-    ]);
-    const p = findByVal(root, 5);
-    const q = findByVal(root, 1);
+    const root = buildTree([8, 3, 10, 1, 6]);
+    const p = findByVal(root, 1);
+    const q = findByVal(root, 6);
     const lca = lowestCommonAncestor(root, p, q);
     assert.equal(lca?.val, 3);
   });
 
   it("example 2", () => {
-    const root = buildTree([
-      3,
-      5,
-      1,
-      6,
-      2,
-      0,
-      8,
-      null,
-      null,
-      7,
-      4,
-    ]);
-    const p = findByVal(root, 5);
-    const q = findByVal(root, 4);
+    const root = buildTree([8, 3, 10, 1, 6]);
+    const p = findByVal(root, 1);
+    const q = findByVal(root, 10);
     const lca = lowestCommonAncestor(root, p, q);
-    assert.equal(lca?.val, 5);
+    assert.equal(lca?.val, 8);
   });
 
   it("example 3", () => {
-    const root = buildTree([
-      3,
-      5,
-      1,
-      6,
-      2,
-      0,
-      8,
-      null,
-      null,
-      7,
-      4,
-    ]);
+    const root = buildTree([8, 3, 10, 1, 6]);
     const p = findByVal(root, 6);
-    const q = findByVal(root, 4);
+    const q = findByVal(root, 3);
     const lca = lowestCommonAncestor(root, p, q);
-    assert.equal(lca?.val, 5);
+    assert.equal(lca?.val, 3);
   });
 
   it("p equals q returns p", () => {
@@ -117,21 +81,9 @@ describe("lowestCommonAncestor", () => {
   });
 
   it("q is ancestor of p", () => {
-    const root = buildTree([
-      3,
-      5,
-      1,
-      6,
-      2,
-      0,
-      8,
-      null,
-      null,
-      7,
-      4,
-    ]);
-    const p = findByVal(root, 4);
-    const q = findByVal(root, 5);
+    const root = buildTree([8, 3, 10, 1, 6]);
+    const p = findByVal(root, 1);
+    const q = findByVal(root, 3);
     const lca = lowestCommonAncestor(root, p, q);
     assert.equal(lca, q);
   });

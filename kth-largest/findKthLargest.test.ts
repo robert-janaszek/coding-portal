@@ -5,15 +5,15 @@ import { findKthLargest } from "./findKthLargest";
 
 describe("findKthLargest", () => {
   it("example 1", () => {
-    assert.equal(findKthLargest([3, 2, 1, 5, 6, 4], 2), 5);
+    assert.equal(findKthLargest([9, 3, 7, 1], 2), 7);
   });
 
   it("example 2", () => {
-    assert.equal(findKthLargest([3, 2, 3, 1, 2, 4, 5, 5, 6], 4), 4);
+    assert.equal(findKthLargest([4, 4, 1, 8, 4], 3), 4);
   });
 
   it("single element", () => {
-    assert.equal(findKthLargest([1], 1), 1);
+    assert.equal(findKthLargest([2], 1), 2);
   });
 
   it("k = 1 is the maximum", () => {

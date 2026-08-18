@@ -7,25 +7,24 @@ describe("mergeIntervals", () => {
   it("example 1", () => {
     assert.deepEqual(
       mergeIntervals([
+        [2, 5],
         [1, 3],
-        [2, 6],
+        [9, 12],
         [8, 10],
-        [15, 18],
       ]),
       [
-        [1, 6],
-        [8, 10],
-        [15, 18],
+        [1, 5],
+        [8, 12],
       ],
     );
   });
 
   it("example 2", () => {
-    assert.deepEqual(mergeIntervals([[1, 4], [0, 4]]), [[0, 4]]);
+    assert.deepEqual(mergeIntervals([[4, 7], [0, 4]]), [[0, 7]]);
   });
 
   it("touching endpoints merge", () => {
-    assert.deepEqual(mergeIntervals([[1, 4], [4, 5]]), [[1, 5]]);
+    assert.deepEqual(mergeIntervals([[3, 6], [6, 9]]), [[3, 9]]);
   });
 
   it("unsorted input", () => {

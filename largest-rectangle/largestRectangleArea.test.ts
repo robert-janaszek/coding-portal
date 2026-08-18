@@ -19,11 +19,11 @@ function naive(heights: number[]): number {
 
 describe("largestRectangleArea", () => {
   it("example 1", () => {
-    assert.equal(largestRectangleArea([2, 1, 5, 6, 2, 3]), 10);
+    assert.equal(largestRectangleArea([2, 4, 2]), 6);
   });
 
   it("example 2", () => {
-    assert.equal(largestRectangleArea([2, 4]), 4);
+    assert.equal(largestRectangleArea([3, 1]), 3);
   });
 
   it("single bar", () => {

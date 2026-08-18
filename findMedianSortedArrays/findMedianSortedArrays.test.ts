@@ -20,11 +20,11 @@ function check(nums1: number[], nums2: number[], expected?: number) {
 describe("findMedianSortedArrays (ex1)", () => {
   describe("examples", () => {
     it("example 1: odd total", () => {
-      check([1, 3], [2], 2);
+      check([2, 8], [4], 4);
     });
 
     it("example 2: even total", () => {
-      check([1, 2], [3, 4], 2.5);
+      check([1, 5], [2, 9], 3.5);
     });
 
     it("argument order does not matter", () => {

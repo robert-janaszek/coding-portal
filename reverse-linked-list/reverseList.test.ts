@@ -48,13 +48,13 @@ describe("reverseList", () => {
   });
 
   it("example 1", () => {
-    const reversed = reverseList(buildList([1, 2, 3, 4, 5]));
-    assert.deepEqual(toArray(reversed), [5, 4, 3, 2, 1]);
+    const reversed = reverseList(buildList([8, 3, 1, 6]));
+    assert.deepEqual(toArray(reversed), [6, 1, 3, 8]);
   });
 
   it("example 2", () => {
-    const reversed = reverseList(buildList([1, 2]));
-    assert.deepEqual(toArray(reversed), [2, 1]);
+    const reversed = reverseList(buildList([4, 9]));
+    assert.deepEqual(toArray(reversed), [9, 4]);
   });
 
   it("rewires the original nodes in place", () => {

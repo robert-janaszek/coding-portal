@@ -6,22 +6,20 @@
 
 ## Problem
 
-Given a sorted array of integers `nums` (ascending) and a target value `target`, return the **index** of `target` if it exists.
+`nums` is strictly increasing. Return the index of `target`, or `-1` if it is missing.
 
-If `target` is not present, return `-1`.
-
-You must use **bisection / binary search** — do not scan linearly.
+Use bisection — do not scan linearly.
 
 ## Examples
 
 ```
-Input:  nums = [-1,0,3,5,9,12], target = 9
-Output: 4
+Input:  nums = [2, 4, 8, 16, 32], target = 16
+Output: 3
 
-Input:  nums = [-1,0,3,5,9,12], target = 2
+Input:  nums = [2, 4, 8, 16, 32], target = 6
 Output: -1
 
-Input:  nums = [5], target = 5
+Input:  nums = [7], target = 7
 Output: 0
 ```
 

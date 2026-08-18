@@ -1,27 +1,28 @@
-# Linked List Cycle
+# Cycle in a Linked List
 
 **Difficulty:** Medium
 **Topics:** Linked List
 **Target:** `O(n)` time, `O(1)` extra space
 
 ## Problem
-Given the `head` of a linked list, return `true` if the linked list has a cycle, otherwise return `false`.
 
-A cycle exists if there is some node in the list that can be reached again by continuously following the `next` pointer.
+Given `head`, decide whether the list loops: following `next` forever would revisit some node.
+
+`pos` in the examples is only a drawing hint (the tail links back to that index). It is **not** an argument to your function. `pos = -1` means the tail’s `next` is `null`.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  head = [3,2,0,-4], pos = 1
+Input:  head = [5, 1, 9], pos = 2
 Output: true
 ```
 
 ### Example 2
 
 ```
-Input:  head = [1,2], pos = -1
+Input:  head = [7], pos = -1
 Output: false
 ```
 
