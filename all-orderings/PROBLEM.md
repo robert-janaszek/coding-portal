@@ -10,8 +10,6 @@
 
 Order of the returned lists does not matter.
 
-Unlike combinations (always take the next unused value **to the right**), here any unused value can fill the next slot.
-
 ## Examples
 
 ### Example 1

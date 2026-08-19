@@ -10,8 +10,6 @@
 
 Two lists are the same combination if they have the same counts. `[3, 5]` and `[5, 3]` are one combination. Order of the returned list does not matter.
 
-Keep a `start` index so you do not emit permutations of the same multiset; staying on that index is how reuse works.
-
 ## Examples
 
 ### Example 1

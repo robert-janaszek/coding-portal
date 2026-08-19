@@ -22,6 +22,7 @@
     "test:course-order": "npm run test:run -- course-order/courseOrder.test.ts",
     "test:string-conversion-cost": "npm run test:run -- string-conversion-cost/stringConversionCost.test.ts",
     "test:common-subsequence": "npm run test:run -- common-subsequence/commonSubsequence.test.ts",
+    "test:palindrome-keep": "npm run test:run -- palindrome-keep/palindromeKeep.test.ts",
     "test:stair-climbing-ways": "npm run test:run -- stair-climbing-ways/stairClimbingWays.test.ts",
     "test:histogram-max-rectangle": "npm run test:run -- histogram-max-rectangle/histogramMaxRectangle.test.ts",
     "test:days-until-warmer": "npm run test:run -- days-until-warmer/daysUntilWarmer.test.ts",

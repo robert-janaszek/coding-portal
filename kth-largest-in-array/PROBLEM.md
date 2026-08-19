@@ -8,8 +8,6 @@
 
 Return the `k`-th largest value in `nums` (`k = 1` is the maximum). Duplicates count separately — this is rank in sorted order, not distinct values.
 
-Do **not** call the language sort (`Array.prototype.sort`, etc.) inside the solution.
-
 ## Examples
 
 ```

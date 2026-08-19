@@ -1,14 +1,12 @@
 # Kth Smallest in a BST
 
 **Difficulty:** Medium
-**Topics:** Binary tree, In-order, BST
+**Topics:** Binary tree, BST
 **Target:** `O(n)` time, `O(h)` extra space (`h` = height)
 
 ## Problem
 
 Given the `root` of a **binary search tree** and an integer `k` (1-indexed), return the `k`-th smallest value among the nodes.
-
-In a BST, an **in-order** walk (left subtree, node, right subtree) visits keys in sorted order. Use that — do not dump every value into an array and sort.
 
 `TreeNode` is exported from the stub file.
 

@@ -10,8 +10,6 @@ Given strings `s` and `t`, return the length of the longest sequence of characte
 
 Deleting characters is allowed; reordering is not. If they share nothing, return `0`.
 
-This is the two-string DP cousin of **String Conversion Cost**: here you only keep matching letters.
-
 ## Examples
 
 ```

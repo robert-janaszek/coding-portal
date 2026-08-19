@@ -1,14 +1,12 @@
 # Level-Order Groups
 
 **Difficulty:** Easy
-**Topics:** Binary tree, Level-order
+**Topics:** Binary tree
 **Target:** `O(n)` time, `O(w)` extra space (`w` = max width)
 
 ## Problem
 
 Given the `root` of a binary tree, return its node values **grouped by level**, from top to bottom. Within a level, values go **left to right**.
-
-This is **level-order** (BFS): finish one depth before moving to the next. Do not flatten the tree into a single list — each level is its own array.
 
 `TreeNode` is exported from the stub file.
 

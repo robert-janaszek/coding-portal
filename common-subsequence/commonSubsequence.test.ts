@@ -29,4 +29,13 @@ describe("commonSubsequence", () => {
   it("contiguous is not required", () => {
     assert.equal(commonSubsequence("qrst", "qt"), 2);
   });
+
+  it("interleaved matches are not greedy", () => {
+    assert.equal(commonSubsequence("abab", "baba"), 3);
+  });
+
+  it("skips shared letters when a longer path exists", () => {
+    assert.equal(commonSubsequence("aggtab", "gxtxayb"), 4);
+    assert.equal(commonSubsequence("abcbdab", "bdcaba"), 4);
+  });
 });

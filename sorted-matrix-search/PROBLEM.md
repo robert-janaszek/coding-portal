@@ -10,7 +10,7 @@ Given an `m x n` grid of integers `matrix` and an integer `target`, return `true
 
 Each row is sorted left to right. Each column is sorted top to bottom.
 
-The grid is **not** one long sorted sequence: the first entry of row `i + 1` may be smaller than the last entry of row `i`. Do not flatten the grid and run a single binary search.
+The grid is **not** one long sorted sequence: the first entry of row `i + 1` may be smaller than the last entry of row `i`.
 
 ## Examples
 

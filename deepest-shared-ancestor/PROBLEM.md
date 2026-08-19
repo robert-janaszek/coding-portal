@@ -2,7 +2,7 @@
 
 **Difficulty:** Medium
 **Topics:** Binary tree
-**Target:** `O(n)` time, `O(h)` space (recursion stack)
+**Target:** `O(n)` time, `O(h)` extra space (`h` = height)
 
 ## Problem
 

@@ -24,7 +24,7 @@ it.next() → { value: number, done: false }  // one more node
 it.next() → { value: undefined, done: true } // finished
 ```
 
-Keep the stack (DFS) or queue (BFS) as **iterator state**. Do **not** precompute the full list of values, and do **not** return a generator from `createDfsIterator` / `createBfsIterator`.
+Values must be produced lazily as the caller asks for them. `createDfsIterator` / `createBfsIterator` must return a plain iterator object — not a generator.
 
 `root === null` is an empty walk: a generator yields nothing; a manual iterator’s first `next()` is already `{ done: true }`.
 

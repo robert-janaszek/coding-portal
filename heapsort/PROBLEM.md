@@ -6,7 +6,7 @@
 
 ## Problem
 
-Implement **heap sort**: sort an array of numbers in non-decreasing order using a binary heap.
+Implement **heap sort**: sort an array of numbers in non-decreasing order.
 
 Do **not** use the language built-in sort (`Array.prototype.sort`, etc.) inside the solution.
 

@@ -8,8 +8,6 @@
 
 Given `head`, reverse the chain and return the node that used to be last.
 
-Rewire `next` pointers on the existing nodes. Building a second list of new nodes does not meet the space target. Recursion uses `O(n)` call-stack space, so it also fails the target.
-
 ## Examples
 
 ### Example 1

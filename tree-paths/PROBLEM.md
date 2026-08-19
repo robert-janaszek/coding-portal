@@ -1,7 +1,7 @@
 # Root-to-Leaf Paths
 
 **Difficulty:** Easy
-**Topics:** Binary tree, Pre-order
+**Topics:** Binary tree
 **Target:** `O(n)` time, `O(h)` extra space (`h` = height), not counting the output
 
 ## Problem
@@ -10,7 +10,7 @@ Given the `root` of a binary tree, return every path from the root to a leaf.
 
 A leaf has no children. Format each path as values joined by `->`, for example `8->3->1`.
 
-Return paths in **left-to-right** leaf order (the order a **pre-order** walk discovers them: visit the node, then the left subtree, then the right subtree).
+Return paths in **left-to-right** leaf order.
 
 `TreeNode` is exported from the stub file.
 

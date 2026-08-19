@@ -41,7 +41,7 @@ Output: 0
 ```
 Input:  coins = [1, 3, 4], amount = 6
 Output: 2
-Explanation: 3 + 3 — taking the largest coin first is wrong here
+Explanation: 3 + 3
 ```
 
 ## Constraints (exercise)

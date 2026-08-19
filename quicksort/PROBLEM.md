@@ -8,7 +8,7 @@
 
 Implement **quicksort**: sort an array of numbers in non-decreasing order.
 
-Use the partition-and-recurse scheme (Lomuto or Hoare). Do **not** use `Array.prototype.sort` inside the solution.
+Do **not** use `Array.prototype.sort` inside the solution.
 
 You may sort in place and return the same array, or return a new array.
 

@@ -16,8 +16,6 @@ Given `nums` and inclusive bounds `left`, `right`, use `nums[right]` as the **pi
 - indices outside `[left, right]` are unchanged
 - the subarray is a permutation of the original subarray
 
-Do **not** use `Array.prototype.sort`.
-
 ## Examples
 
 ### Example 1

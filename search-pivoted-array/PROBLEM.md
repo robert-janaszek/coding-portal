@@ -8,7 +8,7 @@
 
 `nums` is a strictly increasing sequence that was **cut once** and the two pieces swapped. Example: `[-3, 0, 2, 8, 14]` might become `[8, 14, -3, 0, 2]`. A cut of zero (still fully sorted) is allowed.
 
-Find the index of `target`, or `-1` if it is missing. Use modified binary search — a linear scan is too slow for the target.
+Find the index of `target`, or `-1` if it is missing.
 
 ## Examples
 

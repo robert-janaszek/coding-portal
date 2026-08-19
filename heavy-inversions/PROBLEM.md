@@ -1,14 +1,12 @@
 # Heavy Inversions
 
 **Difficulty:** Hard  
-**Topics:** Arrays, Divide and Conquer  
+**Topics:** Arrays
 **Target:** `O(n log n)` time
 
 ## Problem
 
 Count pairs of indices `(i, j)` with `i < j` and `nums[i] > 2 * nums[j]`.
-
-Same merge-sort family as **Right-Side Smaller Counts**, but the crossing test is `>` vs `2 *`, not just `<`.
 
 ## Examples
 
@@ -42,7 +40,6 @@ Output: 1
 
 - `1 <= nums.length <= 5 * 10^4` (tests stay smaller, but aim for `O(n log n)`)
 - `-2^31 <= nums[i] <= 2^31 - 1`
-- Brute force `O(n²)` is too slow for the intended target
 
 ## Files
 

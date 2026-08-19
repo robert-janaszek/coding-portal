@@ -10,8 +10,6 @@ Return every string of `n` pairs of parentheses that is correctly matched.
 
 Order of the returned strings does not matter.
 
-The search is the same “push a choice, recurse, undo” pattern as combinations, except a choice is illegal if it can never become balanced.
-
 ## Examples
 
 ### Example 1

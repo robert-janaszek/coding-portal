@@ -1,7 +1,7 @@
 # Max Path Sum in a Tree
 
 **Difficulty:** Hard  
-**Topics:** Binary tree, Post-order  
+**Topics:** Binary tree
 **Target:** `O(n)` time
 
 ## Problem
@@ -9,8 +9,6 @@
 A path is a walk along tree edges that does not repeat a node. It may start and end anywhere — it does **not** have to include the root.
 
 Return the largest sum of node values on any non-empty path.
-
-Work **post-order**: both children’s results are needed before this node can choose a downward gain vs a path that bends here.
 
 `TreeNode` is exported from the stub file.
 

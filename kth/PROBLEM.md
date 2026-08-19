@@ -8,8 +8,6 @@
 
 Given two sorted arrays `nums1` and `nums2` of size `m` and `n`, and an integer `k` (1-indexed), return the `k`-th smallest element in the merged sorted sequence of the two arrays.
 
-Do **not** fully merge the arrays.
-
 ## Examples
 
 ### Example 1

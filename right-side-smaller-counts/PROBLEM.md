@@ -44,7 +44,6 @@ Output: [0, 0]
 
 - `1 <= nums.length <= 10^5` (tests stay smaller, but aim for `O(n log n)`)
 - `-10^4 <= nums[i] <= 10^4`
-- Brute force `O(n²)` is too slow for the intended target
 
 ## Files
 

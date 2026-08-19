@@ -8,8 +8,6 @@
 
 `nums` is strictly increasing. Return the index of `target`, or `-1` if it is missing.
 
-Use bisection — do not scan linearly.
-
 ## Examples
 
 ```

@@ -10,8 +10,6 @@
 
 Duplicate subsets are not allowed. Order of subsets, and order inside a subset, does not matter.
 
-Same search tree as k-subsets, except you keep **every** prefix, not only those of length `k`.
-
 ## Examples
 
 ### Example 1

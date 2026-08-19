@@ -10,7 +10,7 @@ Glasses form a pyramid: row `r` has `r + 1` glasses, each holding **1** unit. Yo
 
 How full is glass `queryGlass` in row `queryRow` (both 0-based)? Full is `1`, empty is `0`, otherwise a fraction in `(0, 1)`.
 
-Answers within `10^{-6}` are accepted. Do not simulate one unit at a time — `poured` can be huge.
+Answers within `10^{-6}` are accepted.
 
 ## Examples
 

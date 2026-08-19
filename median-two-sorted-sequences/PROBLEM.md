@@ -6,7 +6,7 @@
 
 ## Problem
 
-`nums1` and `nums2` are each sorted non-decreasing. Return the median of the combined multiset, without merging the arrays into one.
+`nums1` and `nums2` are each sorted non-decreasing. Return the median of the combined multiset.
 
 If the total length is even, return the average of the two middle values (a float).
 

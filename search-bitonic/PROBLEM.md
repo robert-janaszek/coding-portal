@@ -18,8 +18,6 @@ The two halves are sorted **separately**: left of the peak is ascending, right o
 
 Given `nums` and `target`, return the **index** of `target`, or `-1` if it is not present.
 
-You must use modified binary search — do not scan linearly.
-
 ## Examples
 
 ### Example 1
