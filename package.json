@@ -24,6 +24,8 @@
     "test:common-subsequence": "npm run test:run -- common-subsequence/commonSubsequence.test.ts",
     "test:palindrome-keep": "npm run test:run -- palindrome-keep/palindromeKeep.test.ts",
     "test:stair-climbing-ways": "npm run test:run -- stair-climbing-ways/stairClimbingWays.test.ts",
+    "test:non-adjacent-max": "npm run test:run -- non-adjacent-max/nonAdjacentMax.test.ts",
+    "test:down-right-routes": "npm run test:run -- down-right-routes/downRightRoutes.test.ts",
     "test:histogram-max-rectangle": "npm run test:run -- histogram-max-rectangle/histogramMaxRectangle.test.ts",
     "test:days-until-warmer": "npm run test:run -- days-until-warmer/daysUntilWarmer.test.ts",
     "test:largest-all-ones-rectangle": "npm run test:run -- largest-all-ones-rectangle/largestAllOnesRectangle.test.ts",

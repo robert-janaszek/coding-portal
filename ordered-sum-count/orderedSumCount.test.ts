@@ -19,7 +19,7 @@ function naive(nums: number[], target: number): number {
 
 describe("orderedSumCount", () => {
   it("example 1", () => {
-    assert.equal(orderedSumCount([1, 3], 4), 4);
+    assert.equal(orderedSumCount([1, 3], 4), 3);
   });
 
   it("example 2 — impossible", () => {

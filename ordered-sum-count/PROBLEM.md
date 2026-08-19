@@ -14,10 +14,10 @@ Given distinct positive integers `nums` and a `target`, count sequences that sum
 
 ```
 Input:  nums = [1, 3], target = 4
-Output: 4
+Output: 3
 Explanation:
 [1,1,1,1]
-[1,1,3], [1,3,1], [3,1,1]
+[1,3], [3,1]
 ```
 
 ### Example 2
