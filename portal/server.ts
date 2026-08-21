@@ -342,15 +342,32 @@ function findStubTemplate(implPath: string): string {
   return templatePath;
 }
 
+function restoreStub(problem: Problem): string {
+  const implPath = findImplFile(problem);
+  const stubTemplate = findStubTemplate(implPath);
+  copyFileSync(stubTemplate, implPath);
+  return implPath;
+}
+
+function stopRunningTests() {
+  if (running) {
+    forceKill(running);
+    running = null;
+  }
+}
+
+/** Discard the current attempt: restore the stub. Does not archive or change recorded status. */
+function cancelAttempt(problem: Problem): void {
+  stopRunningTests();
+  restoreStub(problem);
+}
+
 async function finishProblem(
   problem: Problem,
   status: ProgressStatus,
   elapsedMs?: number,
 ): Promise<{ status: ProgressStatus; archive: string; elapsedMs?: number }> {
-  if (running) {
-    forceKill(running);
-    running = null;
-  }
+  stopRunningTests();
 
   if (status === "pass") {
     const result = await runTestsOnce(problem);
@@ -363,13 +380,12 @@ async function finishProblem(
   }
 
   const implPath = findImplFile(problem);
-  const stubTemplate = findStubTemplate(implPath);
   const meta =
     typeof elapsedMs === "number" && Number.isFinite(elapsedMs) && elapsedMs >= 0
       ? { elapsedMs }
       : undefined;
   const archive = archiveImpl(ROOT, problem.id, implPath, status, meta);
-  copyFileSync(stubTemplate, implPath);
+  restoreStub(problem);
   setStatus(ROOT, problem.id, status);
   return { status, archive, ...(meta ? { elapsedMs: meta.elapsedMs } : {}) };
 }
@@ -456,6 +472,25 @@ const server = createServer(async (req, res) => {
         return;
       }
       json(res, 200, { tests: parseTests(problem.testFile) });
+      return;
+    }
+
+    const cancelMatch = pathname.match(/^\/api\/problems\/([^/]+)\/cancel$/);
+    if (req.method === "POST" && cancelMatch) {
+      await readBody(req);
+      const id = decodeURIComponent(cancelMatch[1]!);
+      const problem = findProblem(id);
+      if (!problem) {
+        json(res, 404, { error: "Problem not found" });
+        return;
+      }
+      try {
+        cancelAttempt(problem);
+        json(res, 200, { ok: true });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        json(res, 500, { error: message });
+      }
       return;
     }
 

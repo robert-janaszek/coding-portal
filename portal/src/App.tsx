@@ -62,6 +62,10 @@ const RESULTS_HEIGHT_KEY = "coding-portal-results-height";
 const RESULTS_COLLAPSED_KEY = "coding-portal-results-collapsed";
 const RESULTS_MIN = 120;
 const RESULTS_DEFAULT = 280;
+const SIDEBAR_WIDTH_KEY = "coding-portal-sidebar-width";
+const SIDEBAR_MIN = 180;
+const SIDEBAR_DEFAULT = 240;
+const SIDEBAR_MAIN_MIN = 360;
 
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
@@ -162,6 +166,10 @@ export default function App() {
     const saved = Number(localStorage.getItem(RESULTS_HEIGHT_KEY));
     return Number.isFinite(saved) && saved > 0 ? saved : RESULTS_DEFAULT;
   });
+  const [sidebarWidth, setSidebarWidth] = useState(() => {
+    const saved = Number(localStorage.getItem(SIDEBAR_WIDTH_KEY));
+    return Number.isFinite(saved) && saved > 0 ? saved : SIDEBAR_DEFAULT;
+  });
 
   const [timer, setTimer] = useState<TimerState>(() => idleFor(null));
   const [timerModalOpen, setTimerModalOpen] = useState(false);
@@ -241,6 +249,7 @@ export default function App() {
 
   useEffect(() => {
     document.body.classList.toggle("resizing-results", false);
+    document.body.classList.toggle("resizing-sidebar", false);
   }, []);
 
   function closeRun() {
@@ -475,6 +484,44 @@ export default function App() {
     }
   }
 
+  async function cancelAttempt() {
+    if (!selectedId || finishBusy) return;
+    if (
+      !window.confirm(
+        "Cancel this attempt? Restore the stub and reset the timer. Current code will not be archived. Previous results stay recorded.",
+      )
+    ) {
+      return;
+    }
+
+    const problemId = selectedId;
+    setFinishBusy(true);
+    closeRun();
+    persistTimer(problemId, resetTimer());
+    setTimerModalOpen(false);
+    setTimerDisplay("00:00");
+    setLastFullRunOk(false);
+    setSummaryState("idle");
+    setSummaryStats(null);
+    setTestsRunning(false);
+    setRunStatus({ text: "", className: "run-status" });
+    clearTerminal();
+
+    try {
+      const res = await fetch(`/api/problems/${encodeURIComponent(problemId)}/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+      });
+      const body = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(body.error || res.statusText || "Request failed");
+    } catch (err) {
+      window.alert(`Timer was reset, but the stub could not be restored (${err}). Restart the portal and try Cancel again.`);
+    } finally {
+      setFinishBusy(false);
+    }
+  }
+
   function onStartTimer() {
     if (!selectedId) return;
     const next = startTimer();
@@ -526,6 +573,52 @@ export default function App() {
     const h = clampResultsHeight(height);
     setResultsHeight(h);
     localStorage.setItem(RESULTS_HEIGHT_KEY, String(h));
+  }
+
+  function clampSidebarWidth(width: number) {
+    const max = Math.max(SIDEBAR_MIN, window.innerWidth - SIDEBAR_MAIN_MIN);
+    return Math.min(max, Math.max(SIDEBAR_MIN, Math.round(width)));
+  }
+
+  function applySidebarWidth(width: number) {
+    const w = clampSidebarWidth(width);
+    setSidebarWidth(w);
+    localStorage.setItem(SIDEBAR_WIDTH_KEY, String(w));
+  }
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--sidebar-width", `${sidebarWidth}px`);
+  }, [sidebarWidth]);
+
+  useEffect(() => {
+    const onResize = () => {
+      setSidebarWidth((prev) => {
+        const next = clampSidebarWidth(prev);
+        if (next !== prev) localStorage.setItem(SIDEBAR_WIDTH_KEY, String(next));
+        return next;
+      });
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  function onSidebarResizePointerDown(ev: { preventDefault(): void; clientX: number }) {
+    ev.preventDefault();
+    const startX = ev.clientX;
+    const startW = sidebarWidth;
+    document.body.classList.add("resizing-sidebar");
+
+    const onMove = (moveEv: PointerEvent) => {
+      applySidebarWidth(startW + (moveEv.clientX - startX));
+    };
+    const onUp = () => {
+      document.body.classList.remove("resizing-sidebar");
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
   }
 
   function onResizePointerDown(ev: { preventDefault(): void; clientY: number }) {
@@ -611,6 +704,26 @@ export default function App() {
             );
           })}
         </nav>
+        <div
+          className="sidebar-resize-handle"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize problem list"
+          aria-valuemin={SIDEBAR_MIN}
+          aria-valuenow={sidebarWidth}
+          tabIndex={0}
+          onPointerDown={onSidebarResizePointerDown}
+          onKeyDown={(ev) => {
+            const step = ev.shiftKey ? 40 : 16;
+            if (ev.key === "ArrowRight") {
+              ev.preventDefault();
+              applySidebarWidth(sidebarWidth + step);
+            } else if (ev.key === "ArrowLeft") {
+              ev.preventDefault();
+              applySidebarWidth(sidebarWidth - step);
+            }
+          }}
+        />
       </aside>
 
       <main className="main">
@@ -670,6 +783,15 @@ export default function App() {
                     <div className="problem-status-label" hidden />
                   )}
                   <div className="problem-action-buttons">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-cancel"
+                      disabled={finishBusy}
+                      title="Discard this attempt: restore the stub and reset the timer. Previous results stay recorded."
+                      onClick={() => void cancelAttempt()}
+                    >
+                      Cancel
+                    </button>
                     <button
                       type="button"
                       className="btn btn-ghost btn-give-up"
@@ -923,6 +1045,20 @@ function idleFor(_id: string | null): TimerState {
   return { status: "idle", accumulatedMs: 0, startedAt: null };
 }
 
+function sortCatalog(problems: ProblemListItem[]): ProblemListItem[] {
+  return [...problems].sort((a, b) => {
+    const byFamily = familyRank(a.family) - familyRank(b.family);
+    if (byFamily !== 0) return byFamily;
+    const fa = (a.family ?? "").localeCompare(b.family ?? "");
+    if (fa !== 0) return fa;
+    return a.title.localeCompare(b.title);
+  });
+}
+
+function isSolved(status: ProgressStatus | null): boolean {
+  return status === "pass" || status === "softpass";
+}
+
 function CatalogTable({
   problems,
   onSelect,
@@ -930,14 +1066,15 @@ function CatalogTable({
   problems: ProblemListItem[];
   onSelect: (id: string) => void;
 }) {
-  const grouped = [...problems].sort((a, b) => {
-    const byFamily = familyRank(a.family) - familyRank(b.family);
-    if (byFamily !== 0) return byFamily;
-    const fa = (a.family ?? "").localeCompare(b.family ?? "");
-    if (fa !== 0) return fa;
-    return a.title.localeCompare(b.title);
-  });
+  const grouped = sortCatalog(problems);
   const familyCount = new Set(problems.map((p) => p.family).filter(Boolean)).size;
+  const nextUndone = grouped.find((p) => !isSolved(p.status));
+
+  function onFeelingLucky() {
+    if (problems.length === 0) return;
+    const pick = problems[Math.floor(Math.random() * problems.length)]!;
+    onSelect(pick.id);
+  }
 
   return (
     <section className="catalog">
@@ -947,6 +1084,32 @@ function CatalogTable({
           {problems.length} exercises · {familyCount} families
         </p>
       </header>
+      <div className="catalog-actions">
+        <button
+          type="button"
+          className="btn btn-run"
+          disabled={!nextUndone}
+          title={
+            nextUndone
+              ? "Open the next unsolved problem without starting the timer"
+              : "All problems are solved"
+          }
+          onClick={() => {
+            if (nextUndone) onSelect(nextUndone.id);
+          }}
+        >
+          Next Undone
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          disabled={problems.length === 0}
+          title="Open a random problem without starting the timer"
+          onClick={onFeelingLucky}
+        >
+          Challenge Me
+        </button>
+      </div>
       <div className="catalog-table-wrap">
         <table className="catalog-table">
           <thead>

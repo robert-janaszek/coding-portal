@@ -42,7 +42,7 @@ body {
 
 #root {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: var(--sidebar-width, 240px) 1fr;
 }
 
 .sidebar {
@@ -51,6 +51,8 @@ body {
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
   min-height: 0;
+  min-width: 0;
+  position: relative;
 }
 
 .sidebar-header {
@@ -139,6 +141,43 @@ body {
   font-size: 0.9rem;
 }
 
+.sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 2;
+  touch-action: none;
+  background: transparent;
+}
+
+.sidebar-resize-handle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  border-radius: 1px;
+  background: var(--text-muted);
+  opacity: 0.55;
+}
+
+.sidebar-resize-handle:hover,
+.sidebar-resize-handle:focus-visible,
+body.resizing-sidebar .sidebar-resize-handle {
+  background: #3a4458;
+  outline: none;
+}
+
+body.resizing-sidebar {
+  cursor: col-resize;
+  user-select: none;
+}
+
 .problem-item-badges {
   display: inline-flex;
   align-items: flex-start;
@@ -204,9 +243,12 @@ body {
 }
 
 .catalog-header {
-  padding: 1.5rem 1.75rem 0.85rem;
-  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 1.75rem 0.35rem;
   flex-shrink: 0;
+  width: min(52rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .catalog-header h2 {
@@ -222,14 +264,29 @@ body {
   font-size: 0.85rem;
 }
 
+.catalog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1.75rem 1rem;
+  width: min(52rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
 .catalog-table-wrap {
   overflow: auto;
   padding: 0.5rem 1.25rem 1.5rem;
+  width: min(52rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .catalog-table {
   width: 100%;
-  max-width: 52rem;
   border-collapse: collapse;
 }
 
@@ -406,6 +463,10 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-left: auto;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .btn-give-up {
@@ -1089,5 +1150,9 @@ body.resizing-results {
 
   .sidebar {
     max-height: 160px;
+  }
+
+  .sidebar-resize-handle {
+    display: none;
   }
 }
