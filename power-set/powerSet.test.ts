@@ -36,6 +36,19 @@ describe("powerSet", () => {
     assertSameSets(powerSet([1, 2]), [[], [1], [2], [1, 2]]);
   });
 
+  it("three elements", () => {
+    assertSameSets(powerSet([1, 2, 3]), [
+      [],
+      [1],
+      [2],
+      [3],
+      [1, 2],
+      [1, 3],
+      [2, 3],
+      [1, 2, 3],
+    ]);
+  });
+
   it("count is 2^n", () => {
     assert.equal(powerSet([4, 5, 6, 7]).length, 16);
   });
