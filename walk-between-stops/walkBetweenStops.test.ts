@@ -120,4 +120,15 @@ describe("walkBetweenStops", () => {
     ];
     assertShortestWalk(4, trails, 0, 3, walkBetweenStops(4, trails, 0, 3));
   });
+
+  it("two-hop walk beats a three-hop detour", () => {
+    const trails: [number, number][] = [
+      [1, 4],
+      [1, 0],
+      [0, 3],
+      [4, 2],
+      [2, 3],
+    ];
+    assertShortestWalk(5, trails, 1, 3, walkBetweenStops(5, trails, 1, 3));
+  });
 });
