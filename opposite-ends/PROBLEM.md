@@ -6,9 +6,9 @@
 
 ## Problem
 
-A panel has `n` terminals labeled `0` … `n - 1`. Each cable `[u, v]` joins two distinct terminals. You may assign every terminal one of **two polarities**.
+A panel has `n` terminals labeled `0` … `n - 1`. Each cable `[u, v]` joins two distinct terminals.
 
-A layout is valid when **every cable** has opposite polarities on its two ends. Isolated terminals (no cables) may take either polarity.
+You assign every terminal a **polarity**: `+` or `-`. A cable is valid only when its two ends have **opposite** polarities (`+`–`-`). Two `+` ends or two `-` ends on the same cable is invalid. Isolated terminals (no cables) may take either polarity.
 
 Return `true` if some assignment works, `false` if no assignment can satisfy every cable.
 
@@ -19,11 +19,11 @@ The cables are two-way. Tests have no self-cables and no duplicate pairs.
 ```
 Input:  n = 4, cables = [[0,1],[1,2],[2,3]]
 Output: true
-Explanation: polarities can alternate along the chain.
+Explanation: one valid assignment is 0:+, 1:-, 2:+, 3:-. Each cable then has opposite ends.
 
 Input:  n = 3, cables = [[0,1],[1,2],[0,2]]
 Output: false
-Explanation: the three cables form a triangle; two ends of some cable would share a polarity.
+Explanation: after 0:+ and 1:-, terminal 2 would need to be - (opposite 0) and + (opposite 1) at once.
 
 Input:  n = 1, cables = []
 Output: true
