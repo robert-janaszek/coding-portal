@@ -72,6 +72,7 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 |--------|---------|
 | `npm run test:bisection` | Binary search |
 | `npm run test:stair-climbing-ways` | Stair climbing ways |
+| `npm run test:heaviest-stretch` | Heaviest stretch |
 | `npm run test:course-order` | Course order |
 | `npm run test:string-conversion-cost` | String conversion cost |
 | `npm run test:palindrome-keep` | Palindrome keep |
