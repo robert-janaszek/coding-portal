@@ -1059,6 +1059,11 @@ function isSolved(status: ProgressStatus | null): boolean {
   return status === "pass" || status === "softpass";
 }
 
+function pickRandom<T>(items: T[]): T | undefined {
+  if (items.length === 0) return undefined;
+  return items[Math.floor(Math.random() * items.length)];
+}
+
 function CatalogTable({
   problems,
   onSelect,
@@ -1068,13 +1073,7 @@ function CatalogTable({
 }) {
   const grouped = sortCatalog(problems);
   const familyCount = new Set(problems.map((p) => p.family).filter(Boolean)).size;
-  const nextUndone = grouped.find((p) => !isSolved(p.status));
-
-  function onFeelingLucky() {
-    if (problems.length === 0) return;
-    const pick = problems[Math.floor(Math.random() * problems.length)]!;
-    onSelect(pick.id);
-  }
+  const unsolved = grouped.filter((p) => !isSolved(p.status));
 
   return (
     <section className="catalog">
@@ -1088,26 +1087,30 @@ function CatalogTable({
         <button
           type="button"
           className="btn btn-run"
-          disabled={!nextUndone}
+          disabled={unsolved.length === 0}
           title={
-            nextUndone
-              ? "Open the next unsolved problem without starting the timer"
+            unsolved.length > 0
+              ? "Open a random unsolved problem without starting the timer"
               : "All problems are solved"
           }
           onClick={() => {
-            if (nextUndone) onSelect(nextUndone.id);
+            const pick = pickRandom(unsolved);
+            if (pick) onSelect(pick.id);
           }}
         >
-          Next Undone
+          Random Unsolved
         </button>
         <button
           type="button"
           className="btn btn-ghost"
           disabled={problems.length === 0}
           title="Open a random problem without starting the timer"
-          onClick={onFeelingLucky}
+          onClick={() => {
+            const pick = pickRandom(problems);
+            if (pick) onSelect(pick.id);
+          }}
         >
-          Challenge Me
+          Random Any
         </button>
       </div>
       <div className="catalog-table-wrap">
