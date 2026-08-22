@@ -6,7 +6,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { familyRank } from "../catalog";
 import { parseSpecResults, statusesFromSpecResults, type ParsedTest } from "../parseTests";
 import {
   elapsedMs,
@@ -647,6 +646,7 @@ export default function App() {
 
   const solving = isSolving(timer);
   const selected = problems.find((p) => p.id === selectedId) ?? problem;
+  const catalog = sortCatalog(problems);
 
   if (loadError) {
     return <div className="empty-state">Failed to load: {loadError}</div>;
@@ -662,7 +662,7 @@ export default function App() {
           </button>
         </header>
         <nav className="problem-list" aria-label="Problems">
-          {problems.map((p) => {
+          {catalog.map((p) => {
             const meta = p.status ? STATUS_META[p.status] : null;
             const timerStatus = activeTimers[p.id];
             return (
@@ -728,7 +728,7 @@ export default function App() {
 
       <main className="main">
         {!selectedId ? (
-          <CatalogTable problems={problems} onSelect={(id) => void selectProblem(id)} />
+          <CatalogTable problems={catalog} onSelect={(id) => void selectProblem(id)} />
         ) : !solving ? (
           <div className="gate">
             <h2 className="gate-title">{selected?.title ?? selectedId}</h2>
@@ -1046,13 +1046,7 @@ function idleFor(_id: string | null): TimerState {
 }
 
 function sortCatalog(problems: ProblemListItem[]): ProblemListItem[] {
-  return [...problems].sort((a, b) => {
-    const byFamily = familyRank(a.family) - familyRank(b.family);
-    if (byFamily !== 0) return byFamily;
-    const fa = (a.family ?? "").localeCompare(b.family ?? "");
-    if (fa !== 0) return fa;
-    return a.title.localeCompare(b.title);
-  });
+  return [...problems].sort((a, b) => a.id.localeCompare(b.id));
 }
 
 function isSolved(status: ProgressStatus | null): boolean {
@@ -1071,9 +1065,8 @@ function CatalogTable({
   problems: ProblemListItem[];
   onSelect: (id: string) => void;
 }) {
-  const grouped = sortCatalog(problems);
   const familyCount = new Set(problems.map((p) => p.family).filter(Boolean)).size;
-  const unsolved = grouped.filter((p) => !isSolved(p.status));
+  const unsolved = problems.filter((p) => !isSolved(p.status));
 
   return (
     <section className="catalog">
@@ -1123,7 +1116,7 @@ function CatalogTable({
             </tr>
           </thead>
           <tbody>
-            {grouped.map((p) => (
+            {problems.map((p) => (
               <tr key={p.id}>
                 <td className="col-problem">
                   <a
