@@ -297,11 +297,41 @@ body.resizing-sidebar {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  padding: 0.75rem 0.6rem 0.5rem;
+  padding: 0;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   background: var(--bg);
+}
+
+.catalog-sort {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  padding: 0.75rem 0.6rem 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.catalog-sort:hover {
+  color: var(--text);
+}
+
+.catalog-sort-indicator {
+  font-size: 0.62rem;
+  line-height: 1;
 }
 
 .catalog-table td {

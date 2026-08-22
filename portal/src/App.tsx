@@ -2,6 +2,7 @@ import { marked } from "marked";
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -1058,6 +1059,43 @@ function pickRandom<T>(items: T[]): T | undefined {
   return items[Math.floor(Math.random() * items.length)];
 }
 
+type CatalogSortKey = "problem" | "family" | "difficulty";
+type CatalogSortDir = "asc" | "desc";
+
+function familyLabel(p: ProblemListItem): string {
+  return p.topics.length > 0 ? p.topics.join(", ") : (p.family ?? "");
+}
+
+function difficultyRank(difficulty: string | null): number {
+  if (!difficulty) return 4;
+  const lower = difficulty.toLowerCase();
+  if (lower.includes("easy") && lower.includes("medium")) return 1.5;
+  if (lower.includes("easy")) return 1;
+  if (lower.includes("medium")) return 2;
+  if (lower.includes("hard")) return 3;
+  return 3.5;
+}
+
+function compareCatalog(
+  a: ProblemListItem,
+  b: ProblemListItem,
+  key: CatalogSortKey,
+): number {
+  if (key === "problem") {
+    const byTitle = a.title.localeCompare(b.title);
+    if (byTitle !== 0) return byTitle;
+    return a.id.localeCompare(b.id);
+  }
+  if (key === "family") {
+    const byFamily = familyLabel(a).localeCompare(familyLabel(b));
+    if (byFamily !== 0) return byFamily;
+    return a.title.localeCompare(b.title);
+  }
+  const byDifficulty = difficultyRank(a.difficulty) - difficultyRank(b.difficulty);
+  if (byDifficulty !== 0) return byDifficulty;
+  return a.title.localeCompare(b.title);
+}
+
 function CatalogTable({
   problems,
   onSelect,
@@ -1065,8 +1103,23 @@ function CatalogTable({
   problems: ProblemListItem[];
   onSelect: (id: string) => void;
 }) {
+  const [sortKey, setSortKey] = useState<CatalogSortKey>("problem");
+  const [sortDir, setSortDir] = useState<CatalogSortDir>("asc");
   const familyCount = new Set(problems.map((p) => p.family).filter(Boolean)).size;
   const unsolved = problems.filter((p) => !isSolved(p.status));
+  const rows = useMemo(() => {
+    const sorted = [...problems].sort((a, b) => compareCatalog(a, b, sortKey));
+    return sortDir === "asc" ? sorted : sorted.reverse();
+  }, [problems, sortKey, sortDir]);
+
+  function onSort(key: CatalogSortKey) {
+    if (key === sortKey) {
+      setSortDir((dir) => (dir === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortKey(key);
+    setSortDir("asc");
+  }
 
   return (
     <section className="catalog">
@@ -1110,13 +1163,31 @@ function CatalogTable({
         <table className="catalog-table">
           <thead>
             <tr>
-              <th className="col-problem">Problem</th>
-              <th className="col-family">Family</th>
-              <th className="col-difficulty">Difficulty</th>
+              <CatalogSortHeader
+                label="Problem"
+                column="problem"
+                sortKey={sortKey}
+                sortDir={sortDir}
+                onSort={onSort}
+              />
+              <CatalogSortHeader
+                label="Family"
+                column="family"
+                sortKey={sortKey}
+                sortDir={sortDir}
+                onSort={onSort}
+              />
+              <CatalogSortHeader
+                label="Difficulty"
+                column="difficulty"
+                sortKey={sortKey}
+                sortDir={sortDir}
+                onSort={onSort}
+              />
             </tr>
           </thead>
           <tbody>
-            {problems.map((p) => (
+            {rows.map((p) => (
               <tr key={p.id}>
                 <td className="col-problem">
                   <a
@@ -1132,7 +1203,7 @@ function CatalogTable({
                   </a>
                 </td>
                 <td className="col-family">
-                  {p.topics.length > 0 ? p.topics.join(", ") : (p.family ?? "—")}
+                  {familyLabel(p) || "—"}
                 </td>
                 <td className="col-difficulty">
                   {p.difficulty ? (
@@ -1151,6 +1222,37 @@ function CatalogTable({
         </table>
       </div>
     </section>
+  );
+}
+
+function CatalogSortHeader({
+  label,
+  column,
+  sortKey,
+  sortDir,
+  onSort,
+}: {
+  label: string;
+  column: CatalogSortKey;
+  sortKey: CatalogSortKey;
+  sortDir: CatalogSortDir;
+  onSort: (key: CatalogSortKey) => void;
+}) {
+  const active = sortKey === column;
+  return (
+    <th
+      className={`col-${column}`}
+      aria-sort={active ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+    >
+      <button type="button" className="catalog-sort" onClick={() => onSort(column)}>
+        {label}
+        {active ? (
+          <span className="catalog-sort-indicator" aria-hidden="true">
+            {sortDir === "asc" ? "▲" : "▼"}
+          </span>
+        ) : null}
+      </button>
+    </th>
   );
 }
 
