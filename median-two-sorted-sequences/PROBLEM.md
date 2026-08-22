@@ -6,9 +6,14 @@
 
 ## Problem
 
-`nums1` and `nums2` are each sorted non-decreasing. Return the median of the combined multiset.
+`nums1` and `nums2` are each sorted non-decreasing. Return the **median** of the combined multiset (both arrays concatenated, then sorted).
 
-If the total length is even, return the average of the two middle values (a float).
+Let that combined sequence be `A` of length `N = m + n`, indexed from `0`.
+
+- If `N` is **odd**, the median is the single middle value: `A[floor(N / 2)]`.
+- If `N` is **even**, the median is the average of the two middle values: `(A[N / 2 - 1] + A[N / 2]) / 2` (a float is allowed).
+
+Duplicates count separately. Either array may be empty.
 
 ## Examples
 
@@ -17,7 +22,7 @@ If the total length is even, return the average of the two middle values (a floa
 ```
 Input:  nums1 = [2, 8], nums2 = [4]
 Output: 4
-Explanation: combined [2, 4, 8]
+Explanation: combined A = [2, 4, 8], N = 3 (odd) → A[1] = 4
 ```
 
 ### Example 2
@@ -25,7 +30,7 @@ Explanation: combined [2, 4, 8]
 ```
 Input:  nums1 = [1, 5], nums2 = [2, 9]
 Output: 3.5
-Explanation: combined [1, 2, 5, 9], middle pair 2 and 5
+Explanation: combined A = [1, 2, 5, 9], N = 4 (even) → (A[1] + A[2]) / 2 = (2 + 5) / 2 = 3.5
 ```
 
 ## Constraints
