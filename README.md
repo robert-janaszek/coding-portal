@@ -80,6 +80,7 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 | `npm run test:heapsort` | Heap sort |
 | `npm run test:kth` | K-th in two sorted arrays |
 | `npm run test:histogram-max-rectangle` | Histogram max rectangle |
+| `npm run test:held-water` | Held water |
 | `npm run test:shortest-covering-window` | Shortest covering window |
 | `npm run test:max-path-sum-in-a-tree` | Max path sum in a tree |
 | `npm run test:least-recently-used-map` | Least-recently-used map |

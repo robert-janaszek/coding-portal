@@ -33,6 +33,7 @@
     "test:rising-grid-trail": "npm run test:run -- rising-grid-trail/risingGridTrail.test.ts",
     "test:pop-between-neighbors": "npm run test:run -- pop-between-neighbors/popBetweenNeighbors.test.ts",
     "test:histogram-max-rectangle": "npm run test:run -- histogram-max-rectangle/histogramMaxRectangle.test.ts",
+    "test:held-water": "npm run test:run -- held-water/heldWater.test.ts",
     "test:days-until-warmer": "npm run test:run -- days-until-warmer/daysUntilWarmer.test.ts",
     "test:largest-all-ones-rectangle": "npm run test:run -- largest-all-ones-rectangle/largestAllOnesRectangle.test.ts",
     "test:shortest-covering-window": "npm run test:run -- shortest-covering-window/shortestCoveringWindow.test.ts",
