@@ -22,11 +22,15 @@ describe("risingSubsequenceLength", () => {
       assert.equal(risingSubsequenceLength([3, 1, 2, 4]), 3);
     });
 
-    it("example 2 — strictly falling", () => {
+    it("example 2 — skip a dip in the middle", () => {
+      assert.equal(risingSubsequenceLength([1, 4, 0, 5]), 3);
+    });
+
+    it("example 3 — strictly falling", () => {
       assert.equal(risingSubsequenceLength([5, 4, 3, 2]), 1);
     });
 
-    it("example 3 — equals are not rising", () => {
+    it("example 4 — equals are not rising", () => {
       assert.equal(risingSubsequenceLength([7, 7, 7]), 1);
     });
   });
@@ -78,6 +82,7 @@ describe("risingSubsequenceLength", () => {
       [1, 2, 3],
       [3, 2, 1],
       [3, 1, 2, 4],
+      [1, 4, 0, 5],
       [7, 7, 7],
       [1, 8, 2, 3, 4],
       [-2, -1, 0],

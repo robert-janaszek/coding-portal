@@ -17,6 +17,10 @@ Input:  nums = [3, 1, 2, 4]
 Output: 3
 Explanation: 1, 2, 4
 
+Input:  nums = [1, 4, 0, 5]
+Output: 3
+Explanation: 1, 4, 5 — skip the 0 in the middle. A contiguous stretch is at most length 2.
+
 Input:  nums = [5, 4, 3, 2]
 Output: 1
 Explanation: every pair decreases; pick any singleton
