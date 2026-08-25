@@ -97,4 +97,69 @@ describe("Queue", () => {
     }
     assert.equal(q.dequeue(), undefined);
   });
+
+  it("enqueue past constructor size still succeeds and stays FIFO", () => {
+    const q = new Queue(4);
+    const n = 20;
+    for (let i = 0; i < n; i++) q.enqueue(i);
+    for (let i = 0; i < n; i++) {
+      assert.equal(q.dequeue(), i);
+    }
+    assert.equal(q.dequeue(), undefined);
+  });
+
+  it("size 1 grows and stays FIFO", () => {
+    const q = new Queue(1);
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    assert.equal(q.dequeue(), 10);
+    q.enqueue(40);
+    assert.equal(q.dequeue(), 20);
+    assert.equal(q.dequeue(), 30);
+    assert.equal(q.dequeue(), 40);
+    assert.equal(q.dequeue(), undefined);
+  });
+
+  it("wraps a full constructor-sized buffer without losing FIFO", () => {
+    const q = new Queue(8);
+    for (let i = 0; i < 8; i++) q.enqueue(i);
+    for (let i = 0; i < 3; i++) {
+      assert.equal(q.dequeue(), i);
+    }
+    for (let i = 8; i < 11; i++) q.enqueue(i);
+    for (let i = 3; i < 11; i++) {
+      assert.equal(q.dequeue(), i);
+    }
+    assert.equal(q.dequeue(), undefined);
+  });
+
+  it("grows after wrapping a constructor-sized buffer", () => {
+    const q = new Queue(8);
+    for (let i = 0; i < 8; i++) q.enqueue(i);
+    for (let i = 0; i < 3; i++) {
+      assert.equal(q.dequeue(), i);
+    }
+    for (let i = 8; i < 25; i++) q.enqueue(i);
+    for (let i = 3; i < 25; i++) {
+      assert.equal(q.dequeue(), i);
+    }
+    assert.equal(q.dequeue(), undefined);
+  });
+
+  it("interleaved ops past constructor size stay FIFO", () => {
+    const q = new Queue(2);
+    const ref: number[] = [];
+    for (let i = 0; i < 40; i++) {
+      q.enqueue(i);
+      ref.push(i);
+      if (i % 2 === 0) {
+        assert.equal(q.dequeue(), ref.shift());
+      }
+    }
+    while (ref.length > 0) {
+      assert.equal(q.dequeue(), ref.shift());
+    }
+    assert.equal(q.dequeue(), undefined);
+  });
 });

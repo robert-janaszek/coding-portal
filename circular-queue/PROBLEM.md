@@ -8,7 +8,11 @@
 
 Implement a FIFO **queue**. `enqueue` adds a value at the back. `dequeue` removes and returns the value at the front, or `undefined` if the queue is empty.
 
-`enqueue` **always succeeds**. There is no capacity limit and no `false` / “full” result.
+- `Queue(size?)` — empty queue. `size` is the **initial** backing-buffer length (`size >= 1` when passed). It is **not** a capacity limit.
+- `enqueue(value)` — add at the back
+- `dequeue()` — remove and return the front, or `undefined` if empty
+
+`enqueue` **always succeeds**. There is no capacity limit and no `false` / “full” result. If the live count would exceed the current buffer, grow the buffer (typically by doubling) and continue. `new Queue()` is valid — pick any default initial size.
 
 ## Complexity
 
@@ -42,10 +46,21 @@ q.dequeue(); // 0
 q.dequeue(); // 1
 ```
 
+```
+const q = new Queue(2);
+q.enqueue(1);
+q.enqueue(2);
+q.enqueue(3); // still succeeds; buffer grows
+q.dequeue(); // 1
+q.dequeue(); // 2
+q.dequeue(); // 3
+```
+
 ## Constraints
 
 - values fit in JS `number`
-- tests mix enqueue and dequeue, including draining, filling again, and long runs of enqueue
+- `1 <= size <= 1024` when `size` is passed
+- tests mix enqueue and dequeue, including draining, filling again, wrapping a full buffer, and enqueueing past the constructor `size`
 
 ## Files
 

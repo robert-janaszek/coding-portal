@@ -4,7 +4,7 @@ Spoilers. Read only after you have tried on your own.
 
 ## Idea
 
-Keep a backing array and two indices (front / next insert). `dequeue` advances the front; `enqueue` writes at the back. Slots freed at the front can be reused — typically by wrapping the index.
+Keep a backing array and two indices (front / next insert). Constructor `size` is the **initial** array length, not a max. `dequeue` advances the front; `enqueue` writes at the back. Slots freed at the front can be reused — typically by wrapping the index.
 
 When every slot holds a live item, allocate a new array of **twice** the length, copy the live range in order (front to back), reset the indices, then insert. Growing by one each time would make `enqueue` amortized linear.
 
