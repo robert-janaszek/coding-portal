@@ -23,6 +23,7 @@
     "test:string-conversion-cost": "npm run test:run -- string-conversion-cost/stringConversionCost.test.ts",
     "test:common-subsequence": "npm run test:run -- common-subsequence/commonSubsequence.test.ts",
     "test:palindrome-keep": "npm run test:run -- palindrome-keep/palindromeKeep.test.ts",
+    "test:end-take-game": "npm run test:run -- end-take-game/endTakeGame.test.ts",
     "test:stair-climbing-ways": "npm run test:run -- stair-climbing-ways/stairClimbingWays.test.ts",
     "test:non-adjacent-max": "npm run test:run -- non-adjacent-max/nonAdjacentMax.test.ts",
     "test:heaviest-stretch": "npm run test:run -- heaviest-stretch/heaviestStretch.test.ts",
