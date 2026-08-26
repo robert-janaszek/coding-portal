@@ -47,6 +47,18 @@ describe("heaviestStretch", () => {
     assert.equal(heaviestStretch([-5, 4, 3]), 7);
   });
 
+  it("best stretch is a late singleton after a deep dip", () => {
+    assert.equal(heaviestStretch([1, -2, -3, 4]), 4);
+  });
+
+  it("best stretch is a late singleton after two losing dips", () => {
+    assert.equal(heaviestStretch([5, -6, -7, 8]), 8);
+  });
+
+  it("positive peak after a negative start", () => {
+    assert.equal(heaviestStretch([-7, 9, -19]), 9);
+  });
+
   it("drop a losing suffix", () => {
     assert.equal(heaviestStretch([4, 3, -10]), 7);
   });
