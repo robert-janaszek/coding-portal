@@ -108,6 +108,10 @@ describe("heldWater", () => {
     it("multiple local peaks", () => {
       assert.equal(heldWater([6, 2, 5, 4, 5, 1, 6]), 13);
     });
+
+    it("decreasing local peaks keep earlier basins", () => {
+      assert.equal(heldWater([6, 1, 5, 1, 4, 1, 3]), 9);
+    });
   });
 
   describe("naive cross-check", () => {
@@ -118,6 +122,7 @@ describe("heldWater", () => {
       [5, 4, 3, 2, 1, 2, 3, 4, 5],
       [2, 1, 2],
       [6, 2, 5, 4, 5, 1, 6],
+      [6, 1, 5, 1, 4, 1, 3],
       [1, 3, 2, 1, 2],
       [4, 2, 0, 3, 2, 5],
       [1, 0, 1],
