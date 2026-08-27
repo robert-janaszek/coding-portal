@@ -104,6 +104,17 @@ describe("heapSort", () => {
     it("array with one min at end", () => {
       check([2, 3, 4, 5, 6, 1]);
     });
+
+    // After extract-min, last leaf moves to root and sifts down. If the
+    // node is already smaller than both children, sift must stop — otherwise
+    // it keeps swapping and the heap order breaks.
+    it("sift-down stops when parent is already smaller than both children", () => {
+      check([1, 2, 3, 8, 9, 4, 5]);
+    });
+
+    it("already sorted 1..15", () => {
+      check(Array.from({ length: 15 }, (_, i) => i + 1));
+    });
   });
 
   describe("does not rely on built-in sort of the input path", () => {
