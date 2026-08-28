@@ -16,6 +16,7 @@
     "test:sorted-matrix-search": "npm run test:run -- sorted-matrix-search/sortedMatrixSearch.test.ts",
     "test:kth": "npm run test:run -- kth/findKthSortedArrays.test.ts",
     "test:heapsort": "npm run test:run -- heapsort/heapSort.test.ts",
+    "test:mergesort": "npm run test:run -- mergesort/mergeSort.test.ts",
     "test:partition": "npm run test:run -- partition/partition.test.ts",
     "test:quicksort": "npm run test:run -- quicksort/quickSort.test.ts",
     "test:heavy-inversions": "npm run test:run -- heavy-inversions/heavyInversions.test.ts",

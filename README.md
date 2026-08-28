@@ -79,6 +79,7 @@ A folder is picked up by the portal when it contains `PROBLEM.md` and a `*.test.
 | `npm run test:end-take-game` | End take game |
 | `npm run test:median-two-sorted-sequences` | Median of two sorted sequences |
 | `npm run test:heapsort` | Heap sort |
+| `npm run test:mergesort` | Merge sort |
 | `npm run test:kth` | K-th in two sorted arrays |
 | `npm run test:histogram-max-rectangle` | Histogram max rectangle |
 | `npm run test:held-water` | Held water |
