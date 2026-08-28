@@ -31,4 +31,20 @@ describe("kthLargestInArray", () => {
   it("negatives", () => {
     assert.equal(kthLargestInArray([-1, -2, -3, -4], 2), -2);
   });
+
+  it("increasing sequence, k = 2", () => {
+    assert.equal(kthLargestInArray([1, 2, 3], 2), 2);
+  });
+
+  it("replace min when new value is larger than the rest of the heap", () => {
+    assert.equal(kthLargestInArray([1, 5, 10], 2), 5);
+  });
+
+  it("even-sized heap sifts with only a left child", () => {
+    assert.equal(kthLargestInArray([1, 2, 3, 4, 5, 6, 7], 4), 4);
+  });
+
+  it("duplicates then a strictly larger value, k = 2", () => {
+    assert.equal(kthLargestInArray([4, 4, 4, 5], 2), 4);
+  });
 });
