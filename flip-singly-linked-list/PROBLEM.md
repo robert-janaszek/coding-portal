@@ -6,29 +6,29 @@
 
 ## Problem
 
-Given `head`, reverse the chain and return the node that used to be last.
+You are given `head` of a singly linked list. Reverse the chain in place and return the node that used to be last (the new head).
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  head = [8, 3, 1, 6]
-Output: [6, 1, 3, 8]
+Input:  8 → 3 → 1 → 6 → null
+Output: 6 → 1 → 3 → 8 → null
 ```
 
 ### Example 2
 
 ```
-Input:  head = [4, 9]
-Output: [9, 4]
+Input:  4 → 9 → null
+Output: 9 → 4 → null
 ```
 
 ### Example 3
 
 ```
-Input:  head = []
-Output: []
+Input:  null
+Output: null
 ```
 
 ## Constraints (exercise)

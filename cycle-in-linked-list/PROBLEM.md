@@ -6,27 +6,42 @@
 
 ## Problem
 
-Given `head`, decide whether the list loops: following `next` forever would revisit some node.
+You are given `head` of a singly linked list. Return `true` if the list has a cycle, otherwise `false`.
 
-`pos` in the examples is only a drawing hint (the tail links back to that index). It is **not** an argument to your function. `pos = -1` means the tail’s `next` is `null`.
+A cycle means some node’s `next` points back to a node already on the list, so following `next` never reaches `null`.
+
+The function takes only `head`. You inspect the live `next` pointers; you are not given an index of where a cycle starts.
 
 ## Examples
 
 ### Example 1
 
 ```
-Input:  head = [5, 1, 9], pos = 2
-Output: true
+5 → 1 → 9 ─┐
+        └──┘
 ```
+
+The last node points to itself. Output: `true`
 
 ### Example 2
 
 ```
-Input:  head = [7], pos = -1
-Output: false
+7 → null
 ```
 
+Output: `false`
+
+### Example 3
+
+```
+1 → 2 → 3 ─┐
+↑──────────┘
+```
+
+The last node points back to the first. Output: `true`
+
 ## Constraints (exercise)
+
 - `-10^4 <= Node.val <= 10^4`
 - number of nodes in the list is between `0` and `10^4` (tests smaller)
 
@@ -41,4 +56,3 @@ Output: false
 ```bash
 npm run test:cycle-in-linked-list
 ```
-
