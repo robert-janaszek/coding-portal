@@ -97,6 +97,92 @@ describe("largestAllOnesRectangle", () => {
     );
   });
 
+  it("zero resets height — not used as a right edge", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "0", "1"],
+        ["1", "1", "0"],
+      ]),
+      2,
+    );
+  });
+
+  it("2x2 to the right of a height peak", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "1", "0"],
+        ["0", "1", "1"],
+        ["0", "1", "1"],
+      ]),
+      4,
+    );
+  });
+
+  it("wide short strip after a taller leftover one", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "0", "0", "0"],
+        ["1", "1", "1", "0"],
+      ]),
+      3,
+    );
+  });
+
+  it("strictly decreasing column heights", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "1", "1"],
+        ["1", "1", "0"],
+        ["1", "0", "0"],
+      ]),
+      4,
+    );
+  });
+
+  it("increasing column heights — last bars must still count", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["0", "0", "1"],
+        ["0", "1", "1"],
+        ["1", "1", "1"],
+      ]),
+      4,
+    );
+  });
+
+  it("equal heights across two columns", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "1"],
+        ["1", "1"],
+        ["1", "1"],
+        ["1", "0"],
+      ]),
+      6,
+    );
+  });
+
+  it("histogram valley 2 1 2 1", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "0", "1", "0"],
+        ["1", "1", "1", "1"],
+      ]),
+      4,
+    );
+  });
+
+  it("ones only in first column", () => {
+    assert.equal(
+      largestAllOnesRectangle([
+        ["1", "0", "0"],
+        ["1", "0", "0"],
+        ["1", "0", "0"],
+      ]),
+      3,
+    );
+  });
+
   it("naive cross-check batch", () => {
     const cases: string[][][] = [
       [["1"]],
@@ -119,8 +205,79 @@ describe("largestAllOnesRectangle", () => {
         ["1", "1", "0", "1"],
         ["1", "1", "1", "1"],
       ],
+      [
+        ["1", "0", "1"],
+        ["1", "1", "0"],
+      ],
+      [
+        ["1", "1", "0"],
+        ["0", "1", "1"],
+        ["0", "1", "1"],
+      ],
+      [
+        ["1", "0", "0", "0"],
+        ["1", "1", "1", "0"],
+      ],
+      [
+        ["0", "1", "0", "0"],
+        ["0", "1", "1", "1"],
+      ],
+      [
+        ["1", "1", "1"],
+        ["1", "1", "0"],
+        ["1", "0", "0"],
+      ],
+      [
+        ["0", "0", "1"],
+        ["0", "1", "1"],
+        ["1", "1", "1"],
+      ],
+      [
+        ["1", "1"],
+        ["1", "1"],
+        ["1", "1"],
+        ["1", "0"],
+      ],
+      [
+        ["1", "0", "1", "0"],
+        ["1", "1", "1", "1"],
+      ],
+      [
+        ["1", "1", "1", "1"],
+        ["1", "0", "1", "0"],
+      ],
+      [
+        ["0", "1", "1"],
+        ["0", "1", "1"],
+        ["1", "1", "0"],
+      ],
+      [
+        ["1", "1", "0"],
+        ["1", "1", "0"],
+        ["1", "1", "0"],
+        ["1", "1", "0"],
+        ["1", "0", "1"],
+      ],
     ];
     for (const m of cases) {
+      assert.equal(
+        largestAllOnesRectangle(m),
+        naive(m),
+        `failed on ${JSON.stringify(m)}`,
+      );
+    }
+  });
+
+  it("exhaustive 3x4 vs naive", () => {
+    for (let bits = 0; bits < 2 ** 12; bits++) {
+      const m: string[][] = [];
+      for (let r = 0; r < 3; r++) {
+        const row: string[] = [];
+        for (let c = 0; c < 4; c++) {
+          row.push((bits >> (r * 4 + c)) & 1 ? "1" : "0");
+        }
+        m.push(row);
+      }
       assert.equal(
         largestAllOnesRectangle(m),
         naive(m),
