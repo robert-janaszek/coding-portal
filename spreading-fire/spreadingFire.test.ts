@@ -61,4 +61,18 @@ describe("spreadingFire", () => {
   it("two fires meet in the middle", () => {
     assert.equal(spreadingFire([[2, 1, 1, 1, 2]]), 2);
   });
+
+  it("two adjacent fires then a tree chain", () => {
+    assert.equal(spreadingFire([[2, 2, 1, 1]]), 2);
+  });
+
+  it("fire with a tree cut off by empty ground", () => {
+    assert.equal(
+      spreadingFire([
+        [2, 0],
+        [0, 1],
+      ]),
+      -1,
+    );
+  });
 });
