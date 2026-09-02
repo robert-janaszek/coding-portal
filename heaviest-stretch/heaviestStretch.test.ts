@@ -47,6 +47,11 @@ describe("heaviestStretch", () => {
     assert.equal(heaviestStretch([-5, 4, 3]), 7);
   });
 
+  it("drop a losing prefix before a later dip", () => {
+    assert.equal(heaviestStretch([-2, 3, 4, -10]), 7);
+    assert.equal(heaviestStretch([-3, 4, 5, -20]), 9);
+  });
+
   it("best stretch is a late singleton after a deep dip", () => {
     assert.equal(heaviestStretch([1, -2, -3, 4]), 4);
   });
@@ -89,6 +94,8 @@ describe("heaviestStretch", () => {
       [7, -8, 6, -3, 4],
       [4, -1, 2, -3, 5, -2, 1],
       [10, -20, 5],
+      [-2, 3, 4, -10],
+      [-3, 4, 5, -20],
     ];
     for (const nums of cases) {
       it(`${JSON.stringify(nums)}`, () => {

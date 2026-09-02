@@ -8,7 +8,7 @@
 
 Given a line of integers `nums` (negatives allowed), pick a **contiguous** stretch of indices that maximizes the sum of its values.
 
-The stretch must be non-empty when `nums` is non-empty — you cannot skip every cell. If the line is empty, return `0`.
+Return that maximum sum (not the stretch itself). The stretch must be non-empty when `nums` is non-empty — you cannot skip every cell. If the line is empty, return `0`.
 
 ## Examples
 
