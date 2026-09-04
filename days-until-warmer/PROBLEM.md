@@ -6,7 +6,7 @@
 
 ## Problem
 
-`temperatures[i]` is the high on day `i`. For each day, how many days later does a **strictly higher** high first appear? Put `0` if it never does.
+You are given `temperatures[i]`, the temperature on day `i`. For each day, find how many days later a **strictly warmer** temperature first occurs. Use `0` when no later day is warmer.
 
 ## Examples
 
@@ -23,7 +23,7 @@ Output: [0, 0, 0]
 
 ## Constraints
 
-- `1 <= temps.length <= 10^5` (tests stay smaller)
+- `1 <= temperatures.length <= 10^5` (tests stay smaller)
 - values fit in JS `number`
 
 ## Files
