@@ -60,6 +60,7 @@
     "test:deepest-shared-ancestor": "npm run test:run -- deepest-shared-ancestor/deepestSharedAncestor.test.ts",
     "test:cycle-in-linked-list": "npm run test:run -- cycle-in-linked-list/cycleInLinkedList.test.ts",
     "test:flip-singly-linked-list": "npm run test:run -- flip-singly-linked-list/flipSinglyLinkedList.test.ts",
+    "test:join-sorted-chains": "npm run test:run -- join-sorted-chains/joinSortedChains.test.ts",
     "test:combine-overlapping-ranges": "npm run test:run -- combine-overlapping-ranges/combineOverlappingRanges.test.ts",
     "test:deep-copy-graph": "npm run test:run -- deep-copy-graph/deepCopyGraph.test.ts",
     "test:connected-city-groups": "npm run test:run -- connected-city-groups/connectedCityGroups.test.ts",
